@@ -8,5 +8,7 @@ public:
 	virtual ~EnglishChineseWordDict();
 	bool InitDictFromFile(const std::string strFileName);
 	std::string GetTranslation(const std::string strEnglish);
+private:
+
 };
 #endif
