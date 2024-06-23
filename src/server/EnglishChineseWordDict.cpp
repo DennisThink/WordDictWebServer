@@ -2,7 +2,9 @@
 #include "SQLiteCpp/SQLiteCpp.h"
 #include <share.h>
 #include <memory>
+#include <iostream>
 #include "word_dict_struct.hpp"
+#include "dict_tool.hpp"
 static std::shared_ptr<SQLite::Database> g_db = nullptr;
 EnglishChineseWordDict::EnglishChineseWordDict()
 {
@@ -11,11 +13,27 @@ EnglishChineseWordDict::EnglishChineseWordDict()
 
 bool EnglishChineseWordDict::InitDictFromFile(const std::string strFileName)
 {
-	return false;
+    CdictTool tool;
+    m_allWords.clear();
+    m_allWords = tool.GetAllWords(strFileName);
+	return true;
 }
 
 std::string EnglishChineseWordDict::GetTranslation(const std::string strEnglish)
 {
+    for (auto item : m_allWords)
+    {
+        if (item.m_strWord == strEnglish)
+        {
+            std::cout << "English: " << strEnglish << " Match: " << item << std::endl;
+            if (!item.m_strTranslation.empty())
+            {
+                return item.m_strTranslation;
+            }
+        }
+    }
+    return "";
+}
 	/* {
         std::string strQueryEmailReceive = "SELECT SENDER_NAME,SENDER_EMAIL,RECEIVER_NAME,RECEIVER_EMAIL,SUBJECT,CONTENT FROM T_EMAIL_SEND WHERE RECEIVER_EMAIL == ?";
         SQLite::Statement query(*g_db, strQueryEmailReceive);
@@ -33,15 +51,7 @@ std::string EnglishChineseWordDict::GetTranslation(const std::string strEnglish)
         }
         return true;
 	}*/
-	if (strEnglish == "apple")
-	{
-		return "Æ»¹û";
-	}
-	else
-	{
-		return "Ïã½¶";
-	}
-}
+//}
 
 EnglishChineseWordDict::~EnglishChineseWordDict()
 {
