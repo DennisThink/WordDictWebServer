@@ -63,6 +63,24 @@ std::string CWordTranslateClient::EnglishToChinese(std::string strEnglish)
             std::cout << rsp->content.rdbuf() << std::endl;
         }
     }
+
+    {
+        std::string strReqContent = R"({"token":"dennisthink@hotmail.com","english":"The color of flower is red"})";
+        auto rsp = client.request("POST", "/v1/sentence_to_words", strReqContent.c_str());
+        if (rsp)
+        {
+            std::cout << rsp->content.rdbuf() << std::endl;
+        }
+    }
+
+    {
+        std::string strReqContent = R"({"token":"dennisthink@hotmail.com","english":"I like eating apples"})";
+        auto rsp = client.request("POST", "/v1/sentence_to_words", strReqContent.c_str());
+        if (rsp)
+        {
+            std::cout << rsp->content.rdbuf() << std::endl;
+        }
+    }
     //client.io_service->run();
     return "";
 }
