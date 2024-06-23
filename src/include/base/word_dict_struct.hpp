@@ -1,6 +1,7 @@
 #ifndef _WORD_DICT_STRUCT_H_
 #define _WORD_DICT_STRUCT_H_
 #include <string>
+#include <vector>
 struct EnglishToChineseReq_t
 {
     std::string m_strToken;
@@ -20,6 +21,13 @@ struct EnglishToChineseRsp_t
     EnglishToChineseData_t m_data;
 };
 
+
+struct SentenceToWordsRsp_t 
+{
+    int m_code;
+    std::string m_strMsg;
+    std::vector<EnglishToChineseData_t> m_data;
+};
 /*
 * word,phonetic,definition,translation,pos,collins,oxford,tag,bnc,frq,exchange,detail,audio
 */
@@ -38,6 +46,7 @@ struct DictLineElem_t
     std::string m_strExchange;
     std::string m_strDetail;
     std::string m_strAudio;
+    DictLineElem_t();
 };
 std::ostream& operator<<(std::ostream& os, DictLineElem_t p);
 #endif

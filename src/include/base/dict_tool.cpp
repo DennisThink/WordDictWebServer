@@ -39,6 +39,15 @@ DictLineElem_t CdictTool::SplitLine(const std::string strLine)
             }
         }
 
+        {
+            nSecondIndex = strLine.find_first_of(',', nFirstIndex);
+            if (nSecondIndex != std::string::npos)
+            {
+                elem.m_strTranslation = strLine.substr(nFirstIndex, nSecondIndex - nFirstIndex);
+                nFirstIndex = nSecondIndex + 1;
+            }
+        }
+
 
         {
             nSecondIndex = strLine.find_first_of(',', nFirstIndex);

@@ -17,3 +17,20 @@ std::ostream& operator<<(std::ostream& os, DictLineElem_t p)
         "13. " << p.m_strAudio << std::endl;
     return os;
 }
+
+DictLineElem_t::DictLineElem_t()
+{
+    m_strWord.clear();
+    m_strPhonetic.clear();
+    m_strDefinition.clear();
+    m_strTranslation.clear();
+    m_strPos.clear();
+    m_strCollins.clear();
+    m_strOxford.clear();
+    m_strTag.clear();
+    m_strBnc.clear();
+    m_strFrq.clear();
+    m_strExchange.clear();
+    m_strDetail.clear();
+    m_strAudio.clear();
+}
