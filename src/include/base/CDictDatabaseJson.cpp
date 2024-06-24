@@ -1,4 +1,5 @@
 #include "CDictDatabaseJson.hpp"
+#include <algorithm>
 #include "json11/json11.hpp"
 #include <fstream>
 #include <iostream>
@@ -11,9 +12,15 @@ DictLineElem_t CDictDatabaseJson::GetTranslation(const std::string strWord)
 {
 	DictLineElem_t result;
 	result.m_strWord = strWord;
-	for (auto item : m_allWords) {
-		if (item.m_strWord == strWord) {
-			return item;
+	std::string strOld = ToLower(strWord);
+	std::size_t index = strOld[0] - 'a';
+	if ( (0 <= index) && 
+		 (index < 26) )
+	{
+		auto iter = m_mapWords[index].find(strWord);
+		if (iter != m_mapWords[index].end()) {
+			result.m_strWord = strWord;
+			result.m_strTranslation = iter->second;
 		}
 	}
 	return result;
@@ -23,6 +30,13 @@ bool CDictDatabaseJson::InsertWordElem(const DictLineElem_t& elem)
 	return false;
 }
 
+std::string CDictDatabaseJson::ToLower(const std::string& strOld)
+{
+	std::string strIn = strOld;
+	std::transform(strIn.begin(), strIn.end(), strIn.begin(),
+		[](unsigned char c) { return std::tolower(c); });
+	return strIn;
+}
 void CDictDatabaseJson::InitDatabase()
 {
 	std::ifstream file(m_strDbFileName);
@@ -59,11 +73,14 @@ void CDictDatabaseJson::InitDatabase()
 						}
 						std::cout << std::endl;
 					}
-
-					DictLineElem_t elem;
-					elem.m_strWord = strEnglish;
-					elem.m_strTranslation = strChinese;
-					m_allWords.push_back(elem);
+					{
+						std::string strLow = ToLower(strEnglish);
+						std::size_t index = strLow[0] - 'a';
+						if ( (0 <= index) && 
+							 (index < 26)  ) {
+							m_mapWords[index].insert({ strEnglish,strChinese });
+						}
+					}
 				}
 			}
 		}
