@@ -8,6 +8,7 @@ public:
 	virtual ~CDictDatabaseInterface() {};
 	virtual DictLineElem_t GetTranslation(const std::string strWord)=0;
 	virtual bool InsertWordElem(const DictLineElem_t& elem)=0;
+	virtual bool IsWordInDict(const std::string strWord) = 0;
 protected:
 	std::string m_strDbFileName;
 };

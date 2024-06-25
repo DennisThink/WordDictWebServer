@@ -54,10 +54,11 @@ private:
 
 private:
     HttpServer m_server;
-    CDictDatabaseJson m_dict;
+    CDictDatabaseJson m_LowDict;
+    CDictDatabaseJson m_highDict;
 };
 
-CWordTranslateServer::CWordTranslateServer():m_dict("middle_school.json")
+CWordTranslateServer::CWordTranslateServer():m_LowDict("middle_school.json"),m_highDict("toefl_dict.json")
 {
     m_server.config.port = 8080;
 }
@@ -116,7 +117,7 @@ EnglishToChineseReq_t CWordTranslateServer::GetReqFromRequest(Request_SHARED_PTR
 EnglishToChineseRsp_t CWordTranslateServer::CreateRspFromReq(const EnglishToChineseReq_t& req)
 {
     EnglishToChineseRsp_t result;
-    std::string strChinese = m_dict.GetTranslation(req.m_strEnglish).m_strTranslation;
+    std::string strChinese = m_highDict.GetTranslation(req.m_strEnglish).m_strTranslation;
     if (strChinese.empty())
     {
         result.m_code = 0;
@@ -154,11 +155,16 @@ SentenceToWordsRsp_t CWordTranslateServer::TranslateSentence(const EnglishToChin
         startIndex = endIndex+1;
     }
     for (auto item : words) {
-        EnglishToChineseData_t elem;
-        elem.m_strEnglish = item.first;
-        elem.m_strChinese = m_dict.GetTranslation(item.first).m_strTranslation;
-        std::cout << "Engish: " << item.first << "   Chinese: " << elem.m_strChinese << std::endl;
-        transResultArray.push_back(elem);
+        if (m_LowDict.IsWordInDict(item.first)) {
+            std::cout << "Word Already Know: " << item.first << std::endl;
+        }
+        else {
+            EnglishToChineseData_t elem;
+            elem.m_strEnglish = item.first;
+            elem.m_strChinese = m_highDict.GetTranslation(item.first).m_strTranslation;
+            std::cout << "Engish: " << item.first << "   Chinese: " << elem.m_strChinese << std::endl;
+            transResultArray.push_back(elem);   
+        }
     }
     result.m_code = 0;
     result.m_strMsg = "success";

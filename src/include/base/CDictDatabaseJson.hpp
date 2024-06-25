@@ -10,6 +10,7 @@ public:
 	virtual ~CDictDatabaseJson() {};
 	virtual DictLineElem_t GetTranslation(const std::string strWord);
 	virtual bool InsertWordElem(const DictLineElem_t& elem);
+	virtual bool IsWordInDict(const std::string strWord);
 protected:
 	void InitDatabase();
 	std::string ToLower(const std::string& strOld);

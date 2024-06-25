@@ -30,6 +30,21 @@ bool CDictDatabaseJson::InsertWordElem(const DictLineElem_t& elem)
 	return false;
 }
 
+bool CDictDatabaseJson::IsWordInDict(const std::string strWord)
+{
+	std::string strOld = ToLower(strWord);
+	std::size_t index = strOld[0] - 'a';
+	if ((0 <= index) &&
+		(index < 26))
+	{
+		auto iter = m_mapWords[index].find(strWord);
+		if (iter != m_mapWords[index].end()) {
+			return true;
+		}
+	}
+	return false;
+}
+
 std::string CDictDatabaseJson::ToLower(const std::string& strOld)
 {
 	std::string strIn = strOld;
