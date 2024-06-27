@@ -8,7 +8,7 @@ include_directories(./include/thirdparty/json11/)
 include_directories(./include/thirdparty/sqlite/)
 include_directories(./include/thirdparty/mysql_connector_cpp/)
 include_directories(./include/thirdparty/)
-
+include_directories(./include/thirdparty/mysqlwin/include/)
 link_directories(./libs/mysql_connector_cpp/)
 
 add_executable(DictWebServer ./server/http_server.cpp 
@@ -27,8 +27,11 @@ SET(SQLITE_CPP_FILE ${INC_BASE}/thirdparty/SQLiteCpp/src/Backup.cpp
 					${INC_BASE}/thirdparty/SQLiteCpp/src/Statement.cpp 
 					${INC_BASE}/thirdparty/SQLiteCpp/src/Transaction.cpp)
 SET(SQLITE_FILE ${INC_BASE}/thirdparty/sqlite/sqlite3.c)
+link_directories(./libs/mysqllib/lib/)
 
 add_executable(DictWebClient ./client/http_client.cpp)
+
+
 
 add_executable(DictTool ./dict_tool/dict_tool_main.cpp 
 						./include/base/dict_tool.cpp 
@@ -37,6 +40,8 @@ add_executable(DictTool ./dict_tool/dict_tool_main.cpp
 						./include/base/CDictDatabaseMySql.cpp
 						${SQLITE_CPP_FILE}
 						${SQLITE_FILE})
+
+target_link_libraries(DictTool mysqlclient.lib)
 
 add_executable(DictJson ./dict_tool/json_dict_main.cpp 
 						./include/base/CDictDatabaseJson.cpp

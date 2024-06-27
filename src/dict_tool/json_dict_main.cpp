@@ -5,7 +5,7 @@ int main(int argc, char* argv[])
 	if (argc > 0)
 	{
 		std::cout << argc << " " << argv[0] << "    " << argv[1] << std::endl;
-		CDictDatabaseJson dictJson(argv[1]);
+		CDictDatabaseJson dictJson;
 		std::string strArray[] = { "apple","orange","father" };
 		for(auto item:strArray)
 		{

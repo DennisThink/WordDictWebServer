@@ -4,14 +4,14 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-CDictDatabaseJson::CDictDatabaseJson(const std::string strFileName):CDictDatabaseInterface(strFileName)
+CDictDatabaseJson::CDictDatabaseJson()
 {
 	InitDatabase();
 }
-DictLineElem_t CDictDatabaseJson::GetTranslation(const std::string strWord)
+T_ENGLISH_CHINSE_TRANS CDictDatabaseJson::GetTranslation(const std::string strWord)
 {
-	DictLineElem_t result;
-	result.m_strWord = strWord;
+	T_ENGLISH_CHINSE_TRANS result;
+	/*result.m_strWord = strWord;
 	std::string strOld = ToLower(strWord);
 	std::size_t index = strOld[0] - 'a';
 	if ( (0 <= index) && 
@@ -22,10 +22,10 @@ DictLineElem_t CDictDatabaseJson::GetTranslation(const std::string strWord)
 			result.m_strWord = strWord;
 			result.m_strTranslation = iter->second;
 		}
-	}
+	}*/
 	return result;
 }
-bool CDictDatabaseJson::InsertWordElem(const DictLineElem_t& elem)
+bool CDictDatabaseJson::InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem)
 {
 	return false;
 }
@@ -54,7 +54,7 @@ std::string CDictDatabaseJson::ToLower(const std::string& strOld)
 }
 void CDictDatabaseJson::InitDatabase()
 {
-	std::ifstream file(m_strDbFileName);
+	std::ifstream file("1.txt");
 	if (file.is_open()) {
 		std::stringstream buff;
 		buff << file.rdbuf();
@@ -101,6 +101,6 @@ void CDictDatabaseJson::InitDatabase()
 		}
 	}
 	else {
-		std::cout << "Read File failed  File: " << m_strDbFileName <<std::endl;
+		//std::cout << "Read File failed  File: " << m_strDbFileName <<std::endl;
 	}
 }

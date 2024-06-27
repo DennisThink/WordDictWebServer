@@ -49,4 +49,30 @@ struct DictLineElem_t
     DictLineElem_t();
 };
 std::ostream& operator<<(std::ostream& os, DictLineElem_t p);
+
+
+struct DataBaseConfigInterface {
+
+};
+
+struct SqliteDatabaseConfig :public DataBaseConfigInterface {
+
+};
+
+
+struct T_ENGLISH_CHINSE_TRANS
+{
+    std::string F_ID;
+    std::string F_ENGLISH;
+    std::string F_CHINESE;
+    int         F_LEVEL;
+};
+
+struct T_WORD_REQUENCY {
+    std::string F_ENGLISH;
+    std::string F_TOKEN;
+    int         F_TIMES;
+};
+
+
 #endif

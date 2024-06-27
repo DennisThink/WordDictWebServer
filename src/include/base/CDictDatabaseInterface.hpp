@@ -4,12 +4,12 @@
 class CDictDatabaseInterface
 {
 public:
-	CDictDatabaseInterface(const std::string strFileName) { m_strDbFileName = strFileName; };
+	CDictDatabaseInterface() {};
+	virtual bool SetDatabaseConfig(const DataBaseConfigInterface* cfg)=0;
 	virtual ~CDictDatabaseInterface() {};
-	virtual DictLineElem_t GetTranslation(const std::string strWord)=0;
-	virtual bool InsertWordElem(const DictLineElem_t& elem)=0;
+	virtual T_ENGLISH_CHINSE_TRANS GetTranslation(const std::string strWord)=0;
+	virtual bool InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem)=0;
 	virtual bool IsWordInDict(const std::string strWord) = 0;
-protected:
-	std::string m_strDbFileName;
+	virtual bool UpdateWordFrequency(const std::string strWord)=0;
 };
 #endif

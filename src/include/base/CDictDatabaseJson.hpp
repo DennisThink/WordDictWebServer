@@ -6,10 +6,10 @@
 class CDictDatabaseJson :public CDictDatabaseInterface
 {
 public:
-	CDictDatabaseJson(const std::string strFileName);
+	CDictDatabaseJson();
 	virtual ~CDictDatabaseJson() {};
-	virtual DictLineElem_t GetTranslation(const std::string strWord);
-	virtual bool InsertWordElem(const DictLineElem_t& elem);
+	virtual T_ENGLISH_CHINSE_TRANS GetTranslation(const std::string strWord);
+	virtual bool InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem);
 	virtual bool IsWordInDict(const std::string strWord);
 protected:
 	void InitDatabase();

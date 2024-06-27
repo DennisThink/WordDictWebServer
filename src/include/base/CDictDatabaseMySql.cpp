@@ -1,31 +1,153 @@
 #include "CDictDatabaseMySql.hpp"
-#include <mysqlx/xdevapi.h>
 #include <iostream>
-CDictDatabaseMysql::CDictDatabaseMysql(const std::string strFileName):CDictDatabaseInterface(strFileName)
+CDictDatabaseMysql::CDictDatabaseMysql()
 {
-	std::string host = "localhost";
-	std::string strUser = "test";
-	std::string strPassword = "test@1990";
-	std::string strDb = "en_cn_dict";
-	mysqlx::SessionSettings mysqlSet(host,strUser.c_str(), strPassword, strDb.c_str());
-	mysqlx::Session mysqlDbUtil(mysqlSet);
-	mysqlx::RowResult res = mysqlDbUtil.sql("show variables like 'version'").execute();
-	std::stringstream version;
-
-	std::cout << res.fetchOne().get(1).get<std::string>()<<std::endl;
+	InitLibrary();
 }
 
 CDictDatabaseMysql::~CDictDatabaseMysql()
 {
-
+	UninitLibrary();
 }
-DictLineElem_t CDictDatabaseMysql::GetTranslation(const std::string strWord)
+
+bool CDictDatabaseMysql::SetDatabaseConfig(const DataBaseConfigInterface* cfg)
 {
-	DictLineElem_t result;
+	return false;
+}
+
+
+T_ENGLISH_CHINSE_TRANS CDictDatabaseMysql::GetTranslation(const std::string strWord)
+{
+	T_ENGLISH_CHINSE_TRANS result;
+	std::string strSelect = R"(SELECT 
+			F_ENGLISH,
+			F_CHINESE,
+			F_LEVEL  FROM T_ENGLISH_CHINESE WHERE F_ENGLISH="%s";)";
+	char buff[256] = { 0 };
+	sprintf(buff, strSelect.c_str(), strWord.c_str());
+	std::cout << "SQL: " << buff << std::endl;
+	{
+		if (mysql_query(m_mysql, buff)) {
+			printf("Query failed: %s\n", mysql_error(m_mysql));
+		}
+		else {
+			MYSQL_RES* result = mysql_store_result(m_mysql);
+
+			if (!result) {
+				printf("Couldn't get results set: %s\n", mysql_error(m_mysql));
+			}
+			else {
+				MYSQL_ROW row;
+				int i;
+				unsigned int num_fields = mysql_num_fields(result);
+
+				while ((row = mysql_fetch_row(result))) {
+					putchar('\n');
+					break;
+				}
+
+				mysql_free_result(result);
+			}
+		}
+	}
 	return result;
 }
 
-bool CDictDatabaseMysql::InsertWordElem(const DictLineElem_t& elem)
+bool CDictDatabaseMysql::InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem)
+{
+	std::string strCreateSql = R"(INSERT INTO T_ENGLISH_CHINESE(
+			F_ENGLISH,
+			F_CHINESE,
+			F_LEVEL) VALUES('%s','%s',%d);)";
+	char buff[256] = { 0 };
+	//sprintf(buff, strCreateSql.c_str(), elem.m_strWord.c_str(), elem.m_strTranslation.c_str(), 1);
+	std::cout << buff << std::endl;
+	int nResult = mysql_query(m_mysql, buff);
+	mysql_commit(m_mysql);
+	if (nResult == 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+	return false;
+}
+
+void CDictDatabaseMysql::InitTables()
+{
+	{
+		if (NULL != m_mysql) {
+			std::string strCreateSql = R"(CREATE TABLE T_ENGLISH_CHINESE(
+			F_ID int NOT NULL AUTO_INCREMENT,
+			F_ENGLISH varchar(64),
+			F_CHINESE varchar(128),
+			F_LEVEL int,
+			PRIMARY KEY(F_ID)
+			); )";
+			int nResult = mysql_query(m_mysql, strCreateSql.c_str());
+			if (nResult == 0) {
+			}
+			else {
+			}
+		}
+	}
+	{
+		if (NULL != m_mysql) {
+			std::string strCreateSql = R"(CREATE TABLE T_WORD_FREQUENCY(
+											F_ID int NOT NULL AUTO_INCREMENT,
+											F_ENGISH varchar(64),
+											F_TOKEN varchar(128),
+											F_TIMES int,
+											PRIMARY KEY (F_ID)); )";
+			int nResult = mysql_query(m_mysql, strCreateSql.c_str());
+			if (nResult == 0) {
+			}
+			else {
+			}
+		}
+	}
+}
+
+void CDictDatabaseMysql::InitLibrary()
+{
+	m_mysql = NULL;
+	int argc = 0;
+	char** argv = NULL;
+	if (mysql_library_init(argc, argv, NULL)) {
+		fprintf(stderr, "could not initialize MySQL client library\n");
+		exit(1);
+	}
+
+	m_mysql = mysql_init(m_mysql);
+	if (!mysql_real_connect(m_mysql,       /* MYSQL structure to use */
+		"localhost",         /* server hostname or IP address */
+		"test",         /* mysql user */
+		"test@1990",          /* password */
+		"en_cn_dict",               /* default database to use, NULL for none */
+		3306,           /* port number, 0 for default */
+		NULL,        /* socket file or named pipe name */
+		CLIENT_FOUND_ROWS /* connection flags */)) {
+		fprintf(stderr, "mysql_real_connect() failed: '%s'\n", mysql_error(m_mysql));
+		puts("Connect failed\n");
+	}
+	else {
+		puts("Connect OK\n");
+	}
+}
+
+void CDictDatabaseMysql::UninitLibrary()
+{
+	mysql_close(m_mysql);
+	m_mysql = NULL;
+	mysql_library_end();
+}
+
+bool CDictDatabaseMysql::UpdateWordFrequency(const std::string strWord)
+{
+	return false;
+}
+
+bool CDictDatabaseMysql::IsWordInDict(const std::string strWord)
 {
 	return false;
 }

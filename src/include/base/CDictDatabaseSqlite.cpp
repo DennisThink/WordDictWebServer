@@ -3,7 +3,7 @@
 #include <iostream>
 #include "SQLiteCpp/SQLiteCpp.h"
 static std::shared_ptr<SQLite::Database> g_db = nullptr;
-CDictDatabaseSqlite::CDictDatabaseSqlite(const std::string strFileName):CDictDatabaseInterface(strFileName)
+CDictDatabaseSqlite::CDictDatabaseSqlite()
 {
     DatabaseInit();
 }
@@ -13,9 +13,9 @@ CDictDatabaseSqlite::~CDictDatabaseSqlite()
 
 }
 
-DictLineElem_t CDictDatabaseSqlite::GetTranslation(const std::string strWord)
+T_ENGLISH_CHINSE_TRANS CDictDatabaseSqlite::GetTranslation(const std::string strWord)
 {
-	DictLineElem_t result;
+    T_ENGLISH_CHINSE_TRANS result;
     std::string strSelectWordTrans = R"(SELECT 
             WORD,
             PHONETIC,
@@ -54,7 +54,7 @@ DictLineElem_t CDictDatabaseSqlite::GetTranslation(const std::string strWord)
             wordsArray.push_back(elem);
         }
         if (!wordsArray.empty()) {
-            result = wordsArray[0];
+            //result = wordsArray[0];
         }
     }
     catch(std::exception & ec)
@@ -65,10 +65,20 @@ DictLineElem_t CDictDatabaseSqlite::GetTranslation(const std::string strWord)
 	return result;
 }
 
-bool CDictDatabaseSqlite::InsertWordElem(const DictLineElem_t& elem)
+bool CDictDatabaseSqlite::UpdateWordFrequency(const std::string strWord)
+{
+    return false;
+}
+
+bool CDictDatabaseSqlite::IsWordInDict(const std::string strWord)
+{
+    return false;
+}
+
+bool CDictDatabaseSqlite::InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem)
 {
     bool bResult = false;
-    try {
+    /*try {
 
         std::string strInsertEmailSend = R"(INSERT INTO T_ENGLISH_CHINESE(
             WORD,
@@ -105,7 +115,7 @@ bool CDictDatabaseSqlite::InsertWordElem(const DictLineElem_t& elem)
     {
         std::cout << "Exception:  " << ec.what() << std::endl;
         bResult = false;
-    }
+    }*/
 	return bResult;
 }
 
@@ -113,7 +123,7 @@ void CDictDatabaseSqlite::DatabaseInit()
 {
     try
     {
-        g_db = std::make_shared<SQLite::Database>(m_strDbFileName, SQLite::OPEN_READWRITE);
+        //g_db = std::make_shared<SQLite::Database>(m_strDbFileName, SQLite::OPEN_READWRITE);
     }
     catch (std::exception& ec)
     {
@@ -137,7 +147,7 @@ void CDictDatabaseSqlite::DatabaseInit()
                     std::string m_strDetail;
                     std::string m_strAudio;
                 */
-                g_db = std::make_shared<SQLite::Database>(m_strDbFileName, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+                //g_db = std::make_shared<SQLite::Database>(m_strDbFileName, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
                 std::string strCreateUserTable(R"(CREATE TABLE T_ENGLISH_CHINESE(ID INTEGER PRIMARY KEY AUTOINCREMENT,
                     WORD TEXT,
                     PHONETIC TEXT,

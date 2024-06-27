@@ -11,8 +11,8 @@
 int SqliteDemo(int argc, char* argv[])
 {
     CdictTool tool;
-    auto allWords = tool.GetAllWords(argv[1]);
-    CDictDatabaseSqlite sqliteDB(argv[2]);
+    /*auto allWords = tool.GetAllWords(argv[1]);
+    CDictDatabaseSqlite sqliteDB;
     for (auto item : allWords)
     {
         std::cout << sqliteDB.InsertWordElem(item) << "  " << item << std::endl;
@@ -20,12 +20,12 @@ int SqliteDemo(int argc, char* argv[])
     
     auto searchResult = sqliteDB.GetTranslation("apple");
     std::cout << "Result for: \"apple\"  Result: " << searchResult << std::endl;
-    std::cout << allWords.size() << std::endl;
+    std::cout << allWords.size() << std::endl;*/
 	return 0;
 }
 
 int main(int argc, char* argv[])
 {
-    CDictDatabaseMysql mysqlDb(argv[0]);
+    CDictDatabaseMysql mysqlDb;
     return 0;
 }

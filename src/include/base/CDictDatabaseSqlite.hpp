@@ -4,10 +4,12 @@
 class CDictDatabaseSqlite:public CDictDatabaseInterface
 {
 public:
-	CDictDatabaseSqlite(const std::string strFileName);
+	CDictDatabaseSqlite();
 	virtual ~CDictDatabaseSqlite();
-	virtual DictLineElem_t GetTranslation(const std::string strWord);
-	virtual bool InsertWordElem(const DictLineElem_t& elem);
+	virtual T_ENGLISH_CHINSE_TRANS GetTranslation(const std::string strWord);
+	virtual bool InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem);
+	virtual bool IsWordInDict(const std::string strWord);
+	virtual bool UpdateWordFrequency(const std::string strWord);
 private:
 	void DatabaseInit();
 };
