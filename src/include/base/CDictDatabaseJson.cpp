@@ -6,12 +6,11 @@
 #include <sstream>
 CDictDatabaseJson::CDictDatabaseJson()
 {
-	InitDatabase();
 }
 T_ENGLISH_CHINSE_TRANS CDictDatabaseJson::GetTranslation(const std::string strWord)
 {
 	T_ENGLISH_CHINSE_TRANS result;
-	/*result.m_strWord = strWord;
+	result.F_ENGLISH = strWord;
 	std::string strOld = ToLower(strWord);
 	std::size_t index = strOld[0] - 'a';
 	if ( (0 <= index) && 
@@ -19,10 +18,11 @@ T_ENGLISH_CHINSE_TRANS CDictDatabaseJson::GetTranslation(const std::string strWo
 	{
 		auto iter = m_mapWords[index].find(strWord);
 		if (iter != m_mapWords[index].end()) {
-			result.m_strWord = strWord;
-			result.m_strTranslation = iter->second;
+			result.F_CHINESE = strWord;
+			result.F_CHINESE = iter->second;
+			result.F_LEVEL = 0;
 		}
-	}*/
+	}
 	return result;
 }
 bool CDictDatabaseJson::InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem)
@@ -52,14 +52,49 @@ std::string CDictDatabaseJson::ToLower(const std::string& strOld)
 		[](unsigned char c) { return std::tolower(c); });
 	return strIn;
 }
-void CDictDatabaseJson::InitDatabase()
+
+bool CDictDatabaseJson::UpdateWordFrequency(const std::string strWord)
 {
-	std::ifstream file("1.txt");
+	return false;
+}
+
+bool CDictDatabaseJson::SetDatabaseConfig(const DataBaseConfigInterface* cfg)
+{
+	if ((nullptr != cfg) && 
+		(NULL != cfg))
+	{
+		JsonDatabaseConfig pConfig = *(JsonDatabaseConfig*)(cfg);
+		InitDatabase(pConfig.m_jsonFileName);
+		return true;
+	}
+	return false;
+}
+
+std::vector<T_ENGLISH_CHINSE_TRANS> CDictDatabaseJson::GetAllWords()
+{
+	std::vector<T_ENGLISH_CHINSE_TRANS> retResult;
+	for (auto mapItem : m_mapWords)
+	{
+		for (auto wordItem : mapItem) {
+			T_ENGLISH_CHINSE_TRANS elem;
+			elem.F_ENGLISH = wordItem.first;
+			elem.F_CHINESE = wordItem.second;
+			elem.F_LEVEL = 1;
+			retResult.push_back(elem);
+		}
+	}
+	return retResult;
+}
+
+
+void CDictDatabaseJson::InitDatabase(const std::string strJsonFile)
+{
+	std::ifstream file(strJsonFile);
 	if (file.is_open()) {
 		std::stringstream buff;
 		buff << file.rdbuf();
 		std::string data(buff.str());
-		std::cout << "data:" << data << std::endl;
+		//std::cout << "data:" << data << std::endl;
 
 		std::string strErr;
 		json11::Json dictJson = json11::Json::parse(data.c_str(), strErr);
@@ -73,20 +108,20 @@ void CDictDatabaseJson::InitDatabase()
 					strChinese.clear();
 					if (item["word"].is_string())
 					{
-						std::cout << "English: " << item["word"].string_value() << "  ";
+						//std::cout << "English: " << item["word"].string_value() << "  ";
 						strEnglish = item["word"].string_value();
 					}
 					if (item["translations"].is_array()) {
 						auto trans = item["translations"].array_items();
-						std::cout << "Chinese: ";
+						//std::cout << "Chinese: ";
 						for (auto it : trans) {
 							if (it["translation"].is_string()) {
 								strChinese +=" ";
 								strChinese += it["translation"].string_value();
-								std::cout << it["translation"].string_value() << " ";
+								//std::cout << it["translation"].string_value() << " ";
 							}
 						}
-						std::cout << std::endl;
+						//std::cout << std::endl;
 					}
 					{
 						std::string strLow = ToLower(strEnglish);
@@ -101,6 +136,5 @@ void CDictDatabaseJson::InitDatabase()
 		}
 	}
 	else {
-		//std::cout << "Read File failed  File: " << m_strDbFileName <<std::endl;
 	}
 }

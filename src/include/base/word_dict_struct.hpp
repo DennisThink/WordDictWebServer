@@ -56,8 +56,21 @@ struct DataBaseConfigInterface {
 };
 
 struct SqliteDatabaseConfig :public DataBaseConfigInterface {
-
+    std::string m_sqliteFileName;
 };
+
+struct JsonDatabaseConfig : public DataBaseConfigInterface {
+    std::string m_jsonFileName;
+};
+
+struct MysqlDatabaseConfig : public DataBaseConfigInterface {
+    std::string m_strMysqlServerIp;
+    int m_nMysqlServerPort;
+    std::string m_strMysqlUserName;
+    std::string m_strMysqlPassoword;
+    std::string m_strDataBase;
+};
+
 
 
 struct T_ENGLISH_CHINSE_TRANS

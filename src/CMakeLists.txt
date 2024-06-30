@@ -38,17 +38,9 @@ add_executable(DictTool ./dict_tool/dict_tool_main.cpp
 						./include/base/word_dict_struct.cpp
 						./include/base/CDictDatabaseSqlite.cpp
 						./include/base/CDictDatabaseMySql.cpp
+						./include/base/CDictDatabaseJson.cpp
+						./include/thirdparty/json11/json11.cpp
 						${SQLITE_CPP_FILE}
 						${SQLITE_FILE})
 
 target_link_libraries(DictTool mysqlclient.lib)
-
-add_executable(DictJson ./dict_tool/json_dict_main.cpp 
-						./include/base/CDictDatabaseJson.cpp
-						./include/base/word_dict_struct.cpp
-						./include/thirdparty/json11/json11.cpp)
-
-target_link_libraries(DictTool  libcrypto.lib  
-							    libssl.lib  
-								mysqlcppconn.lib
-								mysqlcppconn8.lib)

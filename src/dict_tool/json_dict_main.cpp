@@ -9,8 +9,8 @@ int main(int argc, char* argv[])
 		std::string strArray[] = { "apple","orange","father" };
 		for(auto item:strArray)
 		{
-			DictLineElem_t appleTrans = dictJson.GetTranslation(item);
-			std::cout << item << "    " << appleTrans.m_strTranslation << std::endl;
+			auto appleTrans = dictJson.GetTranslation(item);
+			std::cout << item << "    " << appleTrans.F_CHINESE << std::endl;
 		}
 	}
 	return 0;

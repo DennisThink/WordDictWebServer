@@ -12,17 +12,38 @@ CDictDatabaseMysql::~CDictDatabaseMysql()
 
 bool CDictDatabaseMysql::SetDatabaseConfig(const DataBaseConfigInterface* cfg)
 {
-	return false;
+	if (nullptr != cfg && NULL != cfg)
+	{
+		m_config = *(MysqlDatabaseConfig*)(cfg);
+		if(NULL != m_mysql)
+		{
+			if (!mysql_real_connect(m_mysql,       /* MYSQL structure to use */
+				m_config.m_strMysqlServerIp.c_str(),         /* server hostname or IP address */
+				m_config.m_strMysqlUserName.c_str(),         /* mysql user */
+				m_config.m_strMysqlPassoword.c_str(),          /* password */
+				m_config.m_strDataBase.c_str(),               /* default database to use, NULL for none */
+				m_config.m_nMysqlServerPort,           /* port number, 0 for default */
+				NULL,        /* socket file or named pipe name */
+				CLIENT_FOUND_ROWS /* connection flags */)) {
+				fprintf(stderr, "mysql_real_connect() failed: '%s'\n", mysql_error(m_mysql));
+				puts("Connect failed\n");
+			}
+			else {
+				puts("Connect OK\n");
+			}
+		}
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 
 T_ENGLISH_CHINSE_TRANS CDictDatabaseMysql::GetTranslation(const std::string strWord)
 {
-	T_ENGLISH_CHINSE_TRANS result;
-	std::string strSelect = R"(SELECT 
-			F_ENGLISH,
-			F_CHINESE,
-			F_LEVEL  FROM T_ENGLISH_CHINESE WHERE F_ENGLISH="%s";)";
+	T_ENGLISH_CHINSE_TRANS transResult;
+	std::string strSelect = R"(SELECT F_ENGLISH,F_CHINESE,F_LEVEL FROM T_ENGLISH_CHINESE WHERE F_ENGLISH="%s";)";
 	char buff[256] = { 0 };
 	sprintf(buff, strSelect.c_str(), strWord.c_str());
 	std::cout << "SQL: " << buff << std::endl;
@@ -40,9 +61,14 @@ T_ENGLISH_CHINSE_TRANS CDictDatabaseMysql::GetTranslation(const std::string strW
 				MYSQL_ROW row;
 				int i;
 				unsigned int num_fields = mysql_num_fields(result);
-
+				printf("get results set: %s\n", mysql_error(m_mysql));
 				while ((row = mysql_fetch_row(result))) {
+					printf("ROW loop get results set: %s\n", mysql_error(m_mysql));
+					transResult.F_ENGLISH = row[0];
+					transResult.F_CHINESE = row[1];
+					transResult.F_LEVEL = std::atoi(row[2]);
 					putchar('\n');
+
 					break;
 				}
 
@@ -50,7 +76,7 @@ T_ENGLISH_CHINSE_TRANS CDictDatabaseMysql::GetTranslation(const std::string strW
 			}
 		}
 	}
-	return result;
+	return transResult;
 }
 
 bool CDictDatabaseMysql::InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem)
@@ -60,7 +86,7 @@ bool CDictDatabaseMysql::InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem)
 			F_CHINESE,
 			F_LEVEL) VALUES('%s','%s',%d);)";
 	char buff[256] = { 0 };
-	//sprintf(buff, strCreateSql.c_str(), elem.m_strWord.c_str(), elem.m_strTranslation.c_str(), 1);
+	sprintf(buff, strCreateSql.c_str(), elem.F_ENGLISH.c_str(), elem.F_CHINESE.c_str(), 1);
 	std::cout << buff << std::endl;
 	int nResult = mysql_query(m_mysql, buff);
 	mysql_commit(m_mysql);
@@ -119,20 +145,7 @@ void CDictDatabaseMysql::InitLibrary()
 	}
 
 	m_mysql = mysql_init(m_mysql);
-	if (!mysql_real_connect(m_mysql,       /* MYSQL structure to use */
-		"localhost",         /* server hostname or IP address */
-		"test",         /* mysql user */
-		"test@1990",          /* password */
-		"en_cn_dict",               /* default database to use, NULL for none */
-		3306,           /* port number, 0 for default */
-		NULL,        /* socket file or named pipe name */
-		CLIENT_FOUND_ROWS /* connection flags */)) {
-		fprintf(stderr, "mysql_real_connect() failed: '%s'\n", mysql_error(m_mysql));
-		puts("Connect failed\n");
-	}
-	else {
-		puts("Connect OK\n");
-	}
+	
 }
 
 void CDictDatabaseMysql::UninitLibrary()

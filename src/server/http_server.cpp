@@ -58,7 +58,7 @@ private:
     CDictDatabaseJson m_highDict;
 };
 
-CWordTranslateServer::CWordTranslateServer():m_LowDict("middle_school.json"),m_highDict("toefl_dict.json")
+CWordTranslateServer::CWordTranslateServer()
 {
     m_server.config.port = 8080;
 }
@@ -117,7 +117,7 @@ EnglishToChineseReq_t CWordTranslateServer::GetReqFromRequest(Request_SHARED_PTR
 EnglishToChineseRsp_t CWordTranslateServer::CreateRspFromReq(const EnglishToChineseReq_t& req)
 {
     EnglishToChineseRsp_t result;
-    std::string strChinese = m_highDict.GetTranslation(req.m_strEnglish).m_strTranslation;
+    std::string strChinese = m_highDict.GetTranslation(req.m_strEnglish).F_CHINESE;
     if (strChinese.empty())
     {
         result.m_code = 0;
@@ -161,7 +161,7 @@ SentenceToWordsRsp_t CWordTranslateServer::TranslateSentence(const EnglishToChin
         else {
             EnglishToChineseData_t elem;
             elem.m_strEnglish = item.first;
-            elem.m_strChinese = m_highDict.GetTranslation(item.first).m_strTranslation;
+            elem.m_strChinese = m_highDict.GetTranslation(item.first).F_CHINESE;
             std::cout << "Engish: " << item.first << "   Chinese: " << elem.m_strChinese << std::endl;
             transResultArray.push_back(elem);   
         }

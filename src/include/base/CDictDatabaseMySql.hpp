@@ -16,4 +16,5 @@ private:
 	void InitLibrary();
 	void UninitLibrary();
 	MYSQL* m_mysql;
+	MysqlDatabaseConfig m_config;
 };
