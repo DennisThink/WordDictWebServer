@@ -61,6 +61,18 @@ private:
 CWordTranslateServer::CWordTranslateServer()
 {
     m_server.config.port = 8080;
+    {
+        JsonDatabaseConfig cfg;
+        cfg.m_jsonFileName = "middle_school.json";
+        cfg.m_nLevel = 4;
+        m_LowDict.SetDatabaseConfig(&cfg);
+    }
+    {
+        JsonDatabaseConfig cfg;
+        cfg.m_jsonFileName = "toefl_dict.json";
+        cfg.m_nLevel = 10;
+        m_highDict.SetDatabaseConfig(&cfg);
+    }
 }
 
 CWordTranslateServer::~CWordTranslateServer()
@@ -159,11 +171,19 @@ SentenceToWordsRsp_t CWordTranslateServer::TranslateSentence(const EnglishToChin
             std::cout << "Word Already Know: " << item.first << std::endl;
         }
         else {
-            EnglishToChineseData_t elem;
-            elem.m_strEnglish = item.first;
-            elem.m_strChinese = m_highDict.GetTranslation(item.first).F_CHINESE;
-            std::cout << "Engish: " << item.first << "   Chinese: " << elem.m_strChinese << std::endl;
-            transResultArray.push_back(elem);   
+            if (m_highDict.IsWordInDict(item.first)) 
+            {
+                EnglishToChineseData_t elem;
+                elem.m_strEnglish = item.first;
+                elem.m_strChinese = m_highDict.GetTranslation(item.first).F_CHINESE;
+                std::cout << "Engish: " << item.first << "   Chinese: " << elem.m_strChinese << std::endl;
+                transResultArray.push_back(elem);
+            }
+            else
+            {
+                std::cout << "CAN NOT TRANS EN: " << item.first <<std::endl;
+            }
+
         }
     }
     result.m_code = 0;
