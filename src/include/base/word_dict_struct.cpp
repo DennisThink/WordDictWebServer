@@ -34,3 +34,11 @@ DictLineElem_t::DictLineElem_t()
     m_strDetail.clear();
     m_strAudio.clear();
 }
+
+std::ostream& operator<<(std::ostream& os,const T_ENGLISH_CHINSE_TRANS& p)
+{
+    os << "EN: " << p.F_ENGLISH <<
+        "  CN: " << p.F_CHINESE <<
+        " LEVEL: " << p.F_LEVEL << std::endl;
+    return os;
+}

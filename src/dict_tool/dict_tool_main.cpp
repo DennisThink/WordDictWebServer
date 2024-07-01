@@ -62,10 +62,66 @@ int MysqlDemo(int argc, char* argv[])
     return 0;
 }
 
+int SaveWordsFromJsonToMysql(int argc, char* argv[])
+{
+    CDictDatabaseJson JsonDatabaseUtil;
+    {
+        JsonDatabaseConfig cfg;
+        cfg.m_jsonFileName = "middle_school.json";
+        cfg.m_nLevel = 10;
+        JsonDatabaseUtil.SetDatabaseConfig(&cfg);
+    }
+    CDictDatabaseMysql mysqlDatabaseUtil;
+    {
+        MysqlDatabaseConfig cfg;
+        cfg.m_strMysqlServerIp = "localhost";
+        cfg.m_nMysqlServerPort = 3306;
+        cfg.m_strMysqlUserName = "test";
+        cfg.m_strMysqlPassoword = "test@1990";
+        cfg.m_strDataBase = "en_cn_dict";
+        mysqlDatabaseUtil.SetDatabaseConfig(&cfg);
+    }
+    auto allWords = JsonDatabaseUtil.GetAllWords();
+    for (auto item : allWords) {
+        std::cout << item;
+        mysqlDatabaseUtil.InsertWordElem(item);
+    }
+
+    return 0;
+}
+
+int SaveWordsFromJsonToSqlite(int argc, char* argv[])
+{
+    CDictDatabaseJson JsonDatabaseUtil;
+    {
+        JsonDatabaseConfig cfg;
+        cfg.m_jsonFileName = "middle_school.json";
+        cfg.m_nLevel = 10;
+        JsonDatabaseUtil.SetDatabaseConfig(&cfg);
+    }
+    CDictDatabaseSqlite sqliteDatabaseUtil;
+    {
+        SqliteDatabaseConfig cfg;
+        cfg.m_sqliteFileName = "ecdict_test.db";
+
+
+        sqliteDatabaseUtil.SetDatabaseConfig(&cfg);
+      
+    }
+    auto allWords = JsonDatabaseUtil.GetAllWords();
+    for (auto item : allWords) {
+        std::cout << item;
+        sqliteDatabaseUtil.InsertWordElem(item);
+    }
+
+    return 0;
+}
 int main(int argc, char* argv[])
 {
-    JsonDemo(argc, argv);
-    SqliteDemo(argc, argv);
+    //SaveWordsFromJsonToMysql(argc, argv);
+    SaveWordsFromJsonToSqlite(argc, argv);
+    //JsonDemo(argc, argv);
+    //SqliteDemo(argc, argv);
     //MysqlDemo(argc, argv);
     return 0;
 }

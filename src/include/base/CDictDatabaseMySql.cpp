@@ -85,8 +85,8 @@ bool CDictDatabaseMysql::InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem)
 			F_ENGLISH,
 			F_CHINESE,
 			F_LEVEL) VALUES('%s','%s',%d);)";
-	char buff[256] = { 0 };
-	sprintf(buff, strCreateSql.c_str(), elem.F_ENGLISH.c_str(), elem.F_CHINESE.c_str(), 1);
+	char buff[512] = { 0 };
+	sprintf(buff, strCreateSql.c_str(), elem.F_ENGLISH.c_str(), elem.F_CHINESE.c_str(), elem.F_LEVEL);
 	std::cout << buff << std::endl;
 	int nResult = mysql_query(m_mysql, buff);
 	mysql_commit(m_mysql);
@@ -106,7 +106,7 @@ void CDictDatabaseMysql::InitTables()
 			std::string strCreateSql = R"(CREATE TABLE T_ENGLISH_CHINESE(
 			F_ID int NOT NULL AUTO_INCREMENT,
 			F_ENGLISH varchar(64),
-			F_CHINESE varchar(128),
+			F_CHINESE varchar(512),
 			F_LEVEL int,
 			PRIMARY KEY(F_ID)
 			); )";

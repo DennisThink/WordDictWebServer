@@ -63,8 +63,8 @@ bool CDictDatabaseJson::SetDatabaseConfig(const DataBaseConfigInterface* cfg)
 	if ((nullptr != cfg) && 
 		(NULL != cfg))
 	{
-		JsonDatabaseConfig pConfig = *(JsonDatabaseConfig*)(cfg);
-		InitDatabase(pConfig.m_jsonFileName);
+		m_cfg = *(JsonDatabaseConfig*)(cfg);
+		InitDatabase(m_cfg.m_jsonFileName);
 		return true;
 	}
 	return false;
@@ -79,7 +79,7 @@ std::vector<T_ENGLISH_CHINSE_TRANS> CDictDatabaseJson::GetAllWords()
 			T_ENGLISH_CHINSE_TRANS elem;
 			elem.F_ENGLISH = wordItem.first;
 			elem.F_CHINESE = wordItem.second;
-			elem.F_LEVEL = 1;
+			elem.F_LEVEL = m_cfg.m_nLevel;
 			retResult.push_back(elem);
 		}
 	}

@@ -61,6 +61,7 @@ struct SqliteDatabaseConfig :public DataBaseConfigInterface {
 
 struct JsonDatabaseConfig : public DataBaseConfigInterface {
     std::string m_jsonFileName;
+    int m_nLevel;
 };
 
 struct MysqlDatabaseConfig : public DataBaseConfigInterface {
@@ -80,6 +81,7 @@ struct T_ENGLISH_CHINSE_TRANS
     std::string F_CHINESE;
     int         F_LEVEL;
 };
+std::ostream& operator<<(std::ostream& os,const T_ENGLISH_CHINSE_TRANS& p);
 
 struct T_WORD_REQUENCY {
     std::string F_ENGLISH;

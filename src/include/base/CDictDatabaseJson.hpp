@@ -18,5 +18,6 @@ protected:
 	void InitDatabase(const std::string jsonFile);
 	std::string ToLower(const std::string& strOld);
 	std::map<std::string, std::string> m_mapWords[26];
+	JsonDatabaseConfig m_cfg;
 };
 #endif

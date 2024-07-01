@@ -84,6 +84,7 @@ bool CDictDatabaseSqlite::InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem)
 
 void CDictDatabaseSqlite::DatabaseInit(const std::string strFileName)
 {
+    g_db = nullptr;
     try
     {
         g_db = std::make_shared<SQLite::Database>(strFileName, SQLite::OPEN_READWRITE);
