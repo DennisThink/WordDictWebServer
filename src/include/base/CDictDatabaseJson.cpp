@@ -86,6 +86,36 @@ std::vector<T_ENGLISH_CHINSE_TRANS> CDictDatabaseJson::GetAllWords()
 	return retResult;
 }
 
+bool CDictDatabaseJson::InsertKnownWord(const std::string strWord, const std::string strToken)
+{
+	return false;
+}
+
+bool CDictDatabaseJson::DeleteKnownWord(const std::string strWord, const std::string strToken)
+{
+	return false;
+}
+
+
+bool CDictDatabaseJson::IsKnownWord(const std::string strWord, const std::string strToken)
+{
+	return false;
+}
+
+bool CDictDatabaseJson::InsertUnKnownWord(const std::string strWord, const std::string strToken)
+{
+	return false;
+}
+
+bool CDictDatabaseJson::DeleteUnKnownWord(const std::string strWord, const std::string strToken)
+{
+	return false;
+}
+
+bool CDictDatabaseJson::IsUnKnownWord(const std::string strWord, const std::string strToken)
+{
+	return false;
+}
 
 void CDictDatabaseJson::InitDatabase(const std::string strJsonFile)
 {

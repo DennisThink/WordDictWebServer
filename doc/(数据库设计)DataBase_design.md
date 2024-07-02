@@ -36,3 +36,36 @@ CREATE TABLE T_WORD_FREQUENCY(
 );
 ```
 
+3. 未知单词表
+
+|字段名|字段类型|含义|备注|
+|----|----|---|------|
+|F_ID|INT|唯一标识，自增|
+|F_ENGLISH|varchar(64)|英文单词|
+|F_TOKEN|varchar(64)|用来标识用户|
+```SQL
+CREATE TABLE T_UNKNOWN_WORDS(
+    F_ID int NOT NULL AUTO_INCREMENT,
+    F_ENGISH varchar(64),
+    F_TOKEN varchar(128),
+    PRIMARY KEY (F_ID)
+)
+```
+
+
+4. 已知单词表
+
+|字段名|字段类型|含义|备注|
+|----|----|---|------|
+|F_ID|INT|唯一标识，自增|
+|F_ENGLISH|varchar(64)|英文单词|
+|F_TOKEN|varchar(64)|用来标识用户|
+
+```SQL
+CREATE TABLE T_KNOWN_WORDS(
+    F_ID int NOT NULL AUTO_INCREMENT,
+    F_ENGISH varchar(64),
+    F_TOKEN varchar(128),
+    PRIMARY KEY (F_ID)
+)
+```

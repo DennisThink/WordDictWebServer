@@ -48,6 +48,37 @@ T_ENGLISH_CHINSE_TRANS CDictDatabaseSqlite::GetTranslation(const std::string str
 	return result;
 }
 
+bool CDictDatabaseSqlite::InsertKnownWord(const std::string strWord, const std::string strToken)
+{
+    return false;
+}
+
+bool CDictDatabaseSqlite::DeleteKnownWord(const std::string strWord, const std::string strToken)
+{
+    return false;
+}
+
+bool CDictDatabaseSqlite::IsKnownWord(const std::string strWord, const std::string strToken)
+{
+    return false;
+}
+
+bool CDictDatabaseSqlite::InsertUnKnownWord(const std::string strWord, const std::string strToken)
+{
+    return false;
+}
+
+bool CDictDatabaseSqlite::DeleteUnKnownWord(const std::string strWord, const std::string strToken)
+{
+    return false;
+}
+
+bool CDictDatabaseSqlite::IsUnKnownWord(const std::string strWord, const std::string strToken)
+{
+    return false;
+}
+
+
 bool CDictDatabaseSqlite::UpdateWordFrequency(const std::string strWord)
 {
     return false;
