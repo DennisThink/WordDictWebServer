@@ -42,5 +42,8 @@ add_executable(DictTool ./dict_tool/dict_tool_main.cpp
 						./include/thirdparty/json11/json11.cpp
 						${SQLITE_CPP_FILE}
 						${SQLITE_FILE})
-
+if(CMAKE_HOST_WIN32)
 target_link_libraries(DictTool mysqlclient.lib)
+else()
+target_link_libraries(DictTool mysqlclient)
+endif()

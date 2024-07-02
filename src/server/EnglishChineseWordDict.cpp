@@ -1,6 +1,6 @@
 #include "EnglishChineseWordDict.h"
 #include "SQLiteCpp/SQLiteCpp.h"
-#include <share.h>
+//#include <share.h>
 #include <memory>
 #include <iostream>
 #include "word_dict_struct.hpp"
