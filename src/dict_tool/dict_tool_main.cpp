@@ -21,6 +21,33 @@ int JsonDemo(int argc, char* argv[])
     if (databaseUtil.IsWordInDict(strEnglish)) {
         databaseUtil.UpdateWordFrequency(strEnglish);
     }
+
+    //add new word to unknown
+    {
+        std::string strToken = "dennisthink@hotmail.com";
+        if (databaseUtil.IsKnownWord(strEnglish,strToken)) {
+            databaseUtil.InsertUnKnownWord(strEnglish, strToken);
+            databaseUtil.DeleteKnownWord(strEnglish, strToken);
+        }
+        else{
+            databaseUtil.DeleteUnKnownWord(strEnglish, strToken);
+            databaseUtil.InsertKnownWord(strEnglish, strToken);
+        }
+    }
+
+    //add new word to know
+    {
+        std::string strToken = "dennisthink@hotmail.com";
+        if (databaseUtil.IsUnKnownWord(strEnglish, strToken)) {
+            databaseUtil.DeleteUnKnownWord(strEnglish, strToken);
+            databaseUtil.InsertKnownWord(strEnglish, strToken);
+        }
+        else
+        {
+            databaseUtil.InsertUnKnownWord(strEnglish, strToken);
+            databaseUtil.DeleteKnownWord(strEnglish, strToken);
+        }
+    }
     return 0;
 }
 
@@ -37,6 +64,34 @@ int SqliteDemo(int argc, char* argv[])
 
     if (databaseUtil.IsWordInDict(strEnglish)) {
         databaseUtil.UpdateWordFrequency(strEnglish);
+    }
+    {
+        //add new word to unknown
+        {
+            std::string strToken = "dennisthink@hotmail.com";
+            if (databaseUtil.IsKnownWord(strEnglish, strToken)) {
+                databaseUtil.InsertUnKnownWord(strEnglish, strToken);
+                databaseUtil.DeleteKnownWord(strEnglish, strToken);
+            }
+            else {
+                databaseUtil.DeleteUnKnownWord(strEnglish, strToken);
+                databaseUtil.InsertKnownWord(strEnglish, strToken);
+            }
+        }
+
+        //add new word to know
+        {
+            std::string strToken = "dennisthink@hotmail.com";
+            if (databaseUtil.IsUnKnownWord(strEnglish, strToken)) {
+                databaseUtil.DeleteUnKnownWord(strEnglish, strToken);
+                databaseUtil.InsertKnownWord(strEnglish, strToken);
+            }
+            else
+            {
+                databaseUtil.InsertUnKnownWord(strEnglish, strToken);
+                databaseUtil.DeleteKnownWord(strEnglish, strToken);
+            }
+        }
     }
     return 0;
 }
@@ -58,6 +113,34 @@ int MysqlDemo(int argc, char* argv[])
 
     if (databaseUtil.IsWordInDict(strEnglish)) {
         databaseUtil.UpdateWordFrequency(strEnglish);
+    }
+    {
+        //add new word to unknown
+        {
+            std::string strToken = "dennisthink@hotmail.com";
+            if (databaseUtil.IsKnownWord(strEnglish, strToken)) {
+                databaseUtil.InsertUnKnownWord(strEnglish, strToken);
+                databaseUtil.DeleteKnownWord(strEnglish, strToken);
+            }
+            else {
+                databaseUtil.DeleteUnKnownWord(strEnglish, strToken);
+                databaseUtil.InsertKnownWord(strEnglish, strToken);
+            }
+        }
+
+        //add new word to know
+        {
+            std::string strToken = "dennisthink@hotmail.com";
+            if (databaseUtil.IsUnKnownWord(strEnglish, strToken)) {
+                databaseUtil.DeleteUnKnownWord(strEnglish, strToken);
+                databaseUtil.InsertKnownWord(strEnglish, strToken);
+            }
+            else
+            {
+                databaseUtil.InsertUnKnownWord(strEnglish, strToken);
+                databaseUtil.DeleteKnownWord(strEnglish, strToken);
+            }
+        }
     }
     return 0;
 }
@@ -119,9 +202,9 @@ int SaveWordsFromJsonToSqlite(int argc, char* argv[])
 int main(int argc, char* argv[])
 {
     //SaveWordsFromJsonToMysql(argc, argv);
-    SaveWordsFromJsonToSqlite(argc, argv);
-    //JsonDemo(argc, argv);
-    //SqliteDemo(argc, argv);
-    //MysqlDemo(argc, argv);
+    //SaveWordsFromJsonToSqlite(argc, argv);
+    JsonDemo(argc, argv);
+    SqliteDemo(argc, argv);
+    MysqlDemo(argc, argv);
     return 0;
 }

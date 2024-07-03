@@ -3,6 +3,11 @@
 #include "CDictDatabaseInterface.hpp"
 #include <map>
 #include <vector>
+struct WordTokenElem
+{
+	std::string m_strWord;
+	std::string m_strToken;
+};
 class CDictDatabaseJson :public CDictDatabaseInterface
 {
 public:
@@ -28,6 +33,8 @@ protected:
 	void InitDatabase(const std::string jsonFile);
 	std::string ToLower(const std::string& strOld);
 	std::map<std::string, std::string> m_mapWords[26];
+	std::vector<WordTokenElem> m_knownWords;
+	std::vector<WordTokenElem> m_unKnownWords;
 	JsonDatabaseConfig m_cfg;
 };
 #endif

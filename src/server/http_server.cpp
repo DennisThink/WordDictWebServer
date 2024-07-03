@@ -149,29 +149,57 @@ EnglishToChineseRsp_t CWordTranslateServer::CreateRspFromReq(const EnglishToChin
     return result;
 }
 
+/*
+* (1) 收到整个英语句子。
+(2) 拆分为多个单词。
+(3) 确定改单词是否需要翻译
+(3.1) 需要翻译，则翻译为汉语
+(3.2) 不需要翻译，跳过
+(4) 返回所有的翻译结果
+
+*/
 SentenceToWordsRsp_t CWordTranslateServer::TranslateSentence(const EnglishToChineseReq_t& req)
 {
     SentenceToWordsRsp_t result;
     std::vector<EnglishToChineseData_t> transResultArray;
-    std::map<std::string, int> words;
+ 
     std::string strSentence = req.m_strEnglish;
     std::size_t startIndex = 0;
     std::size_t endIndex = 0;
     startIndex = endIndex;
     std::cout << "Sentence:  " << strSentence << std::endl;
-    while(endIndex != std::string::npos) {
-        endIndex = strSentence.find_first_of(" ", startIndex);
-        std::string word = strSentence.substr(startIndex, endIndex - startIndex);
-        std::cout << "Word:  "<<word << std::endl;
-        words.insert({ word,1 });
-        startIndex = endIndex+1;
-    }
-    for (auto item : words) {
-        if (m_LowDict.IsWordInDict(item.first)) {
-            std::cout << "Word Already Know: " << item.first << std::endl;
+    
+    std::map<std::string, int> words;
+    {
+
+        while (endIndex != std::string::npos) {
+            endIndex = strSentence.find_first_of(" ", startIndex);
+            std::string word = strSentence.substr(startIndex, endIndex - startIndex);
+            std::cout << "Word:  " << word << std::endl;
+            words.insert({ word,1 });
+            startIndex = endIndex + 1;
         }
-        else {
-            if (m_highDict.IsWordInDict(item.first)) 
+    }
+
+    bool bNeedTranslat = false;
+    for (auto item : words) {
+        bNeedTranslat = false;
+        //Need Translate
+        {
+            if (m_LowDict.IsWordInDict(item.first))
+            {
+                if (m_LowDict.IsUnKnownWord(item.first, req.m_strToken))
+                {
+                    if (m_highDict.IsWordInDict(item.first))
+                    {
+                        bNeedTranslat = true;
+                    }
+                }
+            }
+        }
+        //Translate
+        {
+            if (bNeedTranslat)
             {
                 EnglishToChineseData_t elem;
                 elem.m_strEnglish = item.first;
@@ -181,9 +209,8 @@ SentenceToWordsRsp_t CWordTranslateServer::TranslateSentence(const EnglishToChin
             }
             else
             {
-                std::cout << "CAN NOT TRANS EN: " << item.first <<std::endl;
+                std::cout << "CAN NOT TRANS EN: " << item.first << std::endl;
             }
-
         }
     }
     result.m_code = 0;
