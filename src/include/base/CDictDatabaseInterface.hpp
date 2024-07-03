@@ -5,20 +5,26 @@ class CDictDatabaseInterface
 {
 public:
 	CDictDatabaseInterface() {};
-	virtual bool SetDatabaseConfig(const DataBaseConfigInterface* cfg)=0;
 	virtual ~CDictDatabaseInterface() {};
+	virtual bool SetDictDatabaseConfig(const DataBaseConfigInterface* cfg)=0;
 	virtual T_ENGLISH_CHINSE_TRANS GetTranslation(const std::string strWord)=0;
 	virtual bool InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem)=0;
 	virtual bool IsWordInDict(const std::string strWord) = 0;
+};
 
+class CUserWordDatabaseInterface
+{
+public:
+	CUserWordDatabaseInterface() {};
+	virtual ~CUserWordDatabaseInterface() {};
+	virtual bool SetUserWordDatabaseConfig(const DataBaseConfigInterface* cfg) = 0;
 	virtual bool InsertKnownWord(const std::string strWord, const std::string strToken) = 0;
 	virtual bool DeleteKnownWord(const std::string strWord, const std::string strToken) = 0;
-	virtual bool IsKnownWord(const std::string strWord, const std::string strToken)=0;
+	virtual bool IsKnownWord(const std::string strWord, const std::string strToken) = 0;
 
 	virtual bool InsertUnKnownWord(const std::string strWord, const std::string strToken) = 0;
 	virtual bool DeleteUnKnownWord(const std::string strWord, const std::string strToken) = 0;
-	virtual bool IsUnKnownWord(const std::string strWord, const std::string strToken)=0;
-	
-	virtual bool UpdateWordFrequency(const std::string strWord)=0;
+	virtual bool IsUnKnownWord(const std::string strWord, const std::string strToken) = 0;
+	virtual bool UpdateWordFrequency(const std::string strWord) = 0;
 };
 #endif

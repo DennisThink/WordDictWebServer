@@ -10,7 +10,7 @@ CDictDatabaseMysql::~CDictDatabaseMysql()
 	UninitLibrary();
 }
 
-bool CDictDatabaseMysql::InsertKnownWord(const std::string strWord, const std::string strToken)
+bool CUserWordDatabaseMysql::InsertKnownWord(const std::string strWord, const std::string strToken)
 {
 	std::string strCreateSql = R"(INSERT INTO T_KNOWN_WORDS(
 			F_ENGLISH,
@@ -29,7 +29,7 @@ bool CDictDatabaseMysql::InsertKnownWord(const std::string strWord, const std::s
 	return false;
 }
 
-bool CDictDatabaseMysql::DeleteKnownWord(const std::string strWord, const std::string strToken)
+bool CUserWordDatabaseMysql::DeleteKnownWord(const std::string strWord, const std::string strToken)
 {
 	bool bResult = false;
 	std::string strSelect = R"(DELETE FROM T_KNOWN_WORDS WHERE F_ENGLISH="%s" AND F_TOKEN="%s";)";
@@ -64,7 +64,7 @@ bool CDictDatabaseMysql::DeleteKnownWord(const std::string strWord, const std::s
 	return bResult;
 }
 
-bool CDictDatabaseMysql::IsKnownWord(const std::string strWord, const std::string strToken)
+bool CUserWordDatabaseMysql::IsKnownWord(const std::string strWord, const std::string strToken)
 {
 	bool bResult = false;
 	std::string strSelect = R"(SELECT F_ENGLISH,F_TOKEN FROM T_KNOWN_WORDS WHERE F_ENGLISH="%s" AND F_TOKEN="%s";)";
@@ -99,7 +99,7 @@ bool CDictDatabaseMysql::IsKnownWord(const std::string strWord, const std::strin
 	return bResult;
 }
 
-bool CDictDatabaseMysql::InsertUnKnownWord(const std::string strWord, const std::string strToken)
+bool CUserWordDatabaseMysql::InsertUnKnownWord(const std::string strWord, const std::string strToken)
 {
 	std::string strCreateSql = R"(INSERT INTO T_UNKNOWN_WORDS(
 			F_ENGLISH,
@@ -118,7 +118,7 @@ bool CDictDatabaseMysql::InsertUnKnownWord(const std::string strWord, const std:
 	return false;
 }
 
-bool CDictDatabaseMysql::DeleteUnKnownWord(const std::string strWord, const std::string strToken)
+bool CUserWordDatabaseMysql::DeleteUnKnownWord(const std::string strWord, const std::string strToken)
 {
 	bool bResult = false;
 	std::string strSelect = R"(DELETE FROM T_UNKNOWN_WORDS WHERE F_ENGLISH="%s" AND F_TOKEN="%s";)";
@@ -152,7 +152,8 @@ bool CDictDatabaseMysql::DeleteUnKnownWord(const std::string strWord, const std:
 	}
 	return bResult;
 }
-bool CDictDatabaseMysql::IsUnKnownWord(const std::string strWord, const std::string strToken)
+
+bool CUserWordDatabaseMysql::IsUnKnownWord(const std::string strWord, const std::string strToken)
 {
 	bool bResult = false;
 	std::string strSelect = R"(SELECT F_ENGLISH,F_TOKEN FROM T_UNKNOWN_WORDS WHERE F_ENGLISH="%s" AND F_TOKEN="%s";)";
@@ -188,7 +189,7 @@ bool CDictDatabaseMysql::IsUnKnownWord(const std::string strWord, const std::str
 }
 
 
-bool CDictDatabaseMysql::SetDatabaseConfig(const DataBaseConfigInterface* cfg)
+bool CDictDatabaseMysql::SetDictDatabaseConfig(const DataBaseConfigInterface* cfg)
 {
 	if (nullptr != cfg && NULL != cfg)
 	{

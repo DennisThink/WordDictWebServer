@@ -12,7 +12,7 @@ CDictDatabaseSqlite::~CDictDatabaseSqlite()
 
 }
 
-bool CDictDatabaseSqlite::SetDatabaseConfig(const DataBaseConfigInterface* cfg)
+bool CDictDatabaseSqlite::SetDictDatabaseConfig(const DataBaseConfigInterface* cfg)
 {
     if ((NULL != cfg) &&
         (nullptr != cfg)) {
@@ -48,7 +48,7 @@ T_ENGLISH_CHINSE_TRANS CDictDatabaseSqlite::GetTranslation(const std::string str
 	return result;
 }
 
-bool CDictDatabaseSqlite::InsertKnownWord(const std::string strWord, const std::string strToken)
+bool CUserWordDatabaseSqlite::InsertKnownWord(const std::string strWord, const std::string strToken)
 {
     if (!IsKnownWord(strWord, strToken)) {
         std::string strSelectWordTrans = R"(INSERT INTO T_KNOWN_WORDS(F_ENGLISH,F_TOKEN)  VALUES("?","?");)";
@@ -71,7 +71,7 @@ bool CDictDatabaseSqlite::InsertKnownWord(const std::string strWord, const std::
     return true;
 }
 
-bool CDictDatabaseSqlite::DeleteKnownWord(const std::string strWord, const std::string strToken)
+bool CUserWordDatabaseSqlite::DeleteKnownWord(const std::string strWord, const std::string strToken)
 {
     bool bExist = false;
     std::string strSelectWordTrans = R"(DELETE FROM T_KNOWN_WORDS WHERE F_ENGLISH="?" AND F_TOKEN="?";)";
@@ -94,7 +94,7 @@ bool CDictDatabaseSqlite::DeleteKnownWord(const std::string strWord, const std::
     return bExist;
 }
 
-bool CDictDatabaseSqlite::IsKnownWord(const std::string strWord, const std::string strToken)
+bool CUserWordDatabaseSqlite::IsKnownWord(const std::string strWord, const std::string strToken)
 {
     bool bExist = false;
     std::string strSelectWordTrans = R"(SELECT F_ENGLISH FROM T_KNOWN_WORDS WHERE F_ENGLISH="?" AND F_TOKEN="?";)";
@@ -117,7 +117,7 @@ bool CDictDatabaseSqlite::IsKnownWord(const std::string strWord, const std::stri
     return bExist;
 }
 
-bool CDictDatabaseSqlite::InsertUnKnownWord(const std::string strWord, const std::string strToken)
+bool CUserWordDatabaseSqlite::InsertUnKnownWord(const std::string strWord, const std::string strToken)
 {
     if (!IsUnKnownWord(strWord, strToken)) {
         std::string strSelectWordTrans = R"(INSERT INTO T_UNKNOWN_WORDS(F_ENGLISH,F_TOKEN)  VALUES("?","?");)";
@@ -140,7 +140,7 @@ bool CDictDatabaseSqlite::InsertUnKnownWord(const std::string strWord, const std
     return true;
 }
 
-bool CDictDatabaseSqlite::DeleteUnKnownWord(const std::string strWord, const std::string strToken)
+bool CUserWordDatabaseSqlite::DeleteUnKnownWord(const std::string strWord, const std::string strToken)
 {
     bool bExist = false;
     std::string strSelectWordTrans = R"(DELETE FROM T_UNKNOWN_WORDS WHERE F_ENGLISH="?" AND F_TOKEN="?";)";
@@ -163,7 +163,7 @@ bool CDictDatabaseSqlite::DeleteUnKnownWord(const std::string strWord, const std
     return bExist;
 }
 
-bool CDictDatabaseSqlite::IsUnKnownWord(const std::string strWord, const std::string strToken)
+bool CUserWordDatabaseSqlite::IsUnKnownWord(const std::string strWord, const std::string strToken)
 {
     bool bExist = false;
     std::string strSelectWordTrans = R"(SELECT F_ENGLISH FROM T_UNKNOWN_WORDS WHERE F_ENGLISH="?" AND F_TOKEN="?";)";

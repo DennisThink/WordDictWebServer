@@ -58,7 +58,7 @@ bool CDictDatabaseJson::UpdateWordFrequency(const std::string strWord)
 	return false;
 }
 
-bool CDictDatabaseJson::SetDatabaseConfig(const DataBaseConfigInterface* cfg)
+bool CDictDatabaseJson::SetDictDatabaseConfig(const DataBaseConfigInterface* cfg)
 {
 	if ((nullptr != cfg) && 
 		(NULL != cfg))
@@ -86,7 +86,7 @@ std::vector<T_ENGLISH_CHINSE_TRANS> CDictDatabaseJson::GetAllWords()
 	return retResult;
 }
 
-bool CDictDatabaseJson::InsertKnownWord(const std::string strWord, const std::string strToken)
+bool CUserWordDatabaseJson::InsertKnownWord(const std::string strWord, const std::string strToken)
 {
 	bool bHasExist = false;
 	for (auto item : m_knownWords)
@@ -108,7 +108,7 @@ bool CDictDatabaseJson::InsertKnownWord(const std::string strWord, const std::st
 	return true;
 }
 
-bool CDictDatabaseJson::DeleteKnownWord(const std::string strWord, const std::string strToken)
+bool CUserWordDatabaseJson::DeleteKnownWord(const std::string strWord, const std::string strToken)
 {
 	bool bHasExist = false;
 	for (auto item = m_knownWords.begin(); item != m_knownWords.end(); item++)
@@ -123,7 +123,7 @@ bool CDictDatabaseJson::DeleteKnownWord(const std::string strWord, const std::st
 }
 
 
-bool CDictDatabaseJson::IsKnownWord(const std::string strWord, const std::string strToken)
+bool CUserWordDatabaseJson::IsKnownWord(const std::string strWord, const std::string strToken)
 {
 	bool bHasExist = false;
 	for (auto item : m_knownWords)
@@ -137,7 +137,7 @@ bool CDictDatabaseJson::IsKnownWord(const std::string strWord, const std::string
 	return bHasExist;
 }
 
-bool CDictDatabaseJson::InsertUnKnownWord(const std::string strWord, const std::string strToken)
+bool CUserWordDatabaseJson::InsertUnKnownWord(const std::string strWord, const std::string strToken)
 {
 	bool bHasExist = false;
 	for (auto item : m_unKnownWords)
@@ -159,7 +159,7 @@ bool CDictDatabaseJson::InsertUnKnownWord(const std::string strWord, const std::
 	return true;
 }
 
-bool CDictDatabaseJson::DeleteUnKnownWord(const std::string strWord, const std::string strToken)
+bool CUserWordDatabaseJson::DeleteUnKnownWord(const std::string strWord, const std::string strToken)
 {
 	bool bHasExist = false;
 	for (auto item = m_unKnownWords.begin(); item != m_unKnownWords.end(); item++)
@@ -173,7 +173,7 @@ bool CDictDatabaseJson::DeleteUnKnownWord(const std::string strWord, const std::
 	return true;
 }
 
-bool CDictDatabaseJson::IsUnKnownWord(const std::string strWord, const std::string strToken)
+bool CUserWordDatabaseJson::IsUnKnownWord(const std::string strWord, const std::string strToken)
 {
 	bool bHasExist = false;
 	for (auto item : m_unKnownWords)

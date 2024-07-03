@@ -218,6 +218,8 @@ SentenceToWordsRsp_t CWordTranslateServer::TranslateSentence(const EnglishToChin
     result.m_data = transResultArray;
     return result;
 }
+
+
 std::string WordRspToString(const EnglishToChineseRsp_t& rsp)
 {
     json11::Json dataJson = json11::Json::object{
