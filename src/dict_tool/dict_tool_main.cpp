@@ -19,7 +19,6 @@ int JsonDemo(int argc, char* argv[])
     std::cout << "EN: " << trans.F_ENGLISH << "   CN:  " << trans.F_CHINESE << "  LEVEL: " << trans.F_LEVEL << std::endl;
 
     if (databaseUtil.IsWordInDict(strEnglish)) {
-        databaseUtil.UpdateWordFrequency(strEnglish);
     }
 
     /*
