@@ -72,6 +72,15 @@ struct MysqlDatabaseConfig : public DataBaseConfigInterface {
     std::string m_strDataBase;
 };
 
+struct UserWordDatabaseConfig {
+
+};
+
+struct UserWordDatabaseConfigJson :public UserWordDatabaseConfig {
+    std::string m_strKnownWordsFileName;
+    std::string m_strUnKnownWordsFileName;
+};
+
 
 
 struct T_ENGLISH_CHINSE_TRANS

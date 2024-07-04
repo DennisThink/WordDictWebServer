@@ -15,8 +15,8 @@ public:
 	virtual ~CDictDatabaseJson() {};
 	virtual T_ENGLISH_CHINSE_TRANS GetTranslation(const std::string strWord);
 	virtual bool InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem);
+	virtual bool DeleteWordElem(const T_ENGLISH_CHINSE_TRANS& elem);
 	virtual bool IsWordInDict(const std::string strWord);
-	virtual bool UpdateWordFrequency(const std::string strWord);
 	virtual bool SetDictDatabaseConfig(const DataBaseConfigInterface* cfg);
 	std::vector<T_ENGLISH_CHINSE_TRANS> GetAllWords();
 protected:
@@ -30,7 +30,7 @@ protected:
 class CUserWordDatabaseJson :public CUserWordDatabaseInterface
 {
 public:
-	virtual bool SetUserWordDatabaseConfig(const DataBaseConfigInterface* cfg) override;
+	virtual bool SetUserWordDatabaseConfig(const UserWordDatabaseConfig* cfg) override;
 	virtual bool InsertKnownWord(const std::string strWord, const std::string strToken) override;
 	virtual bool DeleteKnownWord(const std::string strWord, const std::string strToken) override;
 	virtual bool IsKnownWord(const std::string strWord, const std::string strToken) override;
@@ -39,7 +39,11 @@ public:
 	virtual bool DeleteUnKnownWord(const std::string strWord, const std::string strToken) override;
 	virtual bool IsUnKnownWord(const std::string strWord, const std::string strToken) override;
 private:
+	void InitArrayFromFile();
+	void SaveArrayToFile();
 	std::vector<WordTokenElem> m_knownWords;
 	std::vector<WordTokenElem> m_unKnownWords;
+private:
+	UserWordDatabaseConfigJson m_config;
 };
 #endif

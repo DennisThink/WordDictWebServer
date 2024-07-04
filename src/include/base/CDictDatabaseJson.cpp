@@ -27,6 +27,15 @@ T_ENGLISH_CHINSE_TRANS CDictDatabaseJson::GetTranslation(const std::string strWo
 }
 bool CDictDatabaseJson::InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem)
 {
+	{
+		std::string strLow = ToLower(elem.F_ENGLISH);
+		std::size_t index = strLow[0] - 'a';
+		if ((0 <= index) &&
+			(index < 26)) {
+			m_mapWords[index].insert({ elem.F_ENGLISH,elem.F_CHINESE });
+			return true;
+		}
+	}
 	return false;
 }
 
@@ -53,11 +62,20 @@ std::string CDictDatabaseJson::ToLower(const std::string& strOld)
 	return strIn;
 }
 
-bool CDictDatabaseJson::UpdateWordFrequency(const std::string strWord)
+
+bool CDictDatabaseJson::DeleteWordElem(const T_ENGLISH_CHINSE_TRANS& elem)
 {
+	{
+		std::string strLow = ToLower(elem.F_ENGLISH);
+		std::size_t index = strLow[0] - 'a';
+		if ((0 <= index) &&
+			(index < 26)) {
+			m_mapWords[index].erase(strLow);
+			return true;
+		}
+	}
 	return false;
 }
-
 bool CDictDatabaseJson::SetDictDatabaseConfig(const DataBaseConfigInterface* cfg)
 {
 	if ((nullptr != cfg) && 
@@ -86,6 +104,16 @@ std::vector<T_ENGLISH_CHINSE_TRANS> CDictDatabaseJson::GetAllWords()
 	return retResult;
 }
 
+
+bool CUserWordDatabaseJson::SetUserWordDatabaseConfig(const UserWordDatabaseConfig* cfg)
+{
+	if ((nullptr != cfg) &&
+		(NULL != cfg))
+	{
+		m_config = *(UserWordDatabaseConfigJson*)(cfg);
+	}
+	return true;
+}
 bool CUserWordDatabaseJson::InsertKnownWord(const std::string strWord, const std::string strToken)
 {
 	bool bHasExist = false;
@@ -187,6 +215,104 @@ bool CUserWordDatabaseJson::IsUnKnownWord(const std::string strWord, const std::
 
 	return bHasExist;
 }
+
+void CUserWordDatabaseJson::InitArrayFromFile()
+{
+
+	{
+		std::ifstream file(m_config.m_strKnownWordsFileName);
+		if (file.is_open()) {
+			std::stringstream buff;
+			buff << file.rdbuf();
+			std::string data(buff.str());
+			std::string strErr;
+			json11::Json dictJson = json11::Json::parse(data.c_str(), strErr);
+			if (strErr.empty()) {
+				if (dictJson.is_array()) {
+					auto jsonArray = dictJson.array_items();
+					for (auto item : jsonArray) {
+						WordTokenElem elem;
+						if (item["english"].is_string())
+						{
+							elem.m_strWord = item["english"].string_value();
+						}
+						if (item["token"].is_string()) 
+						{
+							elem.m_strToken = item["token"].string_value();
+						}
+						m_knownWords.push_back(elem);
+					}
+				}
+			}
+		}
+		else {
+		}
+	}
+
+	{
+		std::ifstream file(m_config.m_strUnKnownWordsFileName);
+		if (file.is_open()) {
+			std::stringstream buff;
+			buff << file.rdbuf();
+			std::string data(buff.str());
+			std::string strErr;
+			json11::Json dictJson = json11::Json::parse(data.c_str(), strErr);
+			if (strErr.empty()) {
+				if (dictJson.is_array()) {
+					auto jsonArray = dictJson.array_items();
+					for (auto item : jsonArray) {
+						WordTokenElem elem;
+						if (item["english"].is_string())
+						{
+							elem.m_strWord = item["english"].string_value();
+						}
+						if (item["token"].is_string())
+						{
+							elem.m_strToken = item["token"].string_value();
+						}
+						m_unKnownWords.push_back(elem);
+					}
+				}
+			}
+		}
+		else {
+		}
+	}
+}
+
+void CUserWordDatabaseJson::SaveArrayToFile()
+{
+	{
+
+		json11::Json::array knownArray;
+		for (auto& item : m_knownWords) {
+			auto elemJson = json11::Json::object{
+				{"english",item.m_strWord},
+				{"token",item.m_strToken}
+			};
+			knownArray.push_back(elemJson);
+		}
+		std::string strDump = json11::Json(knownArray).dump();
+		std::cout << "KnownWords: " << strDump << std::endl;
+	}
+
+	{
+		{
+
+			json11::Json::array knownArray;
+			for (auto& item : m_unKnownWords) {
+				auto elemJson = json11::Json::object{
+					{"english",item.m_strWord},
+					{"token",item.m_strToken}
+				};
+				knownArray.push_back(elemJson);
+			}
+			std::string strDump = json11::Json(knownArray).dump();
+			std::cout << "UnKnownWords: " << strDump << std::endl;
+		}
+	}
+}
+
 
 void CDictDatabaseJson::InitDatabase(const std::string strJsonFile)
 {

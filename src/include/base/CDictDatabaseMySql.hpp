@@ -10,6 +10,7 @@ public:
 	virtual bool InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem) override;
 	virtual bool UpdateWordFrequency(const std::string strWord) ;
 	virtual bool IsWordInDict(const std::string strWord) override;
+	virtual bool DeleteWordElem(const T_ENGLISH_CHINSE_TRANS& elem);
 	bool IsWordInFrequencyTable(const std::string strWord);
 private:
 	void InitTables();

@@ -11,6 +11,7 @@ public:
 	virtual bool InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem);
 	virtual bool IsWordInDict(const std::string strWord);
 	virtual bool UpdateWordFrequency(const std::string strWord);
+	virtual bool DeleteWordElem(const T_ENGLISH_CHINSE_TRANS& elem);
 
 private:
 	void DatabaseInit(const std::string strFileName);
@@ -20,7 +21,7 @@ private:
 class CUserWordDatabaseSqlite :public CUserWordDatabaseInterface
 {
 public:
-	virtual bool SetUserWordDatabaseConfig(const DataBaseConfigInterface* cfg)  override { return false; };
+	virtual bool SetUserWordDatabaseConfig(const UserWordDatabaseConfig* cfg)  override { return false; };
 	virtual bool InsertKnownWord(const std::string strWord, const std::string strToken) override;
 	virtual bool DeleteKnownWord(const std::string strWord, const std::string strToken) override;
 	virtual bool IsKnownWord(const std::string strWord, const std::string strToken) override;

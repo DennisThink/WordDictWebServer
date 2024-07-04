@@ -194,7 +194,46 @@ bool CDictDatabaseSqlite::UpdateWordFrequency(const std::string strWord)
 
 bool CDictDatabaseSqlite::IsWordInDict(const std::string strWord)
 {
-    return false;
+    bool bResult = false;
+    std::string strSelectWordTrans = R"(SELECT F_ENGLISH FROM T_ENGLISH_CHINESE WHERE F_ENGLISH=?;)";
+    if (nullptr != g_db) {
+        try {
+            SQLite::Statement query(*g_db, strSelectWordTrans);
+            query.bind(1, strWord);
+            while (query.executeStep())
+            {
+                bResult = true;
+                break;
+            }
+        }
+        catch (std::exception& ec)
+        {
+            std::cout << "Exception:  " << ec.what() << std::endl;
+        }
+    }
+    return bResult;
+}
+bool CDictDatabaseSqlite::DeleteWordElem(const T_ENGLISH_CHINSE_TRANS& elem)
+{
+    bool bExist = true;
+    std::string strSelectWordTrans = R"(DELETE FROM T_ENGLISH_CHINESE WHERE F_ENGLISH=?;)";
+    if (nullptr != g_db) {
+        try {
+            SQLite::Statement query(*g_db, strSelectWordTrans);
+            query.bind(1, elem.F_ENGLISH);
+            while (query.executeStep())
+            {
+                bExist = true;
+                break;
+            }
+        }
+        catch (std::exception& ec)
+        {
+            std::cout << "Exception:  " << ec.what() << std::endl;
+            bExist = false;
+        }
+    }
+    return true;
 }
 
 bool CDictDatabaseSqlite::InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem)

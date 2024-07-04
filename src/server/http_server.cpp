@@ -65,13 +65,13 @@ CWordTranslateServer::CWordTranslateServer()
         JsonDatabaseConfig cfg;
         cfg.m_jsonFileName = "middle_school.json";
         cfg.m_nLevel = 4;
-        m_LowDict.SetDatabaseConfig(&cfg);
+        m_LowDict.SetDictDatabaseConfig(&cfg);
     }
     {
         JsonDatabaseConfig cfg;
         cfg.m_jsonFileName = "toefl_dict.json";
         cfg.m_nLevel = 10;
-        m_highDict.SetDatabaseConfig(&cfg);
+        m_highDict.SetDictDatabaseConfig(&cfg);
     }
 }
 
@@ -188,13 +188,7 @@ SentenceToWordsRsp_t CWordTranslateServer::TranslateSentence(const EnglishToChin
         {
             if (m_LowDict.IsWordInDict(item.first))
             {
-                if (m_LowDict.IsUnKnownWord(item.first, req.m_strToken))
-                {
-                    if (m_highDict.IsWordInDict(item.first))
-                    {
-                        bNeedTranslat = true;
-                    }
-                }
+
             }
         }
         //Translate

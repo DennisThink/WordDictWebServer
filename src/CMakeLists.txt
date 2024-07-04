@@ -9,6 +9,7 @@ include_directories(./include/thirdparty/sqlite/)
 include_directories(./include/thirdparty/mysql_connector_cpp/)
 include_directories(./include/thirdparty/)
 include_directories(./include/thirdparty/mysqlwin/include/)
+include_directories(./include/thirdparty/doctest/)
 link_directories(./libs/mysql_connector_cpp/)
 
 add_executable(DictWebServer ./server/http_server.cpp 
@@ -32,6 +33,13 @@ link_directories(./libs/mysqllib/lib/)
 add_executable(DictWebClient ./client/http_client.cpp)
 
 
+add_executable(Dict_Test ./dict_test/dict_test_main.cpp
+						./include/base/word_dict_struct.cpp
+						./include/base/CDictDatabaseSqlite.cpp
+						./include/base/CDictDatabaseJson.cpp
+						./include/thirdparty/json11/json11.cpp
+						${SQLITE_CPP_FILE}
+						${SQLITE_FILE})
 
 add_executable(DictTool ./dict_tool/dict_tool_main.cpp 
 						./include/base/dict_tool.cpp 
@@ -46,4 +54,10 @@ if(CMAKE_HOST_WIN32)
 target_link_libraries(DictTool mysqlclient.lib)
 else()
 target_link_libraries(DictTool mysqlclient)
+endif()
+
+if(CMAKE_HOST_WIN32)
+target_link_libraries(Dict_Test mysqlclient.lib)
+else()
+target_link_libraries(Dict_Test mysqlclient)
 endif()
