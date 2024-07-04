@@ -6,12 +6,11 @@ class CDictDatabaseSqlite:public CDictDatabaseInterface
 public:
 	CDictDatabaseSqlite();
 	virtual ~CDictDatabaseSqlite();
-	virtual bool SetDictDatabaseConfig(const DataBaseConfigInterface* cfg);
-	virtual T_ENGLISH_CHINSE_TRANS GetTranslation(const std::string strWord);
-	virtual bool InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem);
-	virtual bool IsWordInDict(const std::string strWord);
-	virtual bool UpdateWordFrequency(const std::string strWord);
-	virtual bool DeleteWordElem(const T_ENGLISH_CHINSE_TRANS& elem);
+	virtual bool SetDictDatabaseConfig(const DataBaseConfigInterface* cfg) override;
+	virtual T_ENGLISH_CHINSE_TRANS GetTranslation(const std::string strWord) override;
+	virtual bool InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem) override;
+	virtual bool IsWordInDict(const std::string strWord) override;
+	virtual bool DeleteWordElem(const T_ENGLISH_CHINSE_TRANS& elem) override;
 
 private:
 	void DatabaseInit(const std::string strFileName);
@@ -29,5 +28,7 @@ public:
 	virtual bool InsertUnKnownWord(const std::string strWord, const std::string strToken) override;
 	virtual bool DeleteUnKnownWord(const std::string strWord, const std::string strToken) override;
 	virtual bool IsUnKnownWord(const std::string strWord, const std::string strToken) override;
+	
+	virtual bool UpdateWordFrequency(const std::string strWord) override;
 };
 #endif

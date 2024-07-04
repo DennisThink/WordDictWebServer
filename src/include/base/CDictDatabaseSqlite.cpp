@@ -163,6 +163,11 @@ bool CUserWordDatabaseSqlite::DeleteUnKnownWord(const std::string strWord, const
     return bExist;
 }
 
+
+bool CUserWordDatabaseSqlite::UpdateWordFrequency(const std::string strWord)
+{
+    return false;
+}
 bool CUserWordDatabaseSqlite::IsUnKnownWord(const std::string strWord, const std::string strToken)
 {
     bool bExist = false;
@@ -184,12 +189,6 @@ bool CUserWordDatabaseSqlite::IsUnKnownWord(const std::string strWord, const std
         }
     }
     return bExist;
-}
-
-
-bool CDictDatabaseSqlite::UpdateWordFrequency(const std::string strWord)
-{
-    return false;
 }
 
 bool CDictDatabaseSqlite::IsWordInDict(const std::string strWord)

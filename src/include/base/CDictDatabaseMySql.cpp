@@ -152,7 +152,10 @@ bool CUserWordDatabaseMysql::DeleteUnKnownWord(const std::string strWord, const 
 	}
 	return bResult;
 }
-
+bool CUserWordDatabaseMysql::UpdateWordFrequency(const std::string strWord)
+{
+	return false;
+}
 bool CUserWordDatabaseMysql::IsUnKnownWord(const std::string strWord, const std::string strToken)
 {
 	bool bResult = false;
@@ -361,12 +364,57 @@ void CDictDatabaseMysql::UninitLibrary()
 	mysql_library_end();
 }
 
-bool CDictDatabaseMysql::UpdateWordFrequency(const std::string strWord)
-{
-	return false;
-}
 
 bool CDictDatabaseMysql::IsWordInDict(const std::string strWord)
 {
-	return false;
+	bool bResult = false;
+	std::string strSelect = R"(SELECT F_ENGLISH FROM T_ENGLISH_CHINESE WHERE F_ENGLISH="%s";)";
+	char buff[256] = { 0 };
+	sprintf(buff, strSelect.c_str(), strWord.c_str());
+	std::cout << "SQL: " << buff << std::endl;
+	{
+		if (mysql_query(m_mysql, buff)) {
+			printf("Query failed: %s\n", mysql_error(m_mysql));
+		}
+		else {
+			MYSQL_RES* result = mysql_store_result(m_mysql);
+
+			if (!result) {
+				printf("Couldn't get results set: %s\n", mysql_error(m_mysql));
+			}
+			else {
+				MYSQL_ROW row;
+				unsigned int num_fields = mysql_num_fields(result);
+				printf("get results set: %s\n", mysql_error(m_mysql));
+				while ((row = mysql_fetch_row(result))) {
+					printf("ROW loop get results set: %s\n", mysql_error(m_mysql));
+					bResult = true;
+					putchar('\n');
+
+					break;
+				}
+
+				mysql_free_result(result);
+			}
+		}
+	}
+	return bResult;
+}
+
+bool CDictDatabaseMysql::DeleteWordElem(const T_ENGLISH_CHINSE_TRANS& elem)
+{
+	bool bResult = false;
+	std::string strSelect = R"(DELETE FROM T_ENGLISH_CHINESE WHERE F_ENGLISH="%s";)";
+	char buff[256] = { 0 };
+	sprintf(buff, strSelect.c_str(), elem.F_ENGLISH.c_str());
+	std::cout << "SQL: " << buff << std::endl;
+	{
+		if (mysql_query(m_mysql, buff)) {
+			printf("Query failed: %s\n", mysql_error(m_mysql));
+		}
+		else {
+			bResult = true;
+		}
+	}
+	return bResult;
 }

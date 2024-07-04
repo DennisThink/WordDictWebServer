@@ -104,6 +104,16 @@ std::vector<T_ENGLISH_CHINSE_TRANS> CDictDatabaseJson::GetAllWords()
 	return retResult;
 }
 
+CUserWordDatabaseJson::CUserWordDatabaseJson()
+{
+
+}
+
+CUserWordDatabaseJson::~CUserWordDatabaseJson()
+{
+
+}
+
 
 bool CUserWordDatabaseJson::SetUserWordDatabaseConfig(const UserWordDatabaseConfig* cfg)
 {
@@ -201,6 +211,10 @@ bool CUserWordDatabaseJson::DeleteUnKnownWord(const std::string strWord, const s
 	return true;
 }
 
+bool CUserWordDatabaseJson::UpdateWordFrequency(const std::string strWord)
+{
+	return false;
+}
 bool CUserWordDatabaseJson::IsUnKnownWord(const std::string strWord, const std::string strToken)
 {
 	bool bHasExist = false;

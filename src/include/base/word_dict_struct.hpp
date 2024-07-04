@@ -81,6 +81,10 @@ struct UserWordDatabaseConfigJson :public UserWordDatabaseConfig {
     std::string m_strUnKnownWordsFileName;
 };
 
+struct UserWordDatabaseConfigSqlite :public UserWordDatabaseConfig {
+    std::string m_strKnownWordsFileName;
+    std::string m_strUnKnownWordsFileName;
+};
 
 
 struct T_ENGLISH_CHINSE_TRANS
