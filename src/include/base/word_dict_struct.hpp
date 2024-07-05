@@ -28,6 +28,22 @@ struct SentenceToWordsRsp_t
     std::string m_strMsg;
     std::vector<EnglishToChineseData_t> m_data;
 };
+
+struct AddWordToKnowReq_t
+{
+    std::string m_strWord;
+    std::string m_strToken;
+};
+
+struct AddWordToKnownRsp_t
+{
+    int m_code;
+    std::string m_strMsg;
+};
+
+
+typedef AddWordToKnowReq_t  AddWordToUnKnownReq_t;
+typedef AddWordToKnownRsp_t AddWordToUnKnownRsp_t;
 /*
 * word,phonetic,definition,translation,pos,collins,oxford,tag,bnc,frq,exchange,detail,audio
 */

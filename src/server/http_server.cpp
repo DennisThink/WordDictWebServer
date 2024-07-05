@@ -45,10 +45,20 @@ protected:
 
     void OnDefaultPost(Response_SHARED_PTR response,
         Request_SHARED_PTR request);
+
+    void OnAddWordToKnow(Response_SHARED_PTR response,
+        Request_SHARED_PTR request);
+
+    void OnAddWordToUnKnow(Response_SHARED_PTR response,
+        Request_SHARED_PTR request);
+
 private:
+    AddWordToKnowReq_t  AddRemoveWordReq(Request_SHARED_PTR request);
     EnglishToChineseReq_t GetReqFromRequest(Request_SHARED_PTR request);
     EnglishToChineseRsp_t CreateRspFromReq(const EnglishToChineseReq_t& req);
     SentenceToWordsRsp_t TranslateSentence(const EnglishToChineseReq_t& req);
+    AddWordToKnownRsp_t  AddWordToKnow(const AddWordToKnowReq_t& req);
+    AddWordToUnKnownRsp_t  AddWordToUnKnown(const AddWordToUnKnownReq_t& req);
     bool MatchUrlMethodAndFunction();
     void ShowRemotePeer(Request_SHARED_PTR request);
 
@@ -56,6 +66,7 @@ private:
     HttpServer m_server;
     CDictDatabaseJson m_LowDict;
     CDictDatabaseJson m_highDict;
+    CUserWordDatabaseJson m_userWordDatabase;
 };
 
 CWordTranslateServer::CWordTranslateServer()
@@ -123,6 +134,25 @@ EnglishToChineseReq_t CWordTranslateServer::GetReqFromRequest(Request_SHARED_PTR
        }
    }
    return result;
+}
+
+AddWordToKnowReq_t CWordTranslateServer::AddRemoveWordReq(Request_SHARED_PTR request)
+{
+    AddWordToKnowReq_t result;
+    {
+        std::string strReq = request->content.string();
+        {
+            std::string strErr;
+            auto resultJson = json11::Json::parse(strReq.c_str(), strErr);
+            if (strErr.empty())
+            {
+                result.m_strToken = resultJson["token"].string_value();
+                result.m_strWord = resultJson["word"].string_value();
+                return result;
+            }
+        }
+    }
+    return result;
 }
 
 
@@ -213,7 +243,49 @@ SentenceToWordsRsp_t CWordTranslateServer::TranslateSentence(const EnglishToChin
     return result;
 }
 
+AddWordToKnownRsp_t  CWordTranslateServer::AddWordToKnow(const AddWordToKnowReq_t& req)
+{
+    AddWordToKnownRsp_t result;
+    if (m_userWordDatabase.IsKnownWord(req.m_strWord, req.m_strToken))
+    {
+        result.m_code = -1;
+        result.m_strMsg = "Already a known word";
+    }
+    else
+    {
+        if (m_userWordDatabase.IsUnKnownWord(req.m_strWord, req.m_strWord))
+        {
+            m_userWordDatabase.DeleteUnKnownWord(req.m_strWord, req.m_strToken);
+        }
+        m_userWordDatabase.InsertKnownWord(req.m_strWord, req.m_strToken);
+        result.m_code = 0;
+        result.m_strMsg = "success";
+    }
 
+    return result;
+}
+
+AddWordToUnKnownRsp_t CWordTranslateServer::AddWordToUnKnown(const AddWordToUnKnownReq_t& req)
+{
+    AddWordToKnownRsp_t result;
+    if (m_userWordDatabase.IsUnKnownWord(req.m_strWord, req.m_strToken))
+    {
+        result.m_code = -1;
+        result.m_strMsg = "Already a unknown word";
+    }
+    else
+    {
+        if (m_userWordDatabase.IsKnownWord(req.m_strWord, req.m_strWord))
+        {
+            m_userWordDatabase.DeleteKnownWord(req.m_strWord, req.m_strToken);
+        }
+        m_userWordDatabase.InsertUnKnownWord(req.m_strWord, req.m_strToken);
+        result.m_code = 0;
+        result.m_strMsg = "success";
+    }
+
+    return result;
+}
 std::string WordRspToString(const EnglishToChineseRsp_t& rsp)
 {
     json11::Json dataJson = json11::Json::object{
@@ -228,6 +300,19 @@ std::string WordRspToString(const EnglishToChineseRsp_t& rsp)
     std::string strRsp = rspJson.dump();
     return strRsp;
 }
+
+
+std::string AddRemoveRspToString(const AddWordToKnownRsp_t& rsp)
+{
+  
+    json11::Json rspJson = json11::Json::object{
+       {"code",rsp.m_code},
+       {"message",rsp.m_strMsg}
+    };
+    std::string strRsp = rspJson.dump();
+    return strRsp;
+}
+
 
 std::string SentenceRspToString(const SentenceToWordsRsp_t& rsp)
 {
@@ -263,6 +348,16 @@ bool CWordTranslateServer::MatchUrlMethodAndFunction()
         Request_SHARED_PTR request) {
             OnEnglishToWordTranslate(response, request);
         };
+    m_server.resource["^/v1/add_word_to_known$"]["POST"] = [this](Response_SHARED_PTR response,
+        Request_SHARED_PTR request) {
+            OnAddWordToKnow(response, request);
+        };
+
+    m_server.resource["^/v1/add_word_to_unknown$"]["POST"] = [this](Response_SHARED_PTR response,
+        Request_SHARED_PTR request) {
+            OnAddWordToUnKnow(response, request);
+        };
+
     m_server.default_resource["GET"] = [this](Response_SHARED_PTR response,
         Request_SHARED_PTR request) {
             OnDefaultGet(response, request);
@@ -334,6 +429,32 @@ void CWordTranslateServer::OnEnglishToWordTranslate(Response_SHARED_PTR response
     *response << "HTTP/1.1 200 OK\r\n"
         << "Content-Length: " << strVersion.length() << "\r\n\r\n"
         << strVersion;
+}
+
+void CWordTranslateServer::OnAddWordToKnow(Response_SHARED_PTR response,
+    Request_SHARED_PTR request)
+{
+    ShowRemotePeer(request);
+    AddWordToKnowReq_t reqData = AddRemoveWordReq(request);
+    auto result = AddWordToKnow(reqData);
+    std::string strVersion = AddRemoveRspToString(result);
+    *response << "HTTP/1.1 200 OK\r\n"
+        << "Content-Length: " << strVersion.length() << "\r\n\r\n"
+        << strVersion;
+    return ;
+}
+
+void CWordTranslateServer::OnAddWordToUnKnow(Response_SHARED_PTR response,
+    Request_SHARED_PTR request)
+{
+    ShowRemotePeer(request);
+    AddWordToKnowReq_t reqData = AddRemoveWordReq(request);
+    auto result = AddWordToUnKnown(reqData);
+    std::string strVersion = AddRemoveRspToString(result);
+    *response << "HTTP/1.1 200 OK\r\n"
+        << "Content-Length: " << strVersion.length() << "\r\n\r\n"
+        << strVersion;
+    return;
 }
 
 int main() {

@@ -81,6 +81,24 @@ std::string CWordTranslateClient::EnglishToChinese(std::string strEnglish)
             std::cout << rsp->content.rdbuf() << std::endl;
         }
     }
+
+    {
+        std::string strReqContent = R"({"token":"dennisthink@hotmail.com","english":"apple"})";
+        auto rsp = client.request("POST", "/v1/add_word_to_known", strReqContent.c_str());
+        if (rsp)
+        {
+            std::cout << rsp->content.rdbuf() << std::endl;
+        }
+    }
+
+    {
+        std::string strReqContent = R"({"token":"dennisthink@hotmail.com","word":"orange"})";
+        auto rsp = client.request("POST", "/v1/add_word_to_unknown", strReqContent.c_str());
+        if (rsp)
+        {
+            std::cout << rsp->content.rdbuf() << std::endl;
+        }
+    }
     //client.io_service->run();
     return "";
 }
