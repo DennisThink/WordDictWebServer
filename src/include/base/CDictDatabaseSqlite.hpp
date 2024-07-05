@@ -20,7 +20,7 @@ private:
 class CUserWordDatabaseSqlite :public CUserWordDatabaseInterface
 {
 public:
-	virtual bool SetUserWordDatabaseConfig(const UserWordDatabaseConfig* cfg)  override { return false; };
+	virtual bool SetUserWordDatabaseConfig(const UserWordDatabaseConfig* cfg)  override { return true; };
 	virtual bool InsertKnownWord(const std::string strWord, const std::string strToken) override;
 	virtual bool DeleteKnownWord(const std::string strWord, const std::string strToken) override;
 	virtual bool IsKnownWord(const std::string strWord, const std::string strToken) override;

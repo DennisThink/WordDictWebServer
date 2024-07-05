@@ -109,7 +109,6 @@ TEST_CASE("UserWordSqlite") {
     {
         CHECK(dataUtil.InsertKnownWord(strWord, strToken));
         CHECK(dataUtil.IsKnownWord(strWord, strToken));
-
     }
 
     if (dataUtil.IsUnKnownWord(strWord, strToken))

@@ -51,7 +51,7 @@ T_ENGLISH_CHINSE_TRANS CDictDatabaseSqlite::GetTranslation(const std::string str
 bool CUserWordDatabaseSqlite::InsertKnownWord(const std::string strWord, const std::string strToken)
 {
     if (!IsKnownWord(strWord, strToken)) {
-        std::string strSelectWordTrans = R"(INSERT INTO T_KNOWN_WORDS(F_ENGLISH,F_TOKEN)  VALUES("?","?");)";
+        std::string strSelectWordTrans = R"(INSERT INTO T_KNOWN_WORDS(F_ENGLISH,F_TOKEN)  VALUES(?,?);)";
         if (nullptr != g_db) {
             try {
                 SQLite::Statement query(*g_db, strSelectWordTrans);
@@ -73,8 +73,8 @@ bool CUserWordDatabaseSqlite::InsertKnownWord(const std::string strWord, const s
 
 bool CUserWordDatabaseSqlite::DeleteKnownWord(const std::string strWord, const std::string strToken)
 {
-    bool bExist = false;
-    std::string strSelectWordTrans = R"(DELETE FROM T_KNOWN_WORDS WHERE F_ENGLISH="?" AND F_TOKEN="?";)";
+    bool bExist = true;
+    std::string strSelectWordTrans = R"(DELETE FROM T_KNOWN_WORDS WHERE F_ENGLISH=? AND F_TOKEN=?;)";
     if (nullptr != g_db) {
         try {
             SQLite::Statement query(*g_db, strSelectWordTrans);
@@ -82,12 +82,13 @@ bool CUserWordDatabaseSqlite::DeleteKnownWord(const std::string strWord, const s
             query.bind(2, strToken);
             while (query.executeStep())
             {
-                bExist = true;
+                
                 break;
             }
         }
         catch (std::exception& ec)
         {
+            bExist = false;
             std::cout << "Exception:  " << ec.what() << std::endl;
         }
     }
@@ -97,7 +98,7 @@ bool CUserWordDatabaseSqlite::DeleteKnownWord(const std::string strWord, const s
 bool CUserWordDatabaseSqlite::IsKnownWord(const std::string strWord, const std::string strToken)
 {
     bool bExist = false;
-    std::string strSelectWordTrans = R"(SELECT F_ENGLISH FROM T_KNOWN_WORDS WHERE F_ENGLISH="?" AND F_TOKEN="?";)";
+    std::string strSelectWordTrans = R"(SELECT F_ENGLISH FROM T_KNOWN_WORDS WHERE F_ENGLISH=? AND F_TOKEN=?;)";
     if (nullptr != g_db) {
         try {
             SQLite::Statement query(*g_db, strSelectWordTrans);
@@ -120,7 +121,7 @@ bool CUserWordDatabaseSqlite::IsKnownWord(const std::string strWord, const std::
 bool CUserWordDatabaseSqlite::InsertUnKnownWord(const std::string strWord, const std::string strToken)
 {
     if (!IsUnKnownWord(strWord, strToken)) {
-        std::string strSelectWordTrans = R"(INSERT INTO T_UNKNOWN_WORDS(F_ENGLISH,F_TOKEN)  VALUES("?","?");)";
+        std::string strSelectWordTrans = R"(INSERT INTO T_UNKNOWN_WORDS(F_ENGLISH,F_TOKEN)  VALUES(?,?);)";
         if (nullptr != g_db) {
             try {
                 SQLite::Statement query(*g_db, strSelectWordTrans);
@@ -142,8 +143,8 @@ bool CUserWordDatabaseSqlite::InsertUnKnownWord(const std::string strWord, const
 
 bool CUserWordDatabaseSqlite::DeleteUnKnownWord(const std::string strWord, const std::string strToken)
 {
-    bool bExist = false;
-    std::string strSelectWordTrans = R"(DELETE FROM T_UNKNOWN_WORDS WHERE F_ENGLISH="?" AND F_TOKEN="?";)";
+    bool bExist = true;
+    std::string strSelectWordTrans = R"(DELETE FROM T_UNKNOWN_WORDS WHERE F_ENGLISH=? AND F_TOKEN=?;)";
     if (nullptr != g_db) {
         try {
             SQLite::Statement query(*g_db, strSelectWordTrans);
@@ -151,12 +152,13 @@ bool CUserWordDatabaseSqlite::DeleteUnKnownWord(const std::string strWord, const
             query.bind(2, strToken);
             while (query.executeStep())
             {
-                bExist = true;
+               
                 break;
             }
         }
         catch (std::exception& ec)
         {
+            bExist = false;
             std::cout << "Exception:  " << ec.what() << std::endl;
         }
     }
@@ -171,7 +173,7 @@ bool CUserWordDatabaseSqlite::UpdateWordFrequency(const std::string strWord)
 bool CUserWordDatabaseSqlite::IsUnKnownWord(const std::string strWord, const std::string strToken)
 {
     bool bExist = false;
-    std::string strSelectWordTrans = R"(SELECT F_ENGLISH FROM T_UNKNOWN_WORDS WHERE F_ENGLISH="?" AND F_TOKEN="?";)";
+    std::string strSelectWordTrans = R"(SELECT F_ENGLISH FROM T_UNKNOWN_WORDS WHERE F_ENGLISH=? AND F_TOKEN=?;)";
     if (nullptr != g_db) {
         try {
             SQLite::Statement query(*g_db, strSelectWordTrans);
