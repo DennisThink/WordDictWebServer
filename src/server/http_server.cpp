@@ -61,11 +61,12 @@ private:
     AddWordToUnKnownRsp_t  AddWordToUnKnown(const AddWordToUnKnownReq_t& req);
     bool MatchUrlMethodAndFunction();
     void ShowRemotePeer(Request_SHARED_PTR request);
+    std::string ToLower(const std::string strOrg);
+    std::string WordTrim(const std::string strOrg);
 
 private:
     HttpServer m_server;
-    CDictDatabaseJson m_LowDict;
-    CDictDatabaseJson m_highDict;
+    CDictDatabaseJson m_dict;
     CUserWordDatabaseJson m_userWordDatabase;
 };
 
@@ -74,15 +75,9 @@ CWordTranslateServer::CWordTranslateServer()
     m_server.config.port = 8080;
     {
         JsonDatabaseConfig cfg;
-        cfg.m_jsonFileName = "middle_school.json";
-        cfg.m_nLevel = 4;
-        m_LowDict.SetDictDatabaseConfig(&cfg);
-    }
-    {
-        JsonDatabaseConfig cfg;
         cfg.m_jsonFileName = "toefl_dict.json";
         cfg.m_nLevel = 10;
-        m_highDict.SetDictDatabaseConfig(&cfg);
+        m_dict.SetDictDatabaseConfig(&cfg);
     }
 }
 
@@ -136,6 +131,25 @@ EnglishToChineseReq_t CWordTranslateServer::GetReqFromRequest(Request_SHARED_PTR
    return result;
 }
 
+std::string CWordTranslateServer::ToLower(const std::string strOrg)
+{
+    std::string strCopy = strOrg;
+    std::transform(strCopy.begin(), strCopy.end(), strCopy.begin(),
+        [](unsigned char c) { return std::tolower(c); });
+    return strCopy;
+}
+
+std::string CWordTranslateServer::WordTrim(const std::string strOrg)
+{
+    std::string strResult;
+    for (auto iter = strOrg.begin(); iter != strOrg.end(); iter++) {
+        if ( ('a' <= *iter) && 
+             (*iter <= 'z')  ) {
+            strResult += *iter;
+        }
+    }
+    return strResult;
+}
 AddWordToKnowReq_t CWordTranslateServer::AddRemoveWordReq(Request_SHARED_PTR request)
 {
     AddWordToKnowReq_t result;
@@ -159,7 +173,7 @@ AddWordToKnowReq_t CWordTranslateServer::AddRemoveWordReq(Request_SHARED_PTR req
 EnglishToChineseRsp_t CWordTranslateServer::CreateRspFromReq(const EnglishToChineseReq_t& req)
 {
     EnglishToChineseRsp_t result;
-    std::string strChinese = m_highDict.GetTranslation(req.m_strEnglish).F_CHINESE;
+    std::string strChinese = m_dict.GetTranslation(req.m_strEnglish).F_CHINESE;
     if (strChinese.empty())
     {
         result.m_code = 0;
@@ -213,12 +227,12 @@ SentenceToWordsRsp_t CWordTranslateServer::TranslateSentence(const EnglishToChin
 
     bool bNeedTranslat = false;
     for (auto item : words) {
-        bNeedTranslat = false;
+        bNeedTranslat = true;
         //Need Translate
         {
-            if (m_LowDict.IsWordInDict(item.first))
+            if (m_userWordDatabase.IsKnownWord(item.first, req.m_strToken))
             {
-
+                bNeedTranslat = false;
             }
         }
         //Translate
@@ -227,7 +241,9 @@ SentenceToWordsRsp_t CWordTranslateServer::TranslateSentence(const EnglishToChin
             {
                 EnglishToChineseData_t elem;
                 elem.m_strEnglish = item.first;
-                elem.m_strChinese = m_highDict.GetTranslation(item.first).F_CHINESE;
+                std::string strLow = ToLower(elem.m_strEnglish);
+                strLow = WordTrim(strLow);
+                elem.m_strChinese = m_dict.GetTranslation(strLow).F_CHINESE;
                 std::cout << "Engish: " << item.first << "   Chinese: " << elem.m_strChinese << std::endl;
                 transResultArray.push_back(elem);
             }
@@ -380,6 +396,7 @@ void CWordTranslateServer::OnVersion(Response_SHARED_PTR response,
 void CWordTranslateServer::OnEnglishToChinese(Response_SHARED_PTR response,
     Request_SHARED_PTR request)
 {
+    std::cout << "OnEnglishToChinese" << std::endl;
     ShowRemotePeer(request);
     
     EnglishToChineseReq_t reqData = GetReqFromRequest(request);
@@ -393,6 +410,7 @@ void CWordTranslateServer::OnEnglishToChinese(Response_SHARED_PTR response,
 void CWordTranslateServer::OnDefaultGet(Response_SHARED_PTR response,
     Request_SHARED_PTR request)
 {
+    std::cout << "OnDefaultGet" << std::endl;
     ShowRemotePeer(request);
     std::string strVersion = "Default Get";
     *response << "HTTP/1.1 200 OK\r\n"
@@ -403,6 +421,7 @@ void CWordTranslateServer::OnDefaultGet(Response_SHARED_PTR response,
 void CWordTranslateServer::OnDefaultPost(Response_SHARED_PTR response,
     Request_SHARED_PTR request)
 {
+    std::cout << "OnDefaultPost" << std::endl;
     ShowRemotePeer(request);
     std::string strVersion = "Default Post";
     *response << "HTTP/1.1 200 OK\r\n"
@@ -422,6 +441,7 @@ void CWordTranslateServer::OnEnglishToChineseMock(Response_SHARED_PTR response,
 void CWordTranslateServer::OnEnglishToWordTranslate(Response_SHARED_PTR response,
     Request_SHARED_PTR request)
 {
+    std::cout << "OnEnglishToWordTranslate" << std::endl;
     ShowRemotePeer(request);
     EnglishToChineseReq_t reqData = GetReqFromRequest(request);
     auto result = TranslateSentence(reqData);
@@ -434,6 +454,7 @@ void CWordTranslateServer::OnEnglishToWordTranslate(Response_SHARED_PTR response
 void CWordTranslateServer::OnAddWordToKnow(Response_SHARED_PTR response,
     Request_SHARED_PTR request)
 {
+    std::cout << "OnAddWordToKnow" << std::endl;
     ShowRemotePeer(request);
     AddWordToKnowReq_t reqData = AddRemoveWordReq(request);
     auto result = AddWordToKnow(reqData);
@@ -447,6 +468,7 @@ void CWordTranslateServer::OnAddWordToKnow(Response_SHARED_PTR response,
 void CWordTranslateServer::OnAddWordToUnKnow(Response_SHARED_PTR response,
     Request_SHARED_PTR request)
 {
+    std::cout << "OnAddWordToUnKnow" << std::endl;
     ShowRemotePeer(request);
     AddWordToKnowReq_t reqData = AddRemoveWordReq(request);
     auto result = AddWordToUnKnown(reqData);
