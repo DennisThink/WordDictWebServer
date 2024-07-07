@@ -1,6 +1,8 @@
 #ifndef _C_DICT_DATA_BASE_INTERFACE_H_
 #define _C_DICT_DATA_BASE_INTERFACE_H_
 #include "word_dict_struct.hpp"
+#include <share.h>
+#include <memory>
 class CDictDatabaseInterface
 {
 public:
@@ -30,4 +32,7 @@ public:
 
 	virtual bool UpdateWordFrequency(const std::string strWord) = 0;
 };
+
+using CDictDataBase_PTR = std::shared_ptr<CDictDatabaseInterface>;
+using CUserWordDataBase_PTR = std::shared_ptr<CUserWordDatabaseInterface>;
 #endif
