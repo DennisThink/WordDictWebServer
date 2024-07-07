@@ -6,6 +6,7 @@
 #include "CDictDatabaseJson.hpp"
 #include "CDictDatabaseSqlite.hpp"
 #include "CDictDatabaseMySql.hpp"
+#include "dict_tool.hpp"
 
 int JsonDemo(int argc, char* argv[])
 {
@@ -200,12 +201,95 @@ int SaveWordsFromJsonToSqlite(int argc, char* argv[])
 
     return 0;
 }
+
+void SaveWordsToMysql()
+{
+    CdictTool tool;
+    auto allWords = tool.GetAllWords("ecdict.csv");
+
+    MysqlDatabaseConfig cfg;
+    cfg.m_strMysqlServerIp = "localhost";
+    cfg.m_nMysqlServerPort = 3306;
+    cfg.m_strMysqlUserName = "test";
+    cfg.m_strMysqlPassoword = "test@1990";
+    cfg.m_strDataBase = "dict_release";
+
+    CDictDatabaseMysql databaseUtil;
+    databaseUtil.SetDictDatabaseConfig(&cfg);
+    std::string strEnglish = "apple";
+    T_ENGLISH_CHINSE_TRANS trans = databaseUtil.GetTranslation("apple");
+    for (auto& item : allWords) {
+        std::cout << item.GetTrans() << std::endl;
+        if (item.m_strTranslation.length() < 128)
+        {
+            T_ENGLISH_CHINSE_TRANS elem;
+            elem.F_ENGLISH = item.m_strWord;
+            elem.F_CHINESE = item.m_strTranslation;
+            elem.F_LEVEL = 1;
+            databaseUtil.InsertWordElem(elem);
+        }
+        else
+        {
+            T_ENGLISH_CHINSE_TRANS elem;
+            elem.F_ENGLISH = item.m_strWord;
+            elem.F_CHINESE = item.m_strTranslation.substr(0, 127);
+            elem.F_LEVEL = 1;
+            databaseUtil.InsertWordElem(elem);
+        }
+    }
+}
+
+void SaveJsonToMysql(const std::string strName, const int level)
+{
+    CDictDatabaseJson JsonDatabaseUtil;
+    {
+        JsonDatabaseConfig cfg;
+        cfg.m_jsonFileName = strName;
+        cfg.m_nLevel = level;
+        JsonDatabaseUtil.SetDictDatabaseConfig(&cfg);
+    }
+    MysqlDatabaseConfig cfg;
+    cfg.m_strMysqlServerIp = "localhost";
+    cfg.m_nMysqlServerPort = 3306;
+    cfg.m_strMysqlUserName = "test";
+    cfg.m_strMysqlPassoword = "test@1990";
+    cfg.m_strDataBase = "json_dict";
+
+    CDictDatabaseMysql databaseUtil;
+    databaseUtil.SetDictDatabaseConfig(&cfg);
+    std::string strEnglish = "apple";
+    T_ENGLISH_CHINSE_TRANS trans = databaseUtil.GetTranslation("apple");
+    auto allWords = JsonDatabaseUtil.GetAllWords();
+    for (auto item : allWords) {
+        std::cout << item << std::endl;
+        if (item.F_CHINESE.length() < 128)
+        {
+            databaseUtil.InsertWordElem(item);
+        }
+        else
+        {
+            item.F_CHINESE = item.F_CHINESE.substr(0, 127);
+            databaseUtil.InsertWordElem(item);
+        }
+    }
+
+}
 int main(int argc, char* argv[])
 {
     //SaveWordsFromJsonToMysql(argc, argv);
     //SaveWordsFromJsonToSqlite(argc, argv);
-    JsonDemo(argc, argv);
-    SqliteDemo(argc, argv);
-    MysqlDemo(argc, argv);
+    //JsonDemo(argc, argv);
+    //SqliteDemo(argc, argv);
+    //MysqlDemo(argc, argv);
+    //SaveWordsToMysql();
+    {
+        SaveJsonToMysql("10-middle-school.json",10);
+        SaveJsonToMysql("15-high-school.json", 15);
+        SaveJsonToMysql("20-CET4-university.json", 20);
+        SaveJsonToMysql("25-CET6-university.json", 25);
+        SaveJsonToMysql("30-Master-Entry.json", 30);
+        SaveJsonToMysql("35-SAT-TEST.json", 35);
+        SaveJsonToMysql("40-toefl-dict.json", 40);
+    }
     return 0;
 }

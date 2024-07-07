@@ -146,8 +146,8 @@ void CdictTool::ReadFileLineByLine(const std::string strFileName)
         // Read each line from the file and store it in the 
         // 'line' variable. 
         while (getline(file, line)) {
-            std::cout << line << std::endl;
-            std::cout << SplitLine(line) << std::endl;
+            //std::cout << line << std::endl;
+            //std::cout << SplitLine(line) << std::endl;
             m_allWords.push_back(SplitLine(line));
         }
 

@@ -266,7 +266,7 @@ bool CDictDatabaseMysql::InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem)
 			F_ENGLISH,
 			F_CHINESE,
 			F_LEVEL) VALUES('%s','%s',%d);)";
-	char buff[512] = { 0 };
+	char buff[1024] = { 0 };
 	sprintf(buff, strCreateSql.c_str(), elem.F_ENGLISH.c_str(), elem.F_CHINESE.c_str(), elem.F_LEVEL);
 	std::cout << buff << std::endl;
 	int nResult = mysql_query(m_mysql, buff);

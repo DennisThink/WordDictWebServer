@@ -14,6 +14,7 @@
 #include "word_dict_struct.hpp"
 #include "EnglishChineseWordDict.h"
 #include "CDictDatabaseJson.hpp"
+#include "CDictDatabaseMySql.hpp"
 #include "json11.hpp"
 
 using HttpServer = SimpleWeb::Server<SimpleWeb::HTTP>;
@@ -66,17 +67,28 @@ private:
 
 private:
     HttpServer m_server;
-    CDictDatabaseJson m_dict;
+    //CDictDatabaseJson m_dict;
+    CDictDatabaseMysql m_dict;
     CUserWordDatabaseJson m_userWordDatabase;
 };
 
 CWordTranslateServer::CWordTranslateServer()
 {
     m_server.config.port = 8080;
-    {
+    /* {
         JsonDatabaseConfig cfg;
         cfg.m_jsonFileName = "toefl_dict.json";
         cfg.m_nLevel = 10;
+        m_dict.SetDictDatabaseConfig(&cfg);
+    }*/
+
+    {
+        MysqlDatabaseConfig cfg;
+        cfg.m_strMysqlServerIp = "localhost";
+        cfg.m_nMysqlServerPort = 3306;
+        cfg.m_strMysqlUserName = "test";
+        cfg.m_strMysqlPassoword = "test@1990";
+        cfg.m_strDataBase = "json_dict";
         m_dict.SetDictDatabaseConfig(&cfg);
     }
 }

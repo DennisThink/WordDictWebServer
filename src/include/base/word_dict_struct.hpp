@@ -63,6 +63,7 @@ struct DictLineElem_t
     std::string m_strDetail;
     std::string m_strAudio;
     DictLineElem_t();
+    std::string GetTrans();
 };
 std::ostream& operator<<(std::ostream& os, DictLineElem_t p);
 

@@ -35,6 +35,11 @@ DictLineElem_t::DictLineElem_t()
     m_strAudio.clear();
 }
 
+std::string DictLineElem_t::GetTrans() {
+    std::string result =  " EN: " + this->m_strWord + " CN: " + this->m_strTranslation;
+    return result;
+}
+
 std::ostream& operator<<(std::ostream& os,const T_ENGLISH_CHINSE_TRANS& p)
 {
     os << "EN: " << p.F_ENGLISH <<
