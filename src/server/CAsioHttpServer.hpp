@@ -53,10 +53,18 @@ protected:
 
     void OnAddWordToUnKnow(Response_SHARED_PTR response,
         Request_SHARED_PTR request);
-
+    //AddWordToKnownRsp_t HandleAddOrRemoveReq(const AddWordToKnowReq_t& req);
+    //EnglishToChineseRsp_t HandleSentenceToWordReq(const EnglishToChineseReq_t& req);
 private:
+    std::string HandleEnglishToChinese(const std::string& strReq);
+    std::string HandleEnglishToWordTranslate(const std::string& strReq);
+    
+    std::string GetReqString(Request_SHARED_PTR request);
+    void WriteRspString(Response_SHARED_PTR rsp, const std::string str);
+
     AddWordToKnowReq_t  AddRemoveWordReq(Request_SHARED_PTR request);
     EnglishToChineseReq_t GetReqFromRequest(Request_SHARED_PTR request);
+    EnglishToChineseReq_t GetReqFromRequest(const std::string& strReq);
     EnglishToChineseRsp_t CreateRspFromReq(const EnglishToChineseReq_t& req);
     SentenceToWordsRsp_t TranslateSentence(const EnglishToChineseReq_t& req);
     AddWordToKnownRsp_t  AddWordToKnow(const AddWordToKnowReq_t& req);

@@ -29,7 +29,11 @@ CAsioHttpServer::~CAsioHttpServer()
 
 void CAsioHttpServer::ShowRemotePeer(Request_SHARED_PTR request)
 {
-    std::cout << "Remote: " << std::endl;
+    if (request)
+    {
+        std::cout << "Remote: " << std::endl;
+    }
+
 }
 
 void CAsioHttpServer::Start()
@@ -46,6 +50,22 @@ void CAsioHttpServer::Start()
         << std::endl;
     server_thread.join();
     return ;
+}
+
+EnglishToChineseReq_t CAsioHttpServer::GetReqFromRequest(const std::string& strReq)
+{
+    EnglishToChineseReq_t result;
+    {
+        std::string strErr;
+        auto resultJson = json11::Json::parse(strReq.c_str(), strErr);
+        if (strErr.empty())
+        {
+            result.m_strToken = resultJson["token"].string_value();
+            result.m_strEnglish = resultJson["english"].string_value();
+            return result;
+        }
+    }
+    return result;
 }
 
 
@@ -326,22 +346,19 @@ void CAsioHttpServer::OnVersion(Response_SHARED_PTR response,
 {
     ShowRemotePeer(request);
     std::string strVersion = "VERSION 0.0.1";
-    *response << "HTTP/1.1 200 OK\r\n"
-        << "Content-Length: " << strVersion.length() << "\r\n\r\n"
-        << strVersion;
+    WriteRspString(response, strVersion);
 }
+
+
 void CAsioHttpServer::OnEnglishToChinese(Response_SHARED_PTR response,
     Request_SHARED_PTR request)
 {
-    std::cout << "OnEnglishToChinese" << std::endl;
     ShowRemotePeer(request);
 
-    EnglishToChineseReq_t reqData = GetReqFromRequest(request);
-    EnglishToChineseRsp_t rspData = CreateRspFromReq(reqData);
-    std::string strRsp = WordRspToString(rspData);
-    *response << "HTTP/1.1 200 OK\r\n"
-        << "Content-Length: " << strRsp.length() << "\r\n\r\n"
-        << strRsp;
+    std::string strReq = GetReqString(request);
+    std::string strRsp = HandleEnglishToChinese(strReq);
+    WriteRspString(response, strRsp);
+
 }
 
 void CAsioHttpServer::OnDefaultGet(Response_SHARED_PTR response,
@@ -380,6 +397,9 @@ void CAsioHttpServer::OnEnglishToWordTranslate(Response_SHARED_PTR response,
 {
     std::cout << "OnEnglishToWordTranslate" << std::endl;
     ShowRemotePeer(request);
+    std::string strReq = GetReqString(request);
+    std::string strRsp = HandleEnglishToWordTranslate(strReq);
+    WriteRspString(response, strRsp);
     EnglishToChineseReq_t reqData = GetReqFromRequest(request);
     auto result = TranslateSentence(reqData);
     std::string strVersion = SentenceRspToString(result);
@@ -402,6 +422,34 @@ void CAsioHttpServer::OnAddWordToKnow(Response_SHARED_PTR response,
     return;
 }
 
+std::string CAsioHttpServer::GetReqString(Request_SHARED_PTR request)
+{
+    std::string strReq = request->content.string();
+    return strReq;
+}
+std::string CAsioHttpServer::HandleEnglishToChinese(const std::string& strReq)
+{
+    EnglishToChineseReq_t reqData = GetReqFromRequest(strReq);
+    EnglishToChineseRsp_t rspData = CreateRspFromReq(reqData);
+    std::string strRsp = WordRspToString(rspData);
+    return strRsp;
+}
+
+void CAsioHttpServer::WriteRspString(Response_SHARED_PTR rsp, const std::string str)
+{
+    *rsp << "HTTP/1.1 200 OK\r\n"
+        << "Content-Length: " << str.length() << "\r\n\r\n"
+        << str;
+}
+
+
+std::string CAsioHttpServer::HandleEnglishToWordTranslate(const std::string& strReq)
+{
+    EnglishToChineseReq_t reqData = GetReqFromRequest(strReq);
+    auto result = TranslateSentence(reqData);
+    std::string strVersion = SentenceRspToString(result);
+    return strVersion;
+}
 void CAsioHttpServer::OnAddWordToUnKnow(Response_SHARED_PTR response,
     Request_SHARED_PTR request)
 {
