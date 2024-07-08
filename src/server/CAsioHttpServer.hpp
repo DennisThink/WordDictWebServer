@@ -39,9 +39,6 @@ protected:
     void OnEnglishToWordTranslate(Response_SHARED_PTR response,
         Request_SHARED_PTR request);
 
-    void OnEnglishToChineseMock(Response_SHARED_PTR response,
-        Request_SHARED_PTR request);
-
     void OnDefaultGet(Response_SHARED_PTR response,
         Request_SHARED_PTR request);
 
@@ -55,20 +52,24 @@ protected:
         Request_SHARED_PTR request);
     //AddWordToKnownRsp_t HandleAddOrRemoveReq(const AddWordToKnowReq_t& req);
     //EnglishToChineseRsp_t HandleSentenceToWordReq(const EnglishToChineseReq_t& req);
-private:
+public:
     std::string HandleEnglishToChinese(const std::string& strReq);
     std::string HandleEnglishToWordTranslate(const std::string& strReq);
-    
-    std::string GetReqString(Request_SHARED_PTR request);
-    void WriteRspString(Response_SHARED_PTR rsp, const std::string str);
-
-    AddWordToKnowReq_t  AddRemoveWordReq(Request_SHARED_PTR request);
-    EnglishToChineseReq_t GetReqFromRequest(Request_SHARED_PTR request);
+    std::string HandleAddWordToKnow(const std::string& strReq);
+    std::string HandleAddWordToUnKnow(const std::string& strReq);
+protected:
+    AddWordToKnowReq_t  AddRemoveWordReq(const std::string& strReq);
     EnglishToChineseReq_t GetReqFromRequest(const std::string& strReq);
     EnglishToChineseRsp_t CreateRspFromReq(const EnglishToChineseReq_t& req);
     SentenceToWordsRsp_t TranslateSentence(const EnglishToChineseReq_t& req);
     AddWordToKnownRsp_t  AddWordToKnow(const AddWordToKnowReq_t& req);
-    AddWordToUnKnownRsp_t  AddWordToUnKnown(const AddWordToUnKnownReq_t& req);
+    AddWordToUnKnownRsp_t AddWordToUnKnown(const AddWordToUnKnownReq_t& req);
+private:
+
+    std::string GetReqString(Request_SHARED_PTR request);
+    void WriteRspString(Response_SHARED_PTR rsp, const std::string str);
+
+
     bool MatchUrlMethodAndFunction();
     void ShowRemotePeer(Request_SHARED_PTR request);
     std::string ToLower(const std::string strOrg);

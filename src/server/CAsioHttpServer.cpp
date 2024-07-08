@@ -69,25 +69,6 @@ EnglishToChineseReq_t CAsioHttpServer::GetReqFromRequest(const std::string& strR
 }
 
 
-EnglishToChineseReq_t CAsioHttpServer::GetReqFromRequest(Request_SHARED_PTR request)
-{
-    EnglishToChineseReq_t result;
-    {
-        std::string strReq = request->content.string();
-        {
-            std::string strErr;
-            auto resultJson = json11::Json::parse(strReq.c_str(), strErr);
-            if (strErr.empty())
-            {
-                result.m_strToken = resultJson["token"].string_value();
-                result.m_strEnglish = resultJson["english"].string_value();
-                return result;
-            }
-        }
-    }
-    return result;
-}
-
 std::string CAsioHttpServer::ToLower(const std::string strOrg)
 {
     std::string strCopy = strOrg;
@@ -107,11 +88,12 @@ std::string CAsioHttpServer::WordTrim(const std::string strOrg)
     }
     return strResult;
 }
-AddWordToKnowReq_t CAsioHttpServer::AddRemoveWordReq(Request_SHARED_PTR request)
+
+
+AddWordToKnowReq_t CAsioHttpServer::AddRemoveWordReq(const std::string& strReq)
 {
     AddWordToKnowReq_t result;
     {
-        std::string strReq = request->content.string();
         {
             std::string strErr;
             auto resultJson = json11::Json::parse(strReq.c_str(), strErr);
@@ -125,7 +107,6 @@ AddWordToKnowReq_t CAsioHttpServer::AddRemoveWordReq(Request_SHARED_PTR request)
     }
     return result;
 }
-
 
 EnglishToChineseRsp_t CAsioHttpServer::CreateRspFromReq(const EnglishToChineseReq_t& req)
 {
@@ -383,15 +364,6 @@ void CAsioHttpServer::OnDefaultPost(Response_SHARED_PTR response,
         << strVersion;
 }
 
-
-void CAsioHttpServer::OnEnglishToChineseMock(Response_SHARED_PTR response,
-    Request_SHARED_PTR request)
-{
-
-}
-
-
-
 void CAsioHttpServer::OnEnglishToWordTranslate(Response_SHARED_PTR response,
     Request_SHARED_PTR request)
 {
@@ -400,12 +372,6 @@ void CAsioHttpServer::OnEnglishToWordTranslate(Response_SHARED_PTR response,
     std::string strReq = GetReqString(request);
     std::string strRsp = HandleEnglishToWordTranslate(strReq);
     WriteRspString(response, strRsp);
-    EnglishToChineseReq_t reqData = GetReqFromRequest(request);
-    auto result = TranslateSentence(reqData);
-    std::string strVersion = SentenceRspToString(result);
-    *response << "HTTP/1.1 200 OK\r\n"
-        << "Content-Length: " << strVersion.length() << "\r\n\r\n"
-        << strVersion;
 }
 
 void CAsioHttpServer::OnAddWordToKnow(Response_SHARED_PTR response,
@@ -413,12 +379,9 @@ void CAsioHttpServer::OnAddWordToKnow(Response_SHARED_PTR response,
 {
     std::cout << "OnAddWordToKnow" << std::endl;
     ShowRemotePeer(request);
-    AddWordToKnowReq_t reqData = AddRemoveWordReq(request);
-    auto result = AddWordToKnow(reqData);
-    std::string strVersion = AddRemoveRspToString(result);
-    *response << "HTTP/1.1 200 OK\r\n"
-        << "Content-Length: " << strVersion.length() << "\r\n\r\n"
-        << strVersion;
+    std::string strReq = GetReqString(request);
+    std::string strRsp = HandleAddWordToKnow(strReq);
+    WriteRspString(response, strRsp);
     return;
 }
 
@@ -450,16 +413,31 @@ std::string CAsioHttpServer::HandleEnglishToWordTranslate(const std::string& str
     std::string strVersion = SentenceRspToString(result);
     return strVersion;
 }
+
+std::string CAsioHttpServer::HandleAddWordToKnow(const std::string& strReq)
+{
+    AddWordToKnowReq_t reqData = AddRemoveWordReq(strReq);
+    auto result = AddWordToKnow(reqData);
+    std::string strVersion = AddRemoveRspToString(result);
+    return strVersion;
+}
+
+std::string CAsioHttpServer::HandleAddWordToUnKnow(const std::string& strReq)
+{
+    AddWordToKnowReq_t reqData = AddRemoveWordReq(strReq);
+    auto result = AddWordToUnKnown(reqData);
+    std::string strVersion = AddRemoveRspToString(result);
+    return strVersion;
+}
+
 void CAsioHttpServer::OnAddWordToUnKnow(Response_SHARED_PTR response,
     Request_SHARED_PTR request)
 {
     std::cout << "OnAddWordToUnKnow" << std::endl;
     ShowRemotePeer(request);
-    AddWordToKnowReq_t reqData = AddRemoveWordReq(request);
-    auto result = AddWordToUnKnown(reqData);
-    std::string strVersion = AddRemoveRspToString(result);
-    *response << "HTTP/1.1 200 OK\r\n"
-        << "Content-Length: " << strVersion.length() << "\r\n\r\n"
-        << strVersion;
+    std::string strReq = GetReqString(request);
+    std::string strRsp = HandleAddWordToUnKnow(strReq);
+    WriteRspString(response, strRsp);
+    
     return;
 }
