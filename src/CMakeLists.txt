@@ -10,6 +10,7 @@ include_directories(./include/thirdparty/mysql_connector_cpp/)
 include_directories(./include/thirdparty/)
 include_directories(./include/thirdparty/mysqlwin/include/)
 include_directories(./include/thirdparty/doctest/)
+include_directories(./include/thirdparty/cpp_http_lib/)
 link_directories(./libs/mysqllib/lib/)
 add_executable(DictWebClient ./client/http_client.cpp)
 add_executable(DictWebServer ./server/http_server.cpp 
@@ -21,6 +22,7 @@ add_executable(DictWebServer ./server/http_server.cpp
 							./include/base/CDictDatabaseJson.cpp
 							./include/base/CDictDatabaseMysql.cpp)
 
+add_executable(HttpServer ./server/cpp_http_main.cpp ./server/CCppHttpLibServer.cpp)
 SET(INC_BASE ./include/)
 SET(SQLITE_CPP_FILE ${INC_BASE}/thirdparty/SQLiteCpp/src/Backup.cpp  
 					${INC_BASE}/thirdparty/SQLiteCpp/src/Column.cpp 
