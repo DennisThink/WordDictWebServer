@@ -20,7 +20,7 @@ add_executable(DictWebServer ./server/http_server.cpp
 							 ./include/base/dict_tool.cpp 
 						     ./include/base/word_dict_struct.cpp
 							./include/base/CDictDatabaseJson.cpp
-							./include/base/CDictDatabaseMysql.cpp
+							./include/base/CDictDatabaseMySql.cpp
 							./server/CHttpServerInterface.cpp)
 
 add_executable(HttpServer ./server/cpp_http_main.cpp 

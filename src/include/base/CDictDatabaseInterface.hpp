@@ -1,7 +1,6 @@
 #ifndef _C_DICT_DATA_BASE_INTERFACE_H_
 #define _C_DICT_DATA_BASE_INTERFACE_H_
 #include "word_dict_struct.hpp"
-#include <share.h>
 #include <memory>
 class CDictDatabaseInterface
 {
