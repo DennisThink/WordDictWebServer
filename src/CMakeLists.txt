@@ -20,9 +20,14 @@ add_executable(DictWebServer ./server/http_server.cpp
 							 ./include/base/dict_tool.cpp 
 						     ./include/base/word_dict_struct.cpp
 							./include/base/CDictDatabaseJson.cpp
-							./include/base/CDictDatabaseMysql.cpp)
+							./include/base/CDictDatabaseMysql.cpp
+							./server/CHttpServerInterface.cpp)
 
-add_executable(HttpServer ./server/cpp_http_main.cpp ./server/CCppHttpLibServer.cpp)
+add_executable(HttpServer ./server/cpp_http_main.cpp 
+                          ./server/CCppHttpLibServer.cpp 
+                          ./server/CHttpServerInterface.cpp
+						  ./include/base/word_dict_struct.cpp
+						  ./include/thirdparty/json11/json11.cpp)
 SET(INC_BASE ./include/)
 SET(SQLITE_CPP_FILE ${INC_BASE}/thirdparty/SQLiteCpp/src/Backup.cpp  
 					${INC_BASE}/thirdparty/SQLiteCpp/src/Column.cpp 

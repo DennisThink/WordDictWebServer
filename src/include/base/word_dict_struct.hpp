@@ -119,5 +119,8 @@ struct T_WORD_REQUENCY {
     int         F_TIMES;
 };
 
-
+std::string WordRspToString(const EnglishToChineseRsp_t& rsp);
+std::string SentenceRspToString(const SentenceToWordsRsp_t& rsp);
+AddWordToKnowReq_t AddRemoveWordReq(const std::string& strReq);
+std::string AddRemoveRspToString(const AddWordToKnownRsp_t& rsp);
 #endif

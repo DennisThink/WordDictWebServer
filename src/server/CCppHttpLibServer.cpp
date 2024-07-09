@@ -30,14 +30,18 @@ void CCppHttpLibServer::OnVersion(const httplib::Request&, httplib::Response& re
 {
 
 }
-void CCppHttpLibServer::OnEnglishToChinese(const httplib::Request&, httplib::Response& res)
+void CCppHttpLibServer::OnEnglishToChinese(const httplib::Request& req, httplib::Response& res)
 {
-
+	std::string strReq = GetReqString(req);
+	std::string strRsp = HandleEnglishToChinese(strReq);
+	WriteRspString(res, strRsp);
 }
 
-void CCppHttpLibServer::OnEnglishToWordTranslate(const httplib::Request&, httplib::Response& res)
+void CCppHttpLibServer::OnEnglishToWordTranslate(const httplib::Request& req, httplib::Response& res)
 {
-
+	std::string strReq = GetReqString(req);
+	std::string strRsp = HandleEnglishToWordTranslate(strReq);
+	WriteRspString(res, strRsp);
 }
 
 void CCppHttpLibServer::OnDefaultGet(const httplib::Request&, httplib::Response& res)
@@ -58,6 +62,16 @@ void CCppHttpLibServer::OnAddWordToKnow(const httplib::Request&, httplib::Respon
 void CCppHttpLibServer::OnAddWordToUnKnow(const httplib::Request&, httplib::Response& res)
 {
 
+}
+
+std::string CCppHttpLibServer::GetReqString(const httplib::Request& req)
+{
+	std::string strRsp = req.body;
+	return strRsp;
+}
+void CCppHttpLibServer::WriteRspString(httplib::Response& res, const std::string strRsp)
+{
+	res.set_content(strRsp, "text/json");
 }
 
 void CCppHttpLibServer::InitUrlRoute()

@@ -1,7 +1,8 @@
 #ifndef _C_CPP_HTTP_LIB_SERVER_H_
 #define _C_CPP_HTTP_LIB_SERVER_H_
+#include "CHttpServerInterface.hpp"
 #include "httplib.h"
-class CCppHttpLibServer
+class CCppHttpLibServer:public CHttpServerInterface
 {
 public:
 	CCppHttpLibServer();
@@ -22,6 +23,9 @@ public:
     void OnAddWordToKnow(const httplib::Request&, httplib::Response& res);
 
     void OnAddWordToUnKnow(const httplib::Request&, httplib::Response& res);
+protected:
+	std::string GetReqString(const httplib::Request& req);
+	void WriteRspString(httplib::Response& res, const std::string strRsp);
 private:
 	httplib::Server m_server;
 };

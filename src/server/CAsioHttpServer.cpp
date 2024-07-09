@@ -140,7 +140,7 @@ EnglishToChineseRsp_t CAsioHttpServer::CreateRspFromReq(const EnglishToChineseRe
 (4) 返回所有的翻译结果
 
 */
-SentenceToWordsRsp_t CAsioHttpServer::TranslateSentence(const EnglishToChineseReq_t& req)
+/*SentenceToWordsRsp_t CAsioHttpServer::TranslateSentence(const EnglishToChineseReq_t& req)
 {
     SentenceToWordsRsp_t result;
     std::vector<EnglishToChineseData_t> transResultArray;
@@ -195,7 +195,7 @@ SentenceToWordsRsp_t CAsioHttpServer::TranslateSentence(const EnglishToChineseRe
     result.m_strMsg = "success";
     result.m_data = transResultArray;
     return result;
-}
+}*/
 
 AddWordToKnownRsp_t  CAsioHttpServer::AddWordToKnow(const AddWordToKnowReq_t& req)
 {
@@ -240,35 +240,13 @@ AddWordToUnKnownRsp_t CAsioHttpServer::AddWordToUnKnown(const AddWordToUnKnownRe
 
     return result;
 }
-std::string WordRspToString(const EnglishToChineseRsp_t& rsp)
-{
-    json11::Json dataJson = json11::Json::object{
-        {"english",rsp.m_data.m_strEnglish},
-        {"chinese",rsp.m_data.m_strChinese}
-    };
-    json11::Json rspJson = json11::Json::object{
-        {"code",rsp.m_code},
-        {"message",rsp.m_strMsg},
-        {"data",dataJson}
-    };
-    std::string strRsp = rspJson.dump();
-    return strRsp;
-}
 
 
-std::string AddRemoveRspToString(const AddWordToKnownRsp_t& rsp)
-{
-
-    json11::Json rspJson = json11::Json::object{
-       {"code",rsp.m_code},
-       {"message",rsp.m_strMsg}
-    };
-    std::string strRsp = rspJson.dump();
-    return strRsp;
-}
 
 
-std::string SentenceRspToString(const SentenceToWordsRsp_t& rsp)
+
+
+/*std::string SentenceRspToString(const SentenceToWordsRsp_t& rsp)
 {
     json11::Json::array dataArray;
     for (auto item : rsp.m_data) {
@@ -285,7 +263,7 @@ std::string SentenceRspToString(const SentenceToWordsRsp_t& rsp)
     };
     std::string strRsp = rspJson.dump();
     return strRsp;
-}
+}*/
 
 bool CAsioHttpServer::MatchUrlMethodAndFunction()
 {
@@ -390,13 +368,6 @@ std::string CAsioHttpServer::GetReqString(Request_SHARED_PTR request)
     std::string strReq = request->content.string();
     return strReq;
 }
-std::string CAsioHttpServer::HandleEnglishToChinese(const std::string& strReq)
-{
-    EnglishToChineseReq_t reqData = GetReqFromRequest(strReq);
-    EnglishToChineseRsp_t rspData = CreateRspFromReq(reqData);
-    std::string strRsp = WordRspToString(rspData);
-    return strRsp;
-}
 
 void CAsioHttpServer::WriteRspString(Response_SHARED_PTR rsp, const std::string str)
 {
@@ -406,21 +377,21 @@ void CAsioHttpServer::WriteRspString(Response_SHARED_PTR rsp, const std::string 
 }
 
 
-std::string CAsioHttpServer::HandleEnglishToWordTranslate(const std::string& strReq)
+/*std::string CAsioHttpServer::HandleEnglishToWordTranslate(const std::string& strReq)
 {
     EnglishToChineseReq_t reqData = GetReqFromRequest(strReq);
     auto result = TranslateSentence(reqData);
     std::string strVersion = SentenceRspToString(result);
     return strVersion;
-}
+}*/
 
-std::string CAsioHttpServer::HandleAddWordToKnow(const std::string& strReq)
+/*std::string CAsioHttpServer::HandleAddWordToKnow(const std::string& strReq)
 {
     AddWordToKnowReq_t reqData = AddRemoveWordReq(strReq);
     auto result = AddWordToKnow(reqData);
     std::string strVersion = AddRemoveRspToString(result);
     return strVersion;
-}
+}*/
 
 std::string CAsioHttpServer::HandleAddWordToUnKnow(const std::string& strReq)
 {
