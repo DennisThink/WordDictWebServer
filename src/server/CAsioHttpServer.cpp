@@ -9,7 +9,7 @@ CAsioHttpServer::CAsioHttpServer()
         m_dict.SetDictDatabaseConfig(&cfg);
     }*/
 
-    {
+    /* {
         MysqlDatabaseConfig cfg;
         cfg.m_strMysqlServerIp = "localhost";
         cfg.m_nMysqlServerPort = 3306;
@@ -17,7 +17,7 @@ CAsioHttpServer::CAsioHttpServer()
         cfg.m_strMysqlPassoword = "test@1990";
         cfg.m_strDataBase = "json_dict";
         m_dict.SetDictDatabaseConfig(&cfg);
-    }
+    }*/
 }
 
 
@@ -52,7 +52,7 @@ void CAsioHttpServer::Start()
     return ;
 }
 
-EnglishToChineseReq_t CAsioHttpServer::GetReqFromRequest(const std::string& strReq)
+/*EnglishToChineseReq_t CAsioHttpServer::GetReqFromRequest(const std::string& strReq)
 {
     EnglishToChineseReq_t result;
     {
@@ -66,17 +66,19 @@ EnglishToChineseReq_t CAsioHttpServer::GetReqFromRequest(const std::string& strR
         }
     }
     return result;
-}
+}*/
 
 
-std::string CAsioHttpServer::ToLower(const std::string strOrg)
+/*std::string CAsioHttpServer::ToLower(const std::string strOrg)
 {
     std::string strCopy = strOrg;
     std::transform(strCopy.begin(), strCopy.end(), strCopy.begin(),
         [](unsigned char c) { return std::tolower(c); });
     return strCopy;
-}
+}*/
 
+
+/* 
 std::string CAsioHttpServer::WordTrim(const std::string strOrg)
 {
     std::string strResult;
@@ -88,9 +90,9 @@ std::string CAsioHttpServer::WordTrim(const std::string strOrg)
     }
     return strResult;
 }
+*/
 
-
-AddWordToKnowReq_t CAsioHttpServer::AddRemoveWordReq(const std::string& strReq)
+/*AddWordToKnowReq_t CAsioHttpServer::AddRemoveWordReq(const std::string& strReq)
 {
     AddWordToKnowReq_t result;
     {
@@ -106,9 +108,9 @@ AddWordToKnowReq_t CAsioHttpServer::AddRemoveWordReq(const std::string& strReq)
         }
     }
     return result;
-}
+}*/
 
-EnglishToChineseRsp_t CAsioHttpServer::CreateRspFromReq(const EnglishToChineseReq_t& req)
+/*EnglishToChineseRsp_t CAsioHttpServer::CreateRspFromReq(const EnglishToChineseReq_t& req)
 {
     EnglishToChineseRsp_t result;
     std::string strChinese = m_dict.GetTranslation(req.m_strEnglish).F_CHINESE;
@@ -129,7 +131,7 @@ EnglishToChineseRsp_t CAsioHttpServer::CreateRspFromReq(const EnglishToChineseRe
         std::cout << "SUCCEED  English: " << req.m_strEnglish << "  Chinese: " << strChinese << std::endl;
     }
     return result;
-}
+}*/
 
 /*
 * (1) 收到整个英语句子。
@@ -197,7 +199,7 @@ EnglishToChineseRsp_t CAsioHttpServer::CreateRspFromReq(const EnglishToChineseRe
     return result;
 }*/
 
-AddWordToKnownRsp_t  CAsioHttpServer::AddWordToKnow(const AddWordToKnowReq_t& req)
+/*AddWordToKnownRsp_t  CAsioHttpServer::AddWordToKnow(const AddWordToKnowReq_t& req)
 {
     AddWordToKnownRsp_t result;
     if (m_userWordDatabase.IsKnownWord(req.m_strWord, req.m_strToken))
@@ -217,9 +219,9 @@ AddWordToKnownRsp_t  CAsioHttpServer::AddWordToKnow(const AddWordToKnowReq_t& re
     }
 
     return result;
-}
+}*/
 
-AddWordToUnKnownRsp_t CAsioHttpServer::AddWordToUnKnown(const AddWordToUnKnownReq_t& req)
+/*AddWordToUnKnownRsp_t CAsioHttpServer::AddWordToUnKnown(const AddWordToUnKnownReq_t& req)
 {
     AddWordToKnownRsp_t result;
     if (m_userWordDatabase.IsUnKnownWord(req.m_strWord, req.m_strToken))
@@ -239,7 +241,7 @@ AddWordToUnKnownRsp_t CAsioHttpServer::AddWordToUnKnown(const AddWordToUnKnownRe
     }
 
     return result;
-}
+}*/
 
 
 
@@ -374,31 +376,6 @@ void CAsioHttpServer::WriteRspString(Response_SHARED_PTR rsp, const std::string 
     *rsp << "HTTP/1.1 200 OK\r\n"
         << "Content-Length: " << str.length() << "\r\n\r\n"
         << str;
-}
-
-
-/*std::string CAsioHttpServer::HandleEnglishToWordTranslate(const std::string& strReq)
-{
-    EnglishToChineseReq_t reqData = GetReqFromRequest(strReq);
-    auto result = TranslateSentence(reqData);
-    std::string strVersion = SentenceRspToString(result);
-    return strVersion;
-}*/
-
-/*std::string CAsioHttpServer::HandleAddWordToKnow(const std::string& strReq)
-{
-    AddWordToKnowReq_t reqData = AddRemoveWordReq(strReq);
-    auto result = AddWordToKnow(reqData);
-    std::string strVersion = AddRemoveRspToString(result);
-    return strVersion;
-}*/
-
-std::string CAsioHttpServer::HandleAddWordToUnKnow(const std::string& strReq)
-{
-    AddWordToKnowReq_t reqData = AddRemoveWordReq(strReq);
-    auto result = AddWordToUnKnown(reqData);
-    std::string strVersion = AddRemoveRspToString(result);
-    return strVersion;
 }
 
 void CAsioHttpServer::OnAddWordToUnKnow(Response_SHARED_PTR response,

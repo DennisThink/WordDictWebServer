@@ -20,6 +20,7 @@ public:
 	EnglishToChineseRsp_t CreateRspFromReq(const EnglishToChineseReq_t& req);
 	SentenceToWordsRsp_t TranslateSentence(const EnglishToChineseReq_t& req);
 	AddWordToKnownRsp_t  AddWordToKnow(const AddWordToKnowReq_t& req);
+	AddWordToUnKnownRsp_t AddWordToUnKnown(const AddWordToUnKnownReq_t& req);
 protected:
 	std::string ToLower(const std::string strOrg);
 	std::string WordTrim(const std::string strOrg);

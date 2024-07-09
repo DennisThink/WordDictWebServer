@@ -34,8 +34,38 @@ std::string CHttpServerInterface::HandleAddWordToKnow(const std::string& strReq)
 
 std::string CHttpServerInterface::HandleAddWordToUnKnow(const std::string& strReq)
 {
-    return "";
+    AddWordToKnowReq_t reqData = AddRemoveWordReq(strReq);
+    auto result = AddWordToUnKnown(reqData);
+    std::string strVersion = AddRemoveRspToString(result);
+    return strVersion;
 }
+
+
+AddWordToUnKnownRsp_t CHttpServerInterface::AddWordToUnKnown(const AddWordToUnKnownReq_t& req)
+{
+    AddWordToKnownRsp_t result;
+    if (m_userWord && m_userWord->IsUnKnownWord(req.m_strWord, req.m_strToken))
+    {
+        result.m_code = -1;
+        result.m_strMsg = "Already a unknown word";
+    }
+    else
+    {
+        if (m_userWord && m_userWord->IsKnownWord(req.m_strWord, req.m_strWord))
+        {
+            m_userWord->DeleteKnownWord(req.m_strWord, req.m_strToken);
+        }
+        if (m_userWord)
+        {
+            m_userWord->InsertUnKnownWord(req.m_strWord, req.m_strToken);
+        }
+        result.m_code = 0;
+        result.m_strMsg = "success";
+    }
+
+    return result;
+}
+
 AddWordToKnownRsp_t  CHttpServerInterface::AddWordToKnow(const AddWordToKnowReq_t& req)
 {
     AddWordToKnownRsp_t result;
@@ -50,7 +80,10 @@ AddWordToKnownRsp_t  CHttpServerInterface::AddWordToKnow(const AddWordToKnowReq_
         {
             m_userWord->DeleteUnKnownWord(req.m_strWord, req.m_strToken);
         }
-        m_userWord->InsertKnownWord(req.m_strWord, req.m_strToken);
+        if (m_userWord)
+        {
+            m_userWord->InsertKnownWord(req.m_strWord, req.m_strToken);
+        }
         result.m_code = 0;
         result.m_strMsg = "success";
     }
