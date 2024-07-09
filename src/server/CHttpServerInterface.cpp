@@ -7,6 +7,11 @@ CHttpServerInterface::CHttpServerInterface()
     m_dict = nullptr;
     m_userWord = nullptr;
 }
+void CHttpServerInterface::SetDictAndUserWord(const CDictDataBase_PTR pDict, const CUserWordDataBase_PTR pWord)
+{
+    m_dict = pDict;
+    m_userWord = pWord;
+}
 
 std::string CHttpServerInterface::HandleEnglishToChinese(const std::string& strReq)
 {

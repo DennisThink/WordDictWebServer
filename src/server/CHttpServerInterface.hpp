@@ -6,8 +6,7 @@ class CHttpServerInterface
 public:
 	CHttpServerInterface();
 	virtual ~CHttpServerInterface() {};
-	void SetDictAndUserWord(const CDictDataBase_PTR pDict, const CUserWordDataBase_PTR pWord) {
-	}
+	void SetDictAndUserWord(const CDictDataBase_PTR pDict, const CUserWordDataBase_PTR pWord);
 	virtual void Start() = 0;
 public:
 	std::string HandleEnglishToChinese(const std::string& strReq);
