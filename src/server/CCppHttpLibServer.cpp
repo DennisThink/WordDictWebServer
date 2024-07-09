@@ -54,14 +54,18 @@ void CCppHttpLibServer::OnDefaultPost(const httplib::Request&, httplib::Response
 
 }
 
-void CCppHttpLibServer::OnAddWordToKnow(const httplib::Request&, httplib::Response& res)
+void CCppHttpLibServer::OnAddWordToKnow(const httplib::Request& req, httplib::Response& res)
 {
-
+	std::string strReq = GetReqString(req);
+	std::string strRsp = HandleAddWordToKnow(strReq);
+	WriteRspString(res, strRsp);
 }
 
-void CCppHttpLibServer::OnAddWordToUnKnow(const httplib::Request&, httplib::Response& res)
+void CCppHttpLibServer::OnAddWordToUnKnow(const httplib::Request& req, httplib::Response& res)
 {
-
+	std::string strReq = GetReqString(req);
+	std::string strRsp = HandleAddWordToUnKnow(strReq);
+	WriteRspString(res, strRsp);
 }
 
 std::string CCppHttpLibServer::GetReqString(const httplib::Request& req)
