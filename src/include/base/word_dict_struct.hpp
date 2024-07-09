@@ -103,6 +103,14 @@ struct UserWordDatabaseConfigSqlite :public UserWordDatabaseConfig {
     std::string m_strUnKnownWordsFileName;
 };
 
+struct UserWordDatabaseConfigMysql :public UserWordDatabaseConfig {
+    std::string m_strMysqlServerIp;
+    int m_nMysqlServerPort;
+    std::string m_strMysqlUserName;
+    std::string m_strMysqlPassoword;
+    std::string m_strDataBase;
+};
+
 
 struct T_ENGLISH_CHINSE_TRANS
 {

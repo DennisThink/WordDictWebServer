@@ -21,6 +21,8 @@ private:
 class CUserWordDatabaseMysql :public CUserWordDatabaseInterface
 {
 public:
+	CUserWordDatabaseMysql();
+	virtual ~CUserWordDatabaseMysql();
 	virtual bool InsertKnownWord(const std::string strWord, const std::string strToken) override;
 	virtual bool DeleteKnownWord(const std::string strWord, const std::string strToken) override;
 	virtual bool IsKnownWord(const std::string strWord, const std::string strToken) override;
@@ -29,6 +31,11 @@ public:
 	virtual bool DeleteUnKnownWord(const std::string strWord, const std::string strToken) override;
 	virtual bool IsUnKnownWord(const std::string strWord, const std::string strToken) override;
 	virtual bool UpdateWordFrequency(const std::string strWord) override;
+	virtual bool SetUserWordDatabaseConfig(const UserWordDatabaseConfig* cfg) override;
 private:
+	void InitTables();
+	void InitLibrary();
+	void UninitLibrary();
 	MYSQL* m_mysql;
+	UserWordDatabaseConfigMysql m_config;
 };

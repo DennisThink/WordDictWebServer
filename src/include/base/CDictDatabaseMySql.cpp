@@ -10,6 +10,15 @@ CDictDatabaseMysql::~CDictDatabaseMysql()
 	UninitLibrary();
 }
 
+CUserWordDatabaseMysql::CUserWordDatabaseMysql()
+{
+	InitLibrary();
+}
+
+CUserWordDatabaseMysql::~CUserWordDatabaseMysql()
+{
+	UninitLibrary();
+}
 bool CUserWordDatabaseMysql::InsertKnownWord(const std::string strWord, const std::string strToken)
 {
 	std::string strCreateSql = R"(INSERT INTO T_KNOWN_WORDS(
@@ -28,7 +37,28 @@ bool CUserWordDatabaseMysql::InsertKnownWord(const std::string strWord, const st
 	}
 	return false;
 }
+void CUserWordDatabaseMysql::InitTables()
+{
 
+}
+void CUserWordDatabaseMysql::InitLibrary()
+{
+	m_mysql = NULL;
+	int argc = 0;
+	char** argv = NULL;
+	if (mysql_library_init(argc, argv, NULL)) {
+		fprintf(stderr, "could not initialize MySQL client library\n");
+		exit(1);
+	}
+
+	m_mysql = mysql_init(m_mysql);
+}
+void CUserWordDatabaseMysql::UninitLibrary()
+{
+	mysql_close(m_mysql);
+	m_mysql = NULL;
+	mysql_library_end();
+}
 bool CUserWordDatabaseMysql::DeleteKnownWord(const std::string strWord, const std::string strToken)
 {
 	bool bResult = false;
@@ -152,6 +182,40 @@ bool CUserWordDatabaseMysql::DeleteUnKnownWord(const std::string strWord, const 
 	}
 	return bResult;
 }
+
+bool  CUserWordDatabaseMysql::SetUserWordDatabaseConfig(const UserWordDatabaseConfig* cfg)
+{
+	if (nullptr != cfg)
+	{
+		
+		if (nullptr != cfg && NULL != cfg)
+		{
+			m_config = *((UserWordDatabaseConfigMysql*)(cfg));
+			if (NULL != m_mysql)
+			{
+				if (!mysql_real_connect(m_mysql,       /* MYSQL structure to use */
+					m_config.m_strMysqlServerIp.c_str(),         /* server hostname or IP address */
+					m_config.m_strMysqlUserName.c_str(),         /* mysql user */
+					m_config.m_strMysqlPassoword.c_str(),          /* password */
+					m_config.m_strDataBase.c_str(),               /* default database to use, NULL for none */
+					m_config.m_nMysqlServerPort,           /* port number, 0 for default */
+					NULL,        /* socket file or named pipe name */
+					CLIENT_FOUND_ROWS /* connection flags */)) {
+					fprintf(stderr, "mysql_real_connect() failed: '%s'\n", mysql_error(m_mysql));
+					puts("Connect failed\n");
+				}
+				else {
+					puts("Connect OK\n");
+				}
+			}
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	return false;
+}
 bool CUserWordDatabaseMysql::UpdateWordFrequency(const std::string strWord)
 {
 	return false;
@@ -163,6 +227,7 @@ bool CUserWordDatabaseMysql::IsUnKnownWord(const std::string strWord, const std:
 	char buff[256] = { 0 };
 	sprintf(buff, strSelect.c_str(), strWord.c_str(),strToken.c_str());
 	std::cout << "SQL: " << buff << std::endl;
+	try
 	{
 		if (mysql_query(m_mysql, buff)) {
 			printf("Query failed: %s\n", mysql_error(m_mysql));
@@ -187,6 +252,9 @@ bool CUserWordDatabaseMysql::IsUnKnownWord(const std::string strWord, const std:
 				mysql_free_result(result);
 			}
 		}
+	}
+	catch (std::exception& ec) {
+
 	}
 	return bResult;
 }
