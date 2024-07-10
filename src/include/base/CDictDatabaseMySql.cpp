@@ -19,6 +19,7 @@ CUserWordDatabaseMysql::~CUserWordDatabaseMysql()
 {
 	UninitLibrary();
 }
+
 bool CUserWordDatabaseMysql::InsertKnownWord(const std::string strWord, const std::string strToken)
 {
 	std::string strCreateSql = R"(INSERT INTO T_KNOWN_WORDS(

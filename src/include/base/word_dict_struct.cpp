@@ -1,4 +1,6 @@
 #include <ostream>
+#include <fstream>
+#include <sstream>
 #include "word_dict_struct.hpp"
 #include "json11.hpp"
 std::ostream& operator<<(std::ostream& os, DictLineElem_t p)
@@ -111,4 +113,181 @@ std::string AddRemoveRspToString(const AddWordToKnownRsp_t& rsp)
     };
     std::string strRsp = rspJson.dump();
     return strRsp;
+}
+
+DictWebServerConfig::DictWebServerConfig()
+{
+    m_strServerIp.clear();
+    m_nServerPort=-1;
+    m_nDataBaseType.clear();//JSON,MYSQL,SQLITE
+    m_dictCfg = nullptr;
+    m_userWordCfg = nullptr;
+}
+
+DictWebServerConfig::~DictWebServerConfig()
+{
+    if (nullptr != m_dictCfg)
+    {
+        delete m_dictCfg;
+        m_dictCfg = nullptr;
+    }
+    if (nullptr != m_userWordCfg)
+    {
+        delete m_userWordCfg;
+        m_userWordCfg = nullptr;
+    }
+}
+
+DictWebServerConfig FromJson(const std::string strJsonFile)
+{
+    DictWebServerConfig result;
+    {
+        DataBaseType databaseType = DataBaseType::NONE;
+        {
+            std::ifstream file(strJsonFile);
+            if (file.is_open()) {
+                std::stringstream buff;
+                buff << file.rdbuf();
+                std::string data(buff.str());
+                std::string strErr;
+                auto resultJson = json11::Json::parse(data.c_str(), strErr);
+                if (strErr.empty())
+                {
+                    if (resultJson["ServerIp"].is_string())
+                    {
+                        result.m_strServerIp = resultJson["ServerIp"].string_value();
+                    }
+                    if (resultJson["ServerPort"].is_number())
+                    {
+                        result.m_nServerPort = resultJson["ServerPort"].int_value();
+                    }
+
+                    if (resultJson["DataBaseType"].is_string()) {
+                        std::string strType = resultJson["DataBaseType"].string_value();
+                        if (strType == "JSON")
+                        {
+                            databaseType = DataBaseType::JSON;
+                        }
+                        if (strType == "MYSQL")
+                        {
+                            databaseType = DataBaseType::MY_SQL;
+                        }
+                        if (strType == "SQLITE") 
+                        {
+                            databaseType = DataBaseType::SQLITE;
+                        }
+                    }
+                    {
+                        if (databaseType == DataBaseType::JSON)
+                        {
+                            auto databaseJson = resultJson["DictDataBase"];
+                            auto pDict = new JsonDatabaseConfig();
+                            if (databaseJson["FileName"].is_string())
+                            {
+                                pDict->m_jsonFileName = databaseJson["FileName"].string_value();
+                            }
+                            if (databaseJson["Level"].is_number())
+                            {
+                                pDict->m_nLevel = databaseJson["Level"].int_value();
+                            }
+                        }
+
+                        if (databaseType == DataBaseType::MY_SQL)
+                        {
+                            auto databaseJson = resultJson["DictDataBase"];
+                            auto pDict = new MysqlDatabaseConfig();
+                            if (databaseJson["DataBaseIp"].is_string())
+                            {
+                                pDict->m_strMysqlServerIp = databaseJson["DataBaseIp"].string_value();
+                            }
+                            if (databaseJson["DataBasePort"].is_number())
+                            {
+                                pDict->m_nMysqlServerPort = databaseJson["DataBasePort"].int_value();
+                            }
+
+                            if (databaseJson["UserName"].is_string())
+                            {
+                                pDict->m_strMysqlUserName = databaseJson["UserName"].string_value();
+                            }
+
+                            if (databaseJson["PassWord"].is_string())
+                            {
+                                pDict->m_strMysqlPassoword = databaseJson["PassWord"].string_value();
+                            }
+
+                            if (databaseJson["DataBase"].is_string())
+                            {
+                                pDict->m_strDataBase = databaseJson["DataBase"].string_value();
+                            }
+                        }
+                        if (databaseType == DataBaseType::SQLITE)
+                        {
+                            auto databaseJson = resultJson["DictDataBase"];
+                            auto pDict = new SqliteDatabaseConfig();
+                            if (databaseJson["FileName"].is_string())
+                            {
+                                pDict->m_sqliteFileName = databaseJson["FileName"].string_value();
+                            }
+                        }
+                    }
+                    {
+                        if (databaseType == DataBaseType::SQLITE)
+                        {
+                            auto databaseJson = resultJson["UserWordDataBase"];
+                            auto pDict = new SqliteDatabaseConfig();
+                            if (databaseJson["FileName"].is_string())
+                            {
+                                pDict->m_sqliteFileName = databaseJson["FileName"].string_value();
+                            }
+                        }
+
+                        if (databaseType == DataBaseType::MY_SQL)
+                        {
+                            auto databaseJson = resultJson["UserWordDataBase"];
+                            auto pDict = new MysqlDatabaseConfig();
+                            if (databaseJson["DataBaseIp"].is_string())
+                            {
+                                pDict->m_strMysqlServerIp = databaseJson["DataBaseIp"].string_value();
+                            }
+                            if (databaseJson["DataBasePort"].is_number())
+                            {
+                                pDict->m_nMysqlServerPort = databaseJson["DataBasePort"].int_value();
+                            }
+
+                            if (databaseJson["UserName"].is_string())
+                            {
+                                pDict->m_strMysqlUserName = databaseJson["UserName"].string_value();
+                            }
+
+                            if (databaseJson["PassWord"].is_string())
+                            {
+                                pDict->m_strMysqlPassoword = databaseJson["PassWord"].string_value();
+                            }
+
+                            if (databaseJson["DataBase"].is_string())
+                            {
+                                pDict->m_strDataBase = databaseJson["DataBase"].string_value();
+                            }
+                        }
+
+                        if (databaseType == DataBaseType::JSON)
+                        {
+                            auto databaseJson = resultJson["UserWordDataBase"];
+                            auto pDict = new UserWordDatabaseConfigJson();
+                            if (databaseJson["KnownWordFileName"].is_string())
+                            {
+                                pDict->m_strKnownWordsFileName = databaseJson["KnownWordFileName"].string_value();
+                            }
+                            if (databaseJson["UnKnownWordFileName"].is_string())
+                            {
+                                pDict->m_strUnKnownWordsFileName = databaseJson["UnKnownWordFileName"].int_value();
+                            }
+                        }
+                    }
+                    return result;
+                }
+            }
+        }
+    }
+    return result;
 }

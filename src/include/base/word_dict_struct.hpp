@@ -131,4 +131,25 @@ std::string WordRspToString(const EnglishToChineseRsp_t& rsp);
 std::string SentenceRspToString(const SentenceToWordsRsp_t& rsp);
 AddWordToKnowReq_t AddRemoveWordReq(const std::string& strReq);
 std::string AddRemoveRspToString(const AddWordToKnownRsp_t& rsp);
+
+enum class DataBaseType
+{
+    NONE,
+    JSON,
+    MY_SQL,
+    SQLITE,
+};
+class DictWebServerConfig
+{
+public:
+    DictWebServerConfig();
+    virtual ~DictWebServerConfig();
+    std::string m_strServerIp;
+    int         m_nServerPort;
+    std::string m_nDataBaseType;//JSON,MYSQL,SQLITE
+    DataBaseConfigInterface* m_dictCfg;
+    UserWordDatabaseConfig* m_userWordCfg;
+};
+
+DictWebServerConfig FromJson(const std::string strJsonFile);
 #endif
