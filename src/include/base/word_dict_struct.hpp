@@ -68,20 +68,28 @@ struct DictLineElem_t
 std::ostream& operator<<(std::ostream& os, DictLineElem_t p);
 
 
-struct DataBaseConfigInterface {
-
+struct DictDataBaseCfg {
+public:
+    DictDataBaseCfg() {};
+    virtual ~DictDataBaseCfg() {};
 };
 
-struct SqliteDatabaseConfig :public DataBaseConfigInterface {
+struct DictDataBaseCfgSqlite :public DictDataBaseCfg {
+public:
+    DictDataBaseCfgSqlite() {};
+    virtual ~DictDataBaseCfgSqlite() {};
     std::string m_sqliteFileName;
 };
 
-struct JsonDatabaseConfig : public DataBaseConfigInterface {
+struct DictDataBaseCfgJson : public DictDataBaseCfg {
+public:
+    DictDataBaseCfgJson() {};
+    virtual ~DictDataBaseCfgJson() {};
     std::string m_jsonFileName;
     int m_nLevel;
 };
 
-struct MysqlDatabaseConfig : public DataBaseConfigInterface {
+struct DictDataBaseCfgMysql : public DictDataBaseCfg {
     std::string m_strMysqlServerIp;
     int m_nMysqlServerPort;
     std::string m_strMysqlUserName;
@@ -89,21 +97,21 @@ struct MysqlDatabaseConfig : public DataBaseConfigInterface {
     std::string m_strDataBase;
 };
 
-struct UserWordDatabaseConfig {
+struct UserWordDataBaseCfg {
 
 };
 
-struct UserWordDatabaseConfigJson :public UserWordDatabaseConfig {
+struct UserWordDataBaseCfgJson :public UserWordDataBaseCfg {
     std::string m_strKnownWordsFileName;
     std::string m_strUnKnownWordsFileName;
 };
 
-struct UserWordDatabaseConfigSqlite :public UserWordDatabaseConfig {
+struct UserWordDataBaseCfgSqlite :public UserWordDataBaseCfg {
     std::string m_strKnownWordsFileName;
     std::string m_strUnKnownWordsFileName;
 };
 
-struct UserWordDatabaseConfigMysql :public UserWordDatabaseConfig {
+struct UserWordDataBaseCfgMysql :public UserWordDataBaseCfg {
     std::string m_strMysqlServerIp;
     int m_nMysqlServerPort;
     std::string m_strMysqlUserName;
@@ -146,10 +154,11 @@ public:
     virtual ~DictWebServerConfig();
     std::string m_strServerIp;
     int         m_nServerPort;
-    std::string m_nDataBaseType;//JSON,MYSQL,SQLITE
-    DataBaseConfigInterface* m_dictCfg;
-    UserWordDatabaseConfig* m_userWordCfg;
+    std::string m_strDataBaseType;//JSON,MYSQL,SQLITE
+    DictDataBaseCfg* m_dictCfg;
+    UserWordDataBaseCfg* m_userWordCfg;
 };
 
-DictWebServerConfig FromJson(const std::string strJsonFile);
+DictWebServerConfig FromJsonFile(const std::string strJsonFile);
+DictWebServerConfig FromJsonContent(const std::string& jsonContent);
 #endif

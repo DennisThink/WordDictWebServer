@@ -4,7 +4,7 @@ int main() {
     auto userWordPtr = std::make_shared<CUserWordDatabaseMysql>();
     {
       {
-           MysqlDatabaseConfig cfg;
+           DictDataBaseCfgMysql cfg;
            cfg.m_strMysqlServerIp = "localhost";
            cfg.m_nMysqlServerPort = 3306;
            cfg.m_strMysqlUserName = "test";
@@ -15,7 +15,7 @@ int main() {
 
       {
           {
-              UserWordDatabaseConfigMysql cfg;
+              UserWordDataBaseCfgMysql cfg;
               cfg.m_strMysqlServerIp = "localhost";
               cfg.m_nMysqlServerPort = 3306;
               cfg.m_strMysqlUserName = "test";

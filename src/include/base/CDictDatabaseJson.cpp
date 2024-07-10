@@ -76,12 +76,12 @@ bool CDictDatabaseJson::DeleteWordElem(const T_ENGLISH_CHINSE_TRANS& elem)
 	}
 	return false;
 }
-bool CDictDatabaseJson::SetDictDatabaseConfig(const DataBaseConfigInterface* cfg)
+bool CDictDatabaseJson::SetDictDatabaseConfig(const DictDataBaseCfg* cfg)
 {
 	if ((nullptr != cfg) && 
 		(NULL != cfg))
 	{
-		m_cfg = *(JsonDatabaseConfig*)(cfg);
+		m_cfg = *(DictDataBaseCfgJson*)(cfg);
 		InitDatabase(m_cfg.m_jsonFileName);
 		return true;
 	}
@@ -115,12 +115,12 @@ CUserWordDatabaseJson::~CUserWordDatabaseJson()
 }
 
 
-bool CUserWordDatabaseJson::SetUserWordDatabaseConfig(const UserWordDatabaseConfig* cfg)
+bool CUserWordDatabaseJson::SetUserWordDatabaseConfig(const UserWordDataBaseCfg* cfg)
 {
 	if ((nullptr != cfg) &&
 		(NULL != cfg))
 	{
-		m_config = *(UserWordDatabaseConfigJson*)(cfg);
+		m_config = *(UserWordDataBaseCfgJson*)(cfg);
 	}
 	return true;
 }

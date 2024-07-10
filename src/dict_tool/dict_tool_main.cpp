@@ -10,7 +10,7 @@
 
 int JsonDemo(int argc, char* argv[])
 {
-    JsonDatabaseConfig cfg;
+    DictDataBaseCfgJson cfg;
     cfg.m_jsonFileName = "middle_school.json";
 
     CDictDatabaseJson databaseUtil;
@@ -99,7 +99,7 @@ int SqliteDemo(int argc, char* argv[])
 
 int MysqlDemo(int argc, char* argv[])
 {
-    MysqlDatabaseConfig cfg;
+    DictDataBaseCfgMysql cfg;
     cfg.m_strMysqlServerIp = "localhost";
     cfg.m_nMysqlServerPort = 3306;
     cfg.m_strMysqlUserName = "test";
@@ -151,14 +151,14 @@ int SaveWordsFromJsonToMysql(int argc, char* argv[])
 {
     CDictDatabaseJson JsonDatabaseUtil;
     {
-        JsonDatabaseConfig cfg;
+        DictDataBaseCfgJson cfg;
         cfg.m_jsonFileName = "middle_school.json";
         cfg.m_nLevel = 10;
         JsonDatabaseUtil.SetDictDatabaseConfig(&cfg);
     }
     CDictDatabaseMysql mysqlDatabaseUtil;
     {
-        MysqlDatabaseConfig cfg;
+        DictDataBaseCfgMysql cfg;
         cfg.m_strMysqlServerIp = "localhost";
         cfg.m_nMysqlServerPort = 3306;
         cfg.m_strMysqlUserName = "test";
@@ -179,14 +179,14 @@ int SaveWordsFromJsonToSqlite(int argc, char* argv[])
 {
     CDictDatabaseJson JsonDatabaseUtil;
     {
-        JsonDatabaseConfig cfg;
+        DictDataBaseCfgJson cfg;
         cfg.m_jsonFileName = "middle_school.json";
         cfg.m_nLevel = 10;
         JsonDatabaseUtil.SetDictDatabaseConfig(&cfg);
     }
     CDictDatabaseSqlite sqliteDatabaseUtil;
     {
-        SqliteDatabaseConfig cfg;
+        DictDataBaseCfgSqlite cfg;
         cfg.m_sqliteFileName = "ecdict_test.db";
 
 
@@ -207,7 +207,7 @@ void SaveWordsToMysql()
     CdictTool tool;
     auto allWords = tool.GetAllWords("ecdict.csv");
 
-    MysqlDatabaseConfig cfg;
+    DictDataBaseCfgMysql cfg;
     cfg.m_strMysqlServerIp = "localhost";
     cfg.m_nMysqlServerPort = 3306;
     cfg.m_strMysqlUserName = "test";
@@ -243,12 +243,12 @@ void SaveJsonToMysql(const std::string strName, const int level)
 {
     CDictDatabaseJson JsonDatabaseUtil;
     {
-        JsonDatabaseConfig cfg;
+        DictDataBaseCfgJson cfg;
         cfg.m_jsonFileName = strName;
         cfg.m_nLevel = level;
         JsonDatabaseUtil.SetDictDatabaseConfig(&cfg);
     }
-    MysqlDatabaseConfig cfg;
+    DictDataBaseCfgMysql cfg;
     cfg.m_strMysqlServerIp = "localhost";
     cfg.m_nMysqlServerPort = 3306;
     cfg.m_strMysqlUserName = "test";

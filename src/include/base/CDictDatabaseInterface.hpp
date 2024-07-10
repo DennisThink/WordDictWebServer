@@ -7,7 +7,7 @@ class CDictDatabaseInterface
 public:
 	CDictDatabaseInterface() {};
 	virtual ~CDictDatabaseInterface() {};
-	virtual bool SetDictDatabaseConfig(const DataBaseConfigInterface* cfg)=0;
+	virtual bool SetDictDatabaseConfig(const DictDataBaseCfg* cfg)=0;
 	virtual T_ENGLISH_CHINSE_TRANS GetTranslation(const std::string strWord)=0;
 	virtual bool InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem)=0;
 	virtual bool DeleteWordElem(const T_ENGLISH_CHINSE_TRANS& elem) = 0;
@@ -19,7 +19,7 @@ class CUserWordDatabaseInterface
 public:
 	CUserWordDatabaseInterface() {};
 	virtual ~CUserWordDatabaseInterface() {};
-	virtual bool SetUserWordDatabaseConfig(const UserWordDatabaseConfig* cfg) = 0;
+	virtual bool SetUserWordDatabaseConfig(const UserWordDataBaseCfg* cfg) = 0;
 
 	virtual bool InsertKnownWord(const std::string strWord, const std::string strToken) = 0;
 	virtual bool DeleteKnownWord(const std::string strWord, const std::string strToken) = 0;

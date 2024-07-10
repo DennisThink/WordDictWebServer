@@ -184,14 +184,14 @@ bool CUserWordDatabaseMysql::DeleteUnKnownWord(const std::string strWord, const 
 	return bResult;
 }
 
-bool  CUserWordDatabaseMysql::SetUserWordDatabaseConfig(const UserWordDatabaseConfig* cfg)
+bool  CUserWordDatabaseMysql::SetUserWordDatabaseConfig(const UserWordDataBaseCfg* cfg)
 {
 	if (nullptr != cfg)
 	{
 		
 		if (nullptr != cfg && NULL != cfg)
 		{
-			m_config = *((UserWordDatabaseConfigMysql*)(cfg));
+			m_config = *((UserWordDataBaseCfgMysql*)(cfg));
 			if (NULL != m_mysql)
 			{
 				if (!mysql_real_connect(m_mysql,       /* MYSQL structure to use */
@@ -261,11 +261,11 @@ bool CUserWordDatabaseMysql::IsUnKnownWord(const std::string strWord, const std:
 }
 
 
-bool CDictDatabaseMysql::SetDictDatabaseConfig(const DataBaseConfigInterface* cfg)
+bool CDictDatabaseMysql::SetDictDatabaseConfig(const DictDataBaseCfg* cfg)
 {
 	if (nullptr != cfg && NULL != cfg)
 	{
-		m_config = *(MysqlDatabaseConfig*)(cfg);
+		m_config = *(DictDataBaseCfgMysql*)(cfg);
 		if(NULL != m_mysql)
 		{
 			if (!mysql_real_connect(m_mysql,       /* MYSQL structure to use */

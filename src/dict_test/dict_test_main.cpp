@@ -10,7 +10,7 @@
 
 TEST_CASE("DictJson") {
 	CHECK(1==1);
-    JsonDatabaseConfig cfg;
+    DictDataBaseCfgJson cfg;
     cfg.m_jsonFileName = "middle_school.json";
 
     CDictDatabaseJson databaseUtil;
@@ -34,7 +34,7 @@ TEST_CASE("DictJson") {
 TEST_CASE("UserWordJson") {
     CUserWordDatabaseJson dataUtil;
 
-    UserWordDatabaseConfigJson cfg;
+    UserWordDataBaseCfgJson cfg;
     CHECK(dataUtil.SetUserWordDatabaseConfig(&cfg));
 
     std::string strWord = "apple";
@@ -69,7 +69,7 @@ TEST_CASE("UserWordJson") {
 
 TEST_CASE("DictSqlite") {
     CHECK(1 == 1);
-    SqliteDatabaseConfig cfg;
+    DictDataBaseCfgSqlite cfg;
     cfg.m_sqliteFileName = "ecdict_test.db";
 
     CDictDatabaseSqlite databaseUtil;
@@ -91,10 +91,72 @@ TEST_CASE("DictSqlite") {
     //CHECK(databaseUtil.UpdateWordFrequency(strEnglish));
 }
 
+TEST_CASE("ServerConfig") {
+    std::string strConfig = R"({
+    "ServerIp":"127.0.0.1",
+    "ServerPort":8080,
+    "DataBaseType":"MYSQL",
+    "DictDataBase":{
+        "DataBaseIp":"localhost",
+        "DataBasePort":3306,
+        "UserName":"test",
+        "PassWord":"test@1990",
+        "DataBase":"json_dict"
+    },
+    "UserWordDataBase":{
+        "DataBaseIp":"localhost",
+        "DataBasePort":3306,
+        "UserName":"test",
+        "PassWord":"test@1990",
+        "DataBase":"json_dict"
+    }
+   })";
+    DictWebServerConfig cfg = FromJsonContent(strConfig);
+    CHECK_EQ(cfg.m_strServerIp, "127.0.0.1");
+    CHECK_EQ(cfg.m_nServerPort, 8080);
+    CHECK_EQ(cfg.m_strDataBaseType, "MYSQL");
+    CHECK_FALSE(cfg.m_dictCfg == NULL);
+    if (NULL != cfg.m_dictCfg)
+    {
+        DictDataBaseCfgMysql* pCfg = dynamic_cast<DictDataBaseCfgMysql*>(cfg.m_dictCfg);
+        CHECK_FALSE(pCfg == NULL);
+        if (NULL != pCfg)
+        {
+            CHECK_EQ(pCfg->m_strMysqlServerIp, "localhost");
+            CHECK_EQ(pCfg->m_nMysqlServerPort, 3306);
+            CHECK_EQ(pCfg->m_strMysqlUserName, "test");
+            CHECK_EQ(pCfg->m_strMysqlPassoword, "test@1990");
+            CHECK_EQ(pCfg->m_strDataBase, "json_dict");
+        }
+    }
+    else
+    {
+        CHECK_FALSE(true);
+    }
+
+    if (NULL != cfg.m_userWordCfg)
+    {
+        UserWordDataBaseCfgMysql* pCfg = dynamic_cast<UserWordDataBaseCfgMysql*>(cfg.m_dictCfg);
+        CHECK_FALSE(pCfg == NULL);
+        if (NULL != pCfg)
+        {
+            CHECK_EQ(pCfg->m_strMysqlServerIp, "localhost");
+            CHECK_EQ(pCfg->m_nMysqlServerPort, 3306);
+            CHECK_EQ(pCfg->m_strMysqlUserName, "test");
+            CHECK_EQ(pCfg->m_strMysqlPassoword, "test@1990");
+            CHECK_EQ(pCfg->m_strDataBase, "json_dict");
+        }
+    }
+    else
+    {
+        CHECK_FALSE(true);
+    }
+}
+
 TEST_CASE("UserWordSqlite") {
     CUserWordDatabaseSqlite dataUtil;
 
-    UserWordDatabaseConfigSqlite cfg;
+    UserWordDataBaseCfgSqlite cfg;
     CHECK(dataUtil.SetUserWordDatabaseConfig(&cfg));
 
     std::string strWord = "apple";
@@ -120,7 +182,6 @@ TEST_CASE("UserWordSqlite") {
     {
         CHECK(dataUtil.InsertUnKnownWord(strWord, strToken));
         CHECK(dataUtil.IsUnKnownWord(strWord, strToken));
-
     }
 }
 

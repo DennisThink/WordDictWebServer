@@ -12,11 +12,11 @@ CDictDatabaseSqlite::~CDictDatabaseSqlite()
 
 }
 
-bool CDictDatabaseSqlite::SetDictDatabaseConfig(const DataBaseConfigInterface* cfg)
+bool CDictDatabaseSqlite::SetDictDatabaseConfig(const DictDataBaseCfg* cfg)
 {
     if ((NULL != cfg) &&
         (nullptr != cfg)) {
-        SqliteDatabaseConfig* pCfg = (SqliteDatabaseConfig*)(cfg);
+        DictDataBaseCfgSqlite* pCfg = (DictDataBaseCfgSqlite*)(cfg);
         DatabaseInit(pCfg->m_sqliteFileName);
         return true;
     }

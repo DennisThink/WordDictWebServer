@@ -5,7 +5,7 @@ class CDictDatabaseMysql:public CDictDatabaseInterface
 public:
 	CDictDatabaseMysql();
 	virtual ~CDictDatabaseMysql();
-	virtual bool SetDictDatabaseConfig(const DataBaseConfigInterface* cfg) override;
+	virtual bool SetDictDatabaseConfig(const DictDataBaseCfg* cfg) override;
 	virtual T_ENGLISH_CHINSE_TRANS GetTranslation(const std::string strWord) override;
 	virtual bool InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem) override;
 	virtual bool IsWordInDict(const std::string strWord) override;
@@ -15,7 +15,7 @@ private:
 	void InitLibrary();
 	void UninitLibrary();
 	MYSQL* m_mysql;
-	MysqlDatabaseConfig m_config;
+	DictDataBaseCfgMysql m_config;
 };
 
 class CUserWordDatabaseMysql :public CUserWordDatabaseInterface
@@ -31,11 +31,11 @@ public:
 	virtual bool DeleteUnKnownWord(const std::string strWord, const std::string strToken) override;
 	virtual bool IsUnKnownWord(const std::string strWord, const std::string strToken) override;
 	virtual bool UpdateWordFrequency(const std::string strWord) override;
-	virtual bool SetUserWordDatabaseConfig(const UserWordDatabaseConfig* cfg) override;
+	virtual bool SetUserWordDatabaseConfig(const UserWordDataBaseCfg* cfg) override;
 private:
 	void InitTables();
 	void InitLibrary();
 	void UninitLibrary();
 	MYSQL* m_mysql;
-	UserWordDatabaseConfigMysql m_config;
+	UserWordDataBaseCfgMysql m_config;
 };
