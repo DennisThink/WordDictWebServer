@@ -91,7 +91,7 @@ TEST_CASE("DictSqlite") {
     //CHECK(databaseUtil.UpdateWordFrequency(strEnglish));
 }
 
-TEST_CASE("ServerConfig") {
+TEST_CASE("ServerConfigMysql") {
     std::string strConfig = R"({
     "ServerIp":"127.0.0.1",
     "ServerPort":8080,
@@ -153,6 +153,57 @@ TEST_CASE("ServerConfig") {
     }
 }
 
+
+TEST_CASE("ServerConfigJson") {
+    std::string strConfig = R"({
+    "ServerIp":"127.0.0.1",
+    "ServerPort":8080,
+    "DataBaseType":"JSON",
+    "DictDataBase":{
+        "FileName":"middle_school.json",
+        "Level":10
+    },
+    "UserWordDataBase":{
+        "KnownWordFile":"KnownWordFile.json",
+        "UnKnownWordFile":"UnKnowWordFile.json"
+    }
+   })";
+    DictWebServerConfig cfg = FromJsonContent(strConfig);
+    CHECK_EQ(cfg.m_strServerIp, "127.0.0.1");
+    CHECK_EQ(cfg.m_nServerPort, 8080);
+    CHECK_EQ(cfg.m_strDataBaseType, "JSON");
+    CHECK_FALSE(cfg.m_dictCfg == nullptr);
+    if (nullptr != cfg.m_dictCfg)
+    {
+        DictDataBaseCfgJson* pCfg = dynamic_cast<DictDataBaseCfgJson*>(cfg.m_dictCfg.get());
+        CHECK_FALSE(pCfg == nullptr);
+        if (nullptr != pCfg)
+        {
+            CHECK_EQ(pCfg->m_jsonFileName, "middle_school.json");
+            CHECK_EQ(pCfg->m_nLevel, 10);
+        }
+    }
+    else
+    {
+        CHECK_FALSE(true);
+    }
+
+    if (NULL != cfg.m_userWordCfg)
+    {
+        UserWordDataBaseCfgJson* pCfg = dynamic_cast<UserWordDataBaseCfgJson*>(cfg.m_dictCfg.get());
+        CHECK_FALSE(pCfg == NULL);
+        if (NULL != pCfg)
+        {
+
+            CHECK_EQ(pCfg->m_strKnownWordsFileName, "KnownWordFile.json");
+            CHECK_EQ(pCfg->m_strKnownWordsFileName, "UnKnowWordFile.json");
+        }
+    }
+    else
+    {
+        CHECK_FALSE(true);
+    }
+}
 TEST_CASE("UserWordSqlite") {
     CUserWordDatabaseSqlite dataUtil;
 
