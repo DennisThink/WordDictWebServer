@@ -115,12 +115,12 @@ TEST_CASE("ServerConfig") {
     CHECK_EQ(cfg.m_strServerIp, "127.0.0.1");
     CHECK_EQ(cfg.m_nServerPort, 8080);
     CHECK_EQ(cfg.m_strDataBaseType, "MYSQL");
-    CHECK_FALSE(cfg.m_dictCfg == NULL);
-    if (NULL != cfg.m_dictCfg)
+    CHECK_FALSE(cfg.m_dictCfg == nullptr);
+    if (nullptr != cfg.m_dictCfg)
     {
-        DictDataBaseCfgMysql* pCfg = dynamic_cast<DictDataBaseCfgMysql*>(cfg.m_dictCfg);
-        CHECK_FALSE(pCfg == NULL);
-        if (NULL != pCfg)
+        DictDataBaseCfgMysql * pCfg = dynamic_cast<DictDataBaseCfgMysql*>(cfg.m_dictCfg.get());
+        CHECK_FALSE(pCfg == nullptr);
+        if (nullptr != pCfg)
         {
             CHECK_EQ(pCfg->m_strMysqlServerIp, "localhost");
             CHECK_EQ(pCfg->m_nMysqlServerPort, 3306);
@@ -136,7 +136,7 @@ TEST_CASE("ServerConfig") {
 
     if (NULL != cfg.m_userWordCfg)
     {
-        UserWordDataBaseCfgMysql* pCfg = dynamic_cast<UserWordDataBaseCfgMysql*>(cfg.m_dictCfg);
+        UserWordDataBaseCfgMysql* pCfg = dynamic_cast<UserWordDataBaseCfgMysql*>(cfg.m_dictCfg.get());
         CHECK_FALSE(pCfg == NULL);
         if (NULL != pCfg)
         {

@@ -2,6 +2,7 @@
 #define _WORD_DICT_STRUCT_H_
 #include <string>
 #include <vector>
+#include <memory>
 struct EnglishToChineseReq_t
 {
     std::string m_strToken;
@@ -155,8 +156,8 @@ public:
     std::string m_strServerIp;
     int         m_nServerPort;
     std::string m_strDataBaseType;//JSON,MYSQL,SQLITE
-    DictDataBaseCfg* m_dictCfg;
-    UserWordDataBaseCfg* m_userWordCfg;
+    std::shared_ptr<DictDataBaseCfg> m_dictCfg;
+    std::shared_ptr<UserWordDataBaseCfg> m_userWordCfg;
 };
 
 DictWebServerConfig FromJsonFile(const std::string strJsonFile);

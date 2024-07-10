@@ -1,6 +1,7 @@
 #include <ostream>
 #include <fstream>
 #include <sstream>
+#include <memory>
 #include "word_dict_struct.hpp"
 #include "json11.hpp"
 std::ostream& operator<<(std::ostream& os, DictLineElem_t p)
@@ -126,16 +127,7 @@ DictWebServerConfig::DictWebServerConfig()
 
 DictWebServerConfig::~DictWebServerConfig()
 {
-    if (nullptr != m_dictCfg)
-    {
-        delete m_dictCfg;
-        m_dictCfg = nullptr;
-    }
-    if (nullptr != m_userWordCfg)
-    {
-        delete m_userWordCfg;
-        m_userWordCfg = nullptr;
-    }
+
 }
 DictWebServerConfig FromJsonContent(const std::string& jsonContent)
 {
@@ -174,7 +166,7 @@ DictWebServerConfig FromJsonContent(const std::string& jsonContent)
             if (databaseType == DataBaseType::JSON)
             {
                 auto databaseJson = resultJson["DictDataBase"];
-                auto pDict = new DictDataBaseCfgJson();
+                auto pDict = std::make_shared<DictDataBaseCfgJson>();
                 if (databaseJson["FileName"].is_string())
                 {
                     pDict->m_jsonFileName = databaseJson["FileName"].string_value();
@@ -189,7 +181,7 @@ DictWebServerConfig FromJsonContent(const std::string& jsonContent)
             if (databaseType == DataBaseType::MY_SQL)
             {
                 auto databaseJson = resultJson["DictDataBase"];
-                auto pDict = new DictDataBaseCfgMysql();
+                auto pDict = std::make_shared <DictDataBaseCfgMysql>();
                 if (databaseJson["DataBaseIp"].is_string())
                 {
                     pDict->m_strMysqlServerIp = databaseJson["DataBaseIp"].string_value();
@@ -218,7 +210,7 @@ DictWebServerConfig FromJsonContent(const std::string& jsonContent)
             if (databaseType == DataBaseType::SQLITE)
             {
                 auto databaseJson = resultJson["DictDataBase"];
-                auto pDict = new DictDataBaseCfgSqlite();
+                auto pDict = std::make_shared<DictDataBaseCfgSqlite>();
                 if (databaseJson["FileName"].is_string())
                 {
                     pDict->m_sqliteFileName = databaseJson["FileName"].string_value();
@@ -241,7 +233,7 @@ DictWebServerConfig FromJsonContent(const std::string& jsonContent)
             if (databaseType == DataBaseType::MY_SQL)
             {
                 auto databaseJson = resultJson["UserWordDataBase"];
-                auto pDict = new UserWordDataBaseCfgMysql();
+                auto pDict = std::make_shared<UserWordDataBaseCfgMysql>();
                 if (databaseJson["DataBaseIp"].is_string())
                 {
                     pDict->m_strMysqlServerIp = databaseJson["DataBaseIp"].string_value();
@@ -271,7 +263,7 @@ DictWebServerConfig FromJsonContent(const std::string& jsonContent)
             if (databaseType == DataBaseType::JSON)
             {
                 auto databaseJson = resultJson["UserWordDataBase"];
-                auto pDict = new UserWordDataBaseCfgJson();
+                auto pDict = std::make_shared<UserWordDataBaseCfgJson>();
                 if (databaseJson["KnownWordFileName"].is_string())
                 {
                     pDict->m_strKnownWordsFileName = databaseJson["KnownWordFileName"].string_value();
@@ -280,6 +272,7 @@ DictWebServerConfig FromJsonContent(const std::string& jsonContent)
                 {
                     pDict->m_strUnKnownWordsFileName = databaseJson["UnKnownWordFileName"].int_value();
                 }
+                result.m_userWordCfg = pDict;
             }
         }
     }
