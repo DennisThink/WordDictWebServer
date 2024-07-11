@@ -120,7 +120,7 @@ DictWebServerConfig::DictWebServerConfig()
 {
     m_strServerIp.clear();
     m_nServerPort=-1;
-    m_strDataBaseType.clear();//JSON,MYSQL,SQLITE
+    m_eDataBaseType = DataBaseType::NONE;
     m_dictCfg = nullptr;
     m_userWordCfg = nullptr;
 }
@@ -132,7 +132,6 @@ DictWebServerConfig::~DictWebServerConfig()
 DictWebServerConfig FromJsonContent(const std::string& jsonContent)
 {
     DictWebServerConfig result;
-    DataBaseType databaseType = DataBaseType::NONE;
     std::string strErr;
     auto resultJson = json11::Json::parse(jsonContent.c_str(), strErr);
     if (strErr.empty())
@@ -148,22 +147,22 @@ DictWebServerConfig FromJsonContent(const std::string& jsonContent)
 
         if (resultJson["DataBaseType"].is_string()) {
             std::string strType = resultJson["DataBaseType"].string_value();
-            result.m_strDataBaseType = strType;
+           
             if (strType == "JSON")
             {
-                databaseType = DataBaseType::JSON;
+                result.m_eDataBaseType = DataBaseType::JSON;
             }
             if (strType == "MYSQL")
             {
-                databaseType = DataBaseType::MY_SQL;
+                result.m_eDataBaseType = DataBaseType::MY_SQL;
             }
             if (strType == "SQLITE")
             {
-                databaseType = DataBaseType::SQLITE;
+                result.m_eDataBaseType = DataBaseType::SQLITE;
             }
         }
         {
-            if (databaseType == DataBaseType::JSON)
+            if (result.m_eDataBaseType == DataBaseType::JSON)
             {
                 auto databaseJson = resultJson["DictDataBase"];
                 auto pDict = std::make_shared<DictDataBaseCfgJson>();
@@ -178,7 +177,7 @@ DictWebServerConfig FromJsonContent(const std::string& jsonContent)
                 result.m_dictCfg = pDict;
             }
 
-            if (databaseType == DataBaseType::MY_SQL)
+            if (result.m_eDataBaseType == DataBaseType::MY_SQL)
             {
                 auto databaseJson = resultJson["DictDataBase"];
                 auto pDict = std::make_shared <DictDataBaseCfgMysql>();
@@ -207,7 +206,7 @@ DictWebServerConfig FromJsonContent(const std::string& jsonContent)
                 }
                 result.m_dictCfg = pDict;
             }
-            if (databaseType == DataBaseType::SQLITE)
+            if (result.m_eDataBaseType == DataBaseType::SQLITE)
             {
                 auto databaseJson = resultJson["DictDataBase"];
                 auto pDict = std::make_shared<DictDataBaseCfgSqlite>();
@@ -219,7 +218,7 @@ DictWebServerConfig FromJsonContent(const std::string& jsonContent)
             }
         }
         {
-            if (databaseType == DataBaseType::SQLITE)
+            if (result.m_eDataBaseType == DataBaseType::SQLITE)
             {
                 /*auto databaseJson = resultJson["UserWordDataBase"];
                 auto pDict = new UserWordDatabaseConfigJson();
@@ -230,7 +229,7 @@ DictWebServerConfig FromJsonContent(const std::string& jsonContent)
                 result.m_userWordCfg = pDict;*/
             }
 
-            if (databaseType == DataBaseType::MY_SQL)
+            if (result.m_eDataBaseType == DataBaseType::MY_SQL)
             {
                 auto databaseJson = resultJson["UserWordDataBase"];
                 auto pDict = std::make_shared<UserWordDataBaseCfgMysql>();
@@ -260,7 +259,7 @@ DictWebServerConfig FromJsonContent(const std::string& jsonContent)
                 result.m_userWordCfg = pDict;
             }
 
-            if (databaseType == DataBaseType::JSON)
+            if (result.m_eDataBaseType == DataBaseType::JSON)
             {
                 auto databaseJson = resultJson["UserWordDataBase"];
                 auto pDict = std::make_shared<UserWordDataBaseCfgJson>();

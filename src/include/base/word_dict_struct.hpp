@@ -155,7 +155,7 @@ public:
     virtual ~DictWebServerConfig();
     std::string m_strServerIp;
     int         m_nServerPort;
-    std::string m_strDataBaseType;//JSON,MYSQL,SQLITE
+    DataBaseType m_eDataBaseType;//JSON,MYSQL,SQLITE
     std::shared_ptr<DictDataBaseCfg> m_dictCfg;
     std::shared_ptr<UserWordDataBaseCfg> m_userWordCfg;
 };

@@ -1,4 +1,5 @@
 #include "CHttpServerInterface.hpp"
+#include "CDictDatabaseMySql.hpp"
 #include "json11.hpp"
 #include <iostream>
 #include <algorithm>
@@ -12,7 +13,21 @@ void CHttpServerInterface::SetDictAndUserWord(const CDictDataBase_PTR pDict, con
     m_dict = pDict;
     m_userWord = pWord;
 }
-
+void CHttpServerInterface::InitDataBaseFromCfg()
+{
+    if (m_cfg.m_eDataBaseType == DataBaseType::MY_SQL)
+    {
+        m_dict = std::make_shared<CDictDatabaseMysql>();
+        m_dict->SetDictDatabaseConfig(m_cfg.m_dictCfg.get());
+        m_userWord = std::make_shared<CUserWordDatabaseMysql>();
+        m_userWord->SetUserWordDatabaseConfig(m_cfg.m_userWordCfg.get());
+    }
+}
+void CHttpServerInterface::SetServerCfg(const DictWebServerConfig& cfg)
+{
+    m_cfg = cfg;
+    InitDataBaseFromCfg();
+}
 std::string CHttpServerInterface::HandleEnglishToChinese(const std::string& strReq)
 {
     EnglishToChineseReq_t reqData = GetReqFromRequest(strReq);

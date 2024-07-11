@@ -1,31 +1,23 @@
 #include "CAsioHttpServer.hpp"
-int main() {
-    auto dictPtr = std::make_shared<CDictDatabaseMysql>();
-    auto userWordPtr = std::make_shared<CUserWordDatabaseMysql>();
-    {
-      {
-           DictDataBaseCfgMysql cfg;
-           cfg.m_strMysqlServerIp = "localhost";
-           cfg.m_nMysqlServerPort = 3306;
-           cfg.m_strMysqlUserName = "test";
-           cfg.m_strMysqlPassoword = "test@1990";
-           cfg.m_strDataBase = "json_dict";
-           dictPtr->SetDictDatabaseConfig(&cfg);
-       }
+#include "clipp.h"
+int main(int argc,char * argv[]) {
+    using namespace clipp;
+    std::string strCfgFileName;
+    auto cli = (
+        required("-cfg", "--config").doc("the config of DictWebServerCfg") & value("config", strCfgFileName)
+        );
 
-      {
-          {
-              UserWordDataBaseCfgMysql cfg;
-              cfg.m_strMysqlServerIp = "localhost";
-              cfg.m_nMysqlServerPort = 3306;
-              cfg.m_strMysqlUserName = "test";
-              cfg.m_strMysqlPassoword = "test@1990";
-              cfg.m_strDataBase = "json_dict";
-              userWordPtr->SetUserWordDatabaseConfig(&cfg);
-          }
-      }
+    if (!parse(argc, argv, cli))
+    {
+        std::cout << make_man_page(cli, argv[0]) << std::endl;
+        return 0;
     }
-    CAsioHttpServer server;
-    server.SetDictAndUserWord(dictPtr, userWordPtr);
-    server.Start();
+    else
+    {
+        auto serverConfig = FromJsonFile(strCfgFileName);
+        CAsioHttpServer server;
+        server.SetServerCfg(serverConfig);
+        server.Start();
+        return 0;
+    }
 }

@@ -11,6 +11,7 @@ include_directories(./include/thirdparty/)
 include_directories(./include/thirdparty/mysqlwin/include/)
 include_directories(./include/thirdparty/doctest/)
 include_directories(./include/thirdparty/cpp_http_lib/)
+include_directories(./include/thirdparty/clipp/include/)
 link_directories(./libs/mysqllib/lib/)
 add_executable(DictWebClient ./client/http_client.cpp)
 add_executable(DictWebServer ./server/http_server.cpp 

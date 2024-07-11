@@ -6,6 +6,8 @@ class CHttpServerInterface
 public:
 	CHttpServerInterface();
 	virtual ~CHttpServerInterface() {};
+	void SetServerCfg(const DictWebServerConfig& cfg);
+	void InitDataBaseFromCfg();
 	void SetDictAndUserWord(const CDictDataBase_PTR pDict, const CUserWordDataBase_PTR pWord);
 	virtual void Start() = 0;
 public:
@@ -26,5 +28,6 @@ protected:
 protected:
 	CDictDataBase_PTR m_dict;
 	CUserWordDataBase_PTR m_userWord;
+	DictWebServerConfig m_cfg;
 };
 #endif
