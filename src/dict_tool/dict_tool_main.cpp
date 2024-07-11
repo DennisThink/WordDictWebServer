@@ -54,7 +54,7 @@ int JsonDemo(int argc, char* argv[])
 
 int SqliteDemo(int argc, char* argv[])
 {
-    SqliteDatabaseConfig cfg;
+    DictDataBaseCfgSqlite cfg;
     cfg.m_sqliteFileName = "ecdict_test.db";
 
     CDictDatabaseSqlite databaseUtil;

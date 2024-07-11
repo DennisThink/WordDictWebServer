@@ -114,7 +114,7 @@ TEST_CASE("ServerConfigMysql") {
     DictWebServerConfig cfg = FromJsonContent(strConfig);
     CHECK_EQ(cfg.m_strServerIp, "127.0.0.1");
     CHECK_EQ(cfg.m_nServerPort, 8080);
-    CHECK_EQ(cfg.m_strDataBaseType, "MYSQL");
+    CHECK_EQ(cfg.m_eDataBaseType, DataBaseType::MY_SQL);
     CHECK_FALSE(cfg.m_dictCfg == nullptr);
     if (nullptr != cfg.m_dictCfg)
     {
@@ -171,7 +171,7 @@ TEST_CASE("ServerConfigJson") {
     DictWebServerConfig cfg = FromJsonContent(strConfig);
     CHECK_EQ(cfg.m_strServerIp, "127.0.0.1");
     CHECK_EQ(cfg.m_nServerPort, 8080);
-    CHECK_EQ(cfg.m_strDataBaseType, "JSON");
+    CHECK_EQ(cfg.m_eDataBaseType, DataBaseType::JSON);
     CHECK_FALSE(cfg.m_dictCfg == nullptr);
     if (nullptr != cfg.m_dictCfg)
     {
