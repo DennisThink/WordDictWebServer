@@ -1,3 +1,5 @@
+#ifndef _C_DICT_DATABASE_MYSQL_H_
+#define _C_DICT_DATABASE_MYSQL_H_
 #include "CDictDatabaseInterface.hpp"
 #include "mysql.h"
 class CDictDatabaseMysql:public CDictDatabaseInterface
@@ -39,3 +41,4 @@ private:
 	MYSQL* m_mysql;
 	UserWordDataBaseCfgMysql m_config;
 };
+#endif

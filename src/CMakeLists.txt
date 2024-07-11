@@ -28,7 +28,8 @@ add_executable(HttpServer ./server/cpp_http_main.cpp
                           ./server/CCppHttpLibServer.cpp 
                           ./server/CHttpServerInterface.cpp
 						  ./include/base/word_dict_struct.cpp
-						  ./include/thirdparty/json11/json11.cpp)
+						  ./include/thirdparty/json11/json11.cpp
+						  ./include/base/CDictDatabaseMySql.cpp)
 SET(INC_BASE ./include/)
 SET(SQLITE_CPP_FILE ${INC_BASE}/thirdparty/SQLiteCpp/src/Backup.cpp  
 					${INC_BASE}/thirdparty/SQLiteCpp/src/Column.cpp 
@@ -75,4 +76,10 @@ if(CMAKE_HOST_WIN32)
 target_link_libraries(DictWebServer mysqlclient.lib)
 else()
 target_link_libraries(DictWebServer mysqlclient)
+endif()
+
+if(CMAKE_HOST_WIN32)
+target_link_libraries(HttpServer mysqlclient.lib)
+else()
+target_link_libraries(HttpServer mysqlclient)
 endif()
