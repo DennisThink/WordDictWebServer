@@ -41,10 +41,10 @@ SET(SQLITE_CPP_FILE ${INC_BASE}/thirdparty/SQLiteCpp/src/Backup.cpp
 SET(SQLITE_FILE ${INC_BASE}/thirdparty/sqlite/sqlite3.c)
 
 
-
 add_executable(Dict_Test ./dict_test/dict_test_main.cpp
 						./include/base/word_dict_struct.cpp
 						./include/base/CDictDatabaseSqlite.cpp
+						./include/base/CDictDatabaseMySql.cpp
 						./include/base/CDictDatabaseJson.cpp
 						./include/thirdparty/json11/json11.cpp
 						${SQLITE_CPP_FILE}

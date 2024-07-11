@@ -84,13 +84,16 @@ public:
 
 struct DictDataBaseCfgJson : public DictDataBaseCfg {
 public:
-    DictDataBaseCfgJson() {};
+    DictDataBaseCfgJson(){};
     virtual ~DictDataBaseCfgJson() {};
     std::string m_jsonFileName;
     int m_nLevel;
 };
 
 struct DictDataBaseCfgMysql : public DictDataBaseCfg {
+public:
+    DictDataBaseCfgMysql() {};
+    virtual ~DictDataBaseCfgMysql() {};
     std::string m_strMysqlServerIp;
     int m_nMysqlServerPort;
     std::string m_strMysqlUserName;

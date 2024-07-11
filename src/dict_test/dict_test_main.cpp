@@ -1,15 +1,14 @@
+#include "word_dict_struct.hpp"
 #define DOCTEST_CONFIG_IMPLEMENT
 #include "doctest.h"
 
 #include "CDictDatabaseJson.hpp"
 #include "CDictDatabaseSqlite.hpp"
+#include "CDictDatabaseMySql.hpp"
 
-//#include "CDictDatabaseMySql.hpp"
-
-
-
+#include <string>
 TEST_CASE("DictJson") {
-	CHECK(1==1);
+    CHECK(1 == 1);
     DictDataBaseCfgJson cfg;
     cfg.m_jsonFileName = "middle_school.json";
 
@@ -39,8 +38,8 @@ TEST_CASE("UserWordJson") {
 
     std::string strWord = "apple";
     std::string strToken = "dennisthink";
-    
-    if(dataUtil.IsKnownWord(strWord, strToken))
+
+    if (dataUtil.IsKnownWord(strWord, strToken))
     {
         CHECK(dataUtil.DeleteKnownWord(strWord, strToken));
         CHECK_FALSE(dataUtil.IsKnownWord(strWord, strToken));
@@ -51,13 +50,13 @@ TEST_CASE("UserWordJson") {
         CHECK(dataUtil.IsKnownWord(strWord, strToken));
 
     }
- 
+
     if (dataUtil.IsUnKnownWord(strWord, strToken))
     {
         CHECK(dataUtil.DeleteUnKnownWord(strWord, strToken));
         CHECK_FALSE(dataUtil.IsUnKnownWord(strWord, strToken));
     }
-    else 
+    else
     {
         CHECK(dataUtil.InsertUnKnownWord(strWord, strToken));
         CHECK(dataUtil.IsUnKnownWord(strWord, strToken));
@@ -118,7 +117,7 @@ TEST_CASE("ServerConfigMysql") {
     CHECK_FALSE(cfg.m_dictCfg == nullptr);
     if (nullptr != cfg.m_dictCfg)
     {
-        DictDataBaseCfgMysql * pCfg = dynamic_cast<DictDataBaseCfgMysql*>(cfg.m_dictCfg.get());
+        DictDataBaseCfgMysql* pCfg = dynamic_cast<DictDataBaseCfgMysql*>(cfg.m_dictCfg.get());
         CHECK_FALSE(pCfg == nullptr);
         if (nullptr != pCfg)
         {
@@ -236,10 +235,9 @@ TEST_CASE("UserWordSqlite") {
     }
 }
 
-/*
 TEST_CASE("DictMySql") {
     CHECK(1 == 1);
-    MysqlDatabaseConfig cfg;
+    DictDataBaseCfgMysql cfg;
     cfg.m_strMysqlServerIp = "localhost";
     cfg.m_nMysqlServerPort = 3306;
     cfg.m_strMysqlUserName = "test";
@@ -263,7 +261,51 @@ TEST_CASE("DictMySql") {
     CHECK(databaseUtil.DeleteWordElem(newWord));
     CHECK_FALSE(databaseUtil.IsWordInDict(strNewWord));
     //CHECK(databaseUtil.UpdateWordFrequency(strEnglish));
-}*/
+}
+
+TEST_CASE("UserWordMysql") {
+    CHECK(1 == 1);
+    UserWordDataBaseCfgMysql cfg;
+    cfg.m_strMysqlServerIp = "localhost";
+    cfg.m_nMysqlServerPort = 3306;
+    cfg.m_strMysqlUserName = "test";
+    cfg.m_strMysqlPassoword = "test@1990";
+    cfg.m_strDataBase = "en_cn_dict";
+
+    CUserWordDatabaseMysql databaseUtil;
+    CHECK(databaseUtil.SetUserWordDatabaseConfig(&cfg));
+    std::string strWord = "apple";
+    std::string strToken = "dennisthink@hotmail.com";
+    if (databaseUtil.IsKnownWord(strWord, strToken))
+    {
+        CHECK(databaseUtil.DeleteKnownWord(strWord, strToken));
+        CHECK_FALSE(databaseUtil.IsKnownWord(strWord, strToken));
+    }
+    else
+    {
+        CHECK(databaseUtil.InsertKnownWord(strWord, strToken));
+        CHECK(databaseUtil.IsKnownWord(strWord, strToken));
+    }
+
+    if (databaseUtil.IsUnKnownWord(strWord, strToken)) 
+    {
+        CHECK(databaseUtil.DeleteUnKnownWord(strWord, strToken));
+        CHECK_FALSE(databaseUtil.IsUnKnownWord(strWord, strToken));
+    }
+    else
+    {
+        CHECK(databaseUtil.InsertUnKnownWord(strWord, strToken));
+        CHECK(databaseUtil.IsUnKnownWord(strWord, strToken));
+    }
+
+    CHECK(databaseUtil.UpdateWordFrequency(strWord, strToken));
+    CHECK(databaseUtil.UpdateUserLanguageLevel(strToken, 10));
+    int nLevel = -1;
+    CHECK(databaseUtil.GetUserLanguageLevel(strToken, nLevel));
+    CHECK(databaseUtil.InsertUserLanguageLevel(strToken, nLevel));
+}
+
+
 int main(int argc, char* argv[])
 {
     doctest::Context context;
@@ -276,7 +318,5 @@ int main(int argc, char* argv[])
         // propagate the result of the tests
         return res;
     }
-
-    printf("%s\n", "Hello, World!");
     return 0;
 }

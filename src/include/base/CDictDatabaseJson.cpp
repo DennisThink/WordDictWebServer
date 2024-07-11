@@ -211,10 +211,25 @@ bool CUserWordDatabaseJson::DeleteUnKnownWord(const std::string strWord, const s
 	return true;
 }
 
-bool CUserWordDatabaseJson::UpdateWordFrequency(const std::string strWord)
+bool CUserWordDatabaseJson::UpdateWordFrequency(const std::string strWord, const std::string strToken)
 {
 	return false;
 }
+
+bool CUserWordDatabaseJson::InsertUserLanguageLevel(const std::string strToken, const int nLevel)
+{
+	return false;
+}
+
+bool CUserWordDatabaseJson::UpdateUserLanguageLevel(const std::string strToken, const int nLevel)
+{
+	return false;
+}
+bool CUserWordDatabaseJson::GetUserLanguageLevel(const std::string strToken, int& nLevel)
+{
+	return false;
+}
+
 bool CUserWordDatabaseJson::IsUnKnownWord(const std::string strWord, const std::string strToken)
 {
 	bool bHasExist = false;
@@ -229,6 +244,7 @@ bool CUserWordDatabaseJson::IsUnKnownWord(const std::string strWord, const std::
 
 	return bHasExist;
 }
+
 
 void CUserWordDatabaseJson::InitArrayFromFile()
 {

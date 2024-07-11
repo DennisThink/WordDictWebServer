@@ -29,7 +29,10 @@ public:
 	virtual bool DeleteUnKnownWord(const std::string strWord, const std::string strToken) = 0;
 	virtual bool IsUnKnownWord(const std::string strWord, const std::string strToken) = 0;
 
-	virtual bool UpdateWordFrequency(const std::string strWord) = 0;
+	virtual bool UpdateWordFrequency(const std::string strWord,const std::string strToken) = 0;
+	virtual bool InsertUserLanguageLevel(const std::string strToken, const int nLevel) = 0;
+	virtual bool UpdateUserLanguageLevel(const std::string strToken, const int nLevel) = 0;
+	virtual bool GetUserLanguageLevel(const std::string strToken, int& nLevel) = 0;
 };
 
 using CDictDataBase_PTR = std::shared_ptr<CDictDatabaseInterface>;

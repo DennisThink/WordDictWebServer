@@ -184,43 +184,115 @@ bool CUserWordDatabaseMysql::DeleteUnKnownWord(const std::string strWord, const 
 	return bResult;
 }
 
-bool  CUserWordDatabaseMysql::SetUserWordDatabaseConfig(const UserWordDataBaseCfg* cfg)
+bool CUserWordDatabaseMysql::UpdateWordFrequency(const std::string strWord, const std::string strToken)
 {
-	if (nullptr != cfg)
+	return false;
+}
+
+
+bool CUserWordDatabaseMysql::InsertUserLanguageLevel(const std::string strToken, const int nLevel)
+{
+	bool bResult = false;
+	std::string strSelect = R"(INSERT INTO T_USER_LANGUAGE_LEVEL(F_TOKEN,F_LEVEL) VALUES("%s",%d);)";
+	char buff[256] = { 0 };
+	sprintf(buff, strSelect.c_str(), strToken.c_str(),nLevel);
+	std::cout << "SQL: " << buff << std::endl;
+	try
 	{
-		
-		if (nullptr != cfg && NULL != cfg)
-		{
-			m_config = *((UserWordDataBaseCfgMysql*)(cfg));
-			if (NULL != m_mysql)
-			{
-				if (!mysql_real_connect(m_mysql,       /* MYSQL structure to use */
-					m_config.m_strMysqlServerIp.c_str(),         /* server hostname or IP address */
-					m_config.m_strMysqlUserName.c_str(),         /* mysql user */
-					m_config.m_strMysqlPassoword.c_str(),          /* password */
-					m_config.m_strDataBase.c_str(),               /* default database to use, NULL for none */
-					m_config.m_nMysqlServerPort,           /* port number, 0 for default */
-					NULL,        /* socket file or named pipe name */
-					CLIENT_FOUND_ROWS /* connection flags */)) {
-					fprintf(stderr, "mysql_real_connect() failed: '%s'\n", mysql_error(m_mysql));
-					puts("Connect failed\n");
-				}
-				else {
-					puts("Connect OK\n");
-				}
-			}
-			return true;
+		if (mysql_query(m_mysql, buff)) {
+			printf("Query failed: %s\n", mysql_error(m_mysql));
 		}
 		else {
-			return false;
+			MYSQL_RES* result = mysql_store_result(m_mysql);
+
+			if (!result) {
+				printf("Couldn't get results set: %s\n", mysql_error(m_mysql));
+			}
+			else {
+				mysql_free_result(result);
+			}
 		}
 	}
-	return false;
+	catch (std::exception& ec) {
+
+	}
+	return bResult;
 }
-bool CUserWordDatabaseMysql::UpdateWordFrequency(const std::string strWord)
+
+bool CUserWordDatabaseMysql::UpdateUserLanguageLevel(const std::string strToken, const int nLevel)
 {
 	return false;
 }
+
+bool CUserWordDatabaseMysql::GetUserLanguageLevel(const std::string strToken, int& nLevel)
+{
+	bool bResult = false;
+	std::string strSelect = R"(SELECT F_TOKEN,F_LEVEL FROM T_USER_LANGUAGE_LEVEL WHERE F_TOKEN="%s";)";
+	char buff[256] = { 0 };
+	sprintf(buff, strSelect.c_str(),strToken.c_str());
+	std::cout << "SQL: " << buff << std::endl;
+	try
+	{
+		if (mysql_query(m_mysql, buff)) {
+			printf("Query failed: %s\n", mysql_error(m_mysql));
+		}
+		else {
+			MYSQL_RES* result = mysql_store_result(m_mysql);
+
+			if (!result) {
+				printf("Couldn't get results set: %s\n", mysql_error(m_mysql));
+			}
+			else {
+				MYSQL_ROW row;
+				unsigned int num_fields = mysql_num_fields(result);
+				printf("get results set: %s\n", mysql_error(m_mysql));
+				while ((row = mysql_fetch_row(result))) {
+					nLevel = std::atoi(row[1]);
+					putchar('\n');
+					bResult = true;
+					break;
+				}
+
+				mysql_free_result(result);
+			}
+		}
+	}
+	catch (std::exception& ec) {
+
+	}
+	return bResult;
+}
+
+bool  CUserWordDatabaseMysql::SetUserWordDatabaseConfig(const UserWordDataBaseCfg* cfg)
+{
+
+	if (nullptr != cfg && NULL != cfg)
+	{
+		m_config = *((UserWordDataBaseCfgMysql*)(cfg));
+		if (NULL != m_mysql)
+		{
+			if (!mysql_real_connect(m_mysql,       /* MYSQL structure to use */
+				m_config.m_strMysqlServerIp.c_str(),         /* server hostname or IP address */
+				m_config.m_strMysqlUserName.c_str(),         /* mysql user */
+				m_config.m_strMysqlPassoword.c_str(),          /* password */
+				m_config.m_strDataBase.c_str(),               /* default database to use, NULL for none */
+				m_config.m_nMysqlServerPort,           /* port number, 0 for default */
+				NULL,        /* socket file or named pipe name */
+				CLIENT_FOUND_ROWS /* connection flags */)) {
+				fprintf(stderr, "mysql_real_connect() failed: '%s'\n", mysql_error(m_mysql));
+				puts("Connect failed\n");
+			}
+			else {
+				puts("Connect OK\n");
+			}
+		}
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 bool CUserWordDatabaseMysql::IsUnKnownWord(const std::string strWord, const std::string strToken)
 {
 	bool bResult = false;

@@ -166,10 +166,26 @@ bool CUserWordDatabaseSqlite::DeleteUnKnownWord(const std::string strWord, const
 }
 
 
-bool CUserWordDatabaseSqlite::UpdateWordFrequency(const std::string strWord)
+bool CUserWordDatabaseSqlite::UpdateWordFrequency(const std::string strWord, const std::string strToken)
 {
     return false;
 }
+
+bool CUserWordDatabaseSqlite::InsertUserLanguageLevel(const std::string strToken, const int nLevel)
+{
+    return false;
+}
+
+bool CUserWordDatabaseSqlite::UpdateUserLanguageLevel(const std::string strToken, const int nLevel)
+{
+    return false;
+}
+
+bool CUserWordDatabaseSqlite::GetUserLanguageLevel(const std::string strToken, int& nLevel)
+{
+    return false;
+}
+
 bool CUserWordDatabaseSqlite::IsUnKnownWord(const std::string strWord, const std::string strToken)
 {
     bool bExist = false;

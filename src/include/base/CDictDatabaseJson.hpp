@@ -41,7 +41,10 @@ public:
 	virtual bool DeleteUnKnownWord(const std::string strWord, const std::string strToken) override;
 	virtual bool IsUnKnownWord(const std::string strWord, const std::string strToken) override;
 
-	virtual bool UpdateWordFrequency(const std::string strWord) override;
+	virtual bool UpdateWordFrequency(const std::string strWord, const std::string strToken) override;
+	virtual bool InsertUserLanguageLevel(const std::string strToken, const int nLevel) override;
+	virtual bool UpdateUserLanguageLevel(const std::string strToken, const int nLevel) override;
+	virtual bool GetUserLanguageLevel(const std::string strToken, int& nLevel) override;
 private:
 	void InitArrayFromFile();
 	void SaveArrayToFile();
