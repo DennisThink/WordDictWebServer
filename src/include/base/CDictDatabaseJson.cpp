@@ -216,6 +216,16 @@ bool CUserWordDatabaseJson::UpdateWordFrequency(const std::string strWord, const
 	return false;
 }
 
+bool CUserWordDatabaseJson::InsertWordFrequency(const std::string strWord, const std::string strToken)
+{
+	return false;
+}
+
+bool CUserWordDatabaseJson::IsWordFrequencyExist(const std::string strWord, const std::string strToken)
+{
+	return false;
+}
+
 bool CUserWordDatabaseJson::InsertUserLanguageLevel(const std::string strToken, const int nLevel)
 {
 	return false;

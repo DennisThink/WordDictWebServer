@@ -171,6 +171,16 @@ bool CUserWordDatabaseSqlite::UpdateWordFrequency(const std::string strWord, con
     return false;
 }
 
+bool CUserWordDatabaseSqlite::InsertWordFrequency(const std::string strWord, const std::string strToken)
+{
+    return false;
+}
+
+bool CUserWordDatabaseSqlite::IsWordFrequencyExist(const std::string strWord, const std::string strToken)
+{
+    return false;
+}
+
 bool CUserWordDatabaseSqlite::InsertUserLanguageLevel(const std::string strToken, const int nLevel)
 {
     return false;

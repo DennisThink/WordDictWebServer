@@ -290,7 +290,7 @@ TEST_CASE("DictMySql") {
     cfg.m_nMysqlServerPort = 3306;
     cfg.m_strMysqlUserName = "test";
     cfg.m_strMysqlPassoword = "test@1990";
-    cfg.m_strDataBase = "en_cn_dict";
+    cfg.m_strDataBase = "json_dict";
 
     CDictDatabaseMysql databaseUtil;
     databaseUtil.SetDictDatabaseConfig(&cfg);
@@ -318,7 +318,7 @@ TEST_CASE("UserWordMysql") {
     cfg.m_nMysqlServerPort = 3306;
     cfg.m_strMysqlUserName = "test";
     cfg.m_strMysqlPassoword = "test@1990";
-    cfg.m_strDataBase = "en_cn_dict";
+    cfg.m_strDataBase = "json_dict";
 
     CUserWordDatabaseMysql databaseUtil;
     CHECK(databaseUtil.SetUserWordDatabaseConfig(&cfg));
@@ -345,8 +345,15 @@ TEST_CASE("UserWordMysql") {
         CHECK(databaseUtil.InsertUnKnownWord(strWord, strToken));
         CHECK(databaseUtil.IsUnKnownWord(strWord, strToken));
     }
-
-    CHECK(databaseUtil.UpdateWordFrequency(strWord, strToken));
+    if (databaseUtil.IsWordFrequencyExist(strWord, strToken))
+    {
+        CHECK(databaseUtil.UpdateWordFrequency(strWord, strToken));
+    }
+    else
+    {
+        CHECK(databaseUtil.InsertWordFrequency(strWord, strToken));
+        CHECK(databaseUtil.UpdateWordFrequency(strWord, strToken));
+    }
     CHECK(databaseUtil.UpdateUserLanguageLevel(strToken, 10));
     int nLevel = -1;
     CHECK(databaseUtil.GetUserLanguageLevel(strToken, nLevel));

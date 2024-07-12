@@ -24,7 +24,7 @@ bool CUserWordDatabaseMysql::InsertKnownWord(const std::string strWord, const st
 {
 	std::string strCreateSql = R"(INSERT INTO T_KNOWN_WORDS(
 			F_ENGLISH,
-			F_TOKEN) VALUES('%s','%s');)";
+			F_TOKEN) VALUES("%s","%s");)";
 	char buff[512] = { 0 };
 	sprintf(buff, strCreateSql.c_str(),strWord.c_str(), strToken.c_str());
 	std::cout << buff << std::endl;
@@ -66,33 +66,15 @@ bool CUserWordDatabaseMysql::DeleteKnownWord(const std::string strWord, const st
 	std::string strSelect = R"(DELETE FROM T_KNOWN_WORDS WHERE F_ENGLISH="%s" AND F_TOKEN="%s";)";
 	char buff[256] = { 0 };
 	sprintf(buff, strSelect.c_str(), strWord.c_str(),strToken.c_str());
-	std::cout << "SQL: " << buff << std::endl;
-	{
-		if (mysql_query(m_mysql, buff)) {
-			printf("Query failed: %s\n", mysql_error(m_mysql));
-		}
-		else {
-			MYSQL_RES* result = mysql_store_result(m_mysql);
-
-			if (!result) {
-				printf("Couldn't get results set: %s\n", mysql_error(m_mysql));
-			}
-			else {
-				MYSQL_ROW row;
-				unsigned int num_fields = mysql_num_fields(result);
-				printf("get results set: %s\n", mysql_error(m_mysql));
-				while ((row = mysql_fetch_row(result))) {
-					printf("ROW loop get results set: %s\n", mysql_error(m_mysql));
-					bResult = true;
-					putchar('\n');
-					break;
-				}
-
-				mysql_free_result(result);
-			}
-		}
+	int nResult = mysql_query(m_mysql, buff);
+	mysql_commit(m_mysql);
+	if (nResult == 0) {
+		return true;
 	}
-	return bResult;
+	else {
+		return false;
+	}
+	return false;
 }
 
 bool CUserWordDatabaseMysql::IsKnownWord(const std::string strWord, const std::string strToken)
@@ -156,6 +138,64 @@ bool CUserWordDatabaseMysql::DeleteUnKnownWord(const std::string strWord, const 
 	char buff[256] = { 0 };
 	sprintf(buff, strSelect.c_str(), strWord.c_str(),strToken.c_str());
 	std::cout << "SQL: " << buff << std::endl;
+	int nResult = mysql_query(m_mysql, buff);
+	mysql_commit(m_mysql);
+	if (nResult == 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+	return false;
+}
+
+bool CUserWordDatabaseMysql::UpdateWordFrequency(const std::string strWord, const std::string strToken)
+{
+	std::string strCreateSql = R"(UPDATE T_WORD_FREQUENCY 
+	 SET F_TIMES=F_TIMES+1 WHERE F_ENGLISH="%s" AND F_TOKEN="%s";)";
+	char buff[512] = { 0 };
+	sprintf(buff, strCreateSql.c_str(), strWord.c_str(), strToken.c_str());
+	std::cout << buff << std::endl;
+	int nResult = mysql_query(m_mysql, buff);
+	mysql_commit(m_mysql);
+	if (nResult == 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+	return false;
+}
+
+bool CUserWordDatabaseMysql::InsertWordFrequency(const std::string strWord, const std::string strToken)
+{
+	std::string strCreateSql = R"(INSERT INTO T_WORD_FREQUENCY(
+			F_ENGLISH,
+			F_TOKEN,
+			F_TIMES) VALUES('%s','%s',0);)";
+	char buff[512] = { 0 };
+	sprintf(buff, strCreateSql.c_str(), strWord.c_str(), strToken.c_str());
+	std::cout << buff << std::endl;
+	int nResult = mysql_query(m_mysql, buff);
+	mysql_commit(m_mysql);
+	if (nResult == 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+	return false;
+	return false;
+}
+
+bool CUserWordDatabaseMysql::IsWordFrequencyExist(const std::string strWord, const std::string strToken)
+{
+	bool bResult = false;
+	std::string strSelect = R"(SELECT F_TIMES FROM T_WORD_FREQUENCY WHERE F_ENGLISH="%s" AND F_TOKEN="%s";)";
+	char buff[256] = { 0 };
+	sprintf(buff, strSelect.c_str(), strWord.c_str(),strToken.c_str());
+	std::cout << "SQL: " << buff << std::endl;
+	try
 	{
 		if (mysql_query(m_mysql, buff)) {
 			printf("Query failed: %s\n", mysql_error(m_mysql));
@@ -171,44 +211,11 @@ bool CUserWordDatabaseMysql::DeleteUnKnownWord(const std::string strWord, const 
 				unsigned int num_fields = mysql_num_fields(result);
 				printf("get results set: %s\n", mysql_error(m_mysql));
 				while ((row = mysql_fetch_row(result))) {
-					printf("ROW loop get results set: %s\n", mysql_error(m_mysql));
-					bResult = true;
 					putchar('\n');
+					bResult = true;
 					break;
 				}
 
-				mysql_free_result(result);
-			}
-		}
-	}
-	return bResult;
-}
-
-bool CUserWordDatabaseMysql::UpdateWordFrequency(const std::string strWord, const std::string strToken)
-{
-	return false;
-}
-
-
-bool CUserWordDatabaseMysql::InsertUserLanguageLevel(const std::string strToken, const int nLevel)
-{
-	bool bResult = false;
-	std::string strSelect = R"(INSERT INTO T_USER_LANGUAGE_LEVEL(F_TOKEN,F_LEVEL) VALUES("%s",%d);)";
-	char buff[256] = { 0 };
-	sprintf(buff, strSelect.c_str(), strToken.c_str(),nLevel);
-	std::cout << "SQL: " << buff << std::endl;
-	try
-	{
-		if (mysql_query(m_mysql, buff)) {
-			printf("Query failed: %s\n", mysql_error(m_mysql));
-		}
-		else {
-			MYSQL_RES* result = mysql_store_result(m_mysql);
-
-			if (!result) {
-				printf("Couldn't get results set: %s\n", mysql_error(m_mysql));
-			}
-			else {
 				mysql_free_result(result);
 			}
 		}
@@ -219,8 +226,40 @@ bool CUserWordDatabaseMysql::InsertUserLanguageLevel(const std::string strToken,
 	return bResult;
 }
 
+
+bool CUserWordDatabaseMysql::InsertUserLanguageLevel(const std::string strToken, const int nLevel)
+{
+	bool bResult = false;
+	std::string strSelect = R"(INSERT INTO T_USER_LANGUAGE_LEVEL(F_TOKEN,F_LEVEL) VALUES("%s",%d);)";
+	char buff[256] = { 0 };
+	sprintf(buff, strSelect.c_str(), strToken.c_str(),nLevel);
+	std::cout << "SQL: " << buff << std::endl;
+	int nResult = mysql_query(m_mysql, buff);
+	mysql_commit(m_mysql);
+	if (nResult == 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+	return false;
+}
+
 bool CUserWordDatabaseMysql::UpdateUserLanguageLevel(const std::string strToken, const int nLevel)
 {
+	bool bResult = false;
+	std::string strSelect = R"(UPDATE T_USER_LANGUAGE_LEVEL SET F_LEVEL=%d  WHERE F_TOKEN="%s";)";
+	char buff[256] = { 0 };
+	sprintf(buff, strSelect.c_str(), nLevel,strToken.c_str());
+	std::cout << "SQL: " << buff << std::endl;
+	int nResult = mysql_query(m_mysql, buff);
+	mysql_commit(m_mysql);
+	if (nResult == 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
 	return false;
 }
 

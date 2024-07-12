@@ -42,6 +42,9 @@ public:
 	virtual bool IsUnKnownWord(const std::string strWord, const std::string strToken) override;
 
 	virtual bool UpdateWordFrequency(const std::string strWord, const std::string strToken) override;
+	virtual bool InsertWordFrequency(const std::string strWord, const std::string strToken) override;
+	virtual bool IsWordFrequencyExist(const std::string strWord, const std::string strToken) override;
+
 	virtual bool InsertUserLanguageLevel(const std::string strToken, const int nLevel) override;
 	virtual bool UpdateUserLanguageLevel(const std::string strToken, const int nLevel) override;
 	virtual bool GetUserLanguageLevel(const std::string strToken, int& nLevel) override;
