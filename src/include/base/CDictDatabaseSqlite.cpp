@@ -152,7 +152,6 @@ bool CUserWordDatabaseSqlite::DeleteUnKnownWord(const std::string strWord, const
             query.bind(2, strToken);
             while (query.executeStep())
             {
-               
                 break;
             }
         }
@@ -168,31 +167,144 @@ bool CUserWordDatabaseSqlite::DeleteUnKnownWord(const std::string strWord, const
 
 bool CUserWordDatabaseSqlite::UpdateWordFrequency(const std::string strWord, const std::string strToken)
 {
-    return false;
+    bool bExist = true;
+    std::string strSelectWordTrans = R"(UPDATE T_WORD_FREQUENCY SET F_TIMES=F_TIMES+1 WHERE F_ENGLISH=? AND F_TOKEN=strToken);)";
+    if (nullptr != g_db) {
+        try {
+            SQLite::Statement query(*g_db, strSelectWordTrans);
+            query.bind(1, strWord);
+            query.bind(2, strToken);
+            query.bind(3, 1);
+            while (query.executeStep())
+            {
+                bExist = true;
+                break;
+            }
+        }
+        catch (std::exception& ec)
+        {
+            bExist = false;
+            std::cout << "Exception:  " << ec.what() << std::endl;
+        }
+    }
+    return bExist;
 }
 
 bool CUserWordDatabaseSqlite::InsertWordFrequency(const std::string strWord, const std::string strToken)
 {
-    return false;
+    bool bExist = true;
+    std::string strSelectWordTrans = R"(INSERT INTO T_WORD_FREQUENCY(F_ENGLISH,F_TOKEN,F_TIMES) VALUES(?,?,?);)";
+    if (nullptr != g_db) {
+        try {
+            SQLite::Statement query(*g_db, strSelectWordTrans);
+            query.bind(1, strWord);
+            query.bind(2, strToken);
+            query.bind(3, 1);
+            while (query.executeStep())
+            {
+                bExist = true;
+                break;
+            }
+        }
+        catch (std::exception& ec)
+        {
+            bExist = false;
+            std::cout << "Exception:  " << ec.what() << std::endl;
+        }
+    }
+    return bExist;
 }
 
 bool CUserWordDatabaseSqlite::IsWordFrequencyExist(const std::string strWord, const std::string strToken)
 {
-    return false;
+    bool bExist = false;
+    std::string strSelectWordTrans = R"(SELECT F_TIMES FROM T_WORD_FREQUENCY WHERE F_ENGLISH=? AND F_TOKEN=?;)";
+    if (nullptr != g_db) {
+        try {
+            SQLite::Statement query(*g_db, strSelectWordTrans);
+            query.bind(1, strWord);
+            query.bind(2, strToken);
+            while (query.executeStep())
+            {
+                bExist = true;
+                break;
+            }
+        }
+        catch (std::exception& ec)
+        {
+            std::cout << "Exception:  " << ec.what() << std::endl;
+        }
+    }
+    return bExist;
 }
 
 bool CUserWordDatabaseSqlite::InsertUserLanguageLevel(const std::string strToken, const int nLevel)
 {
-    return false;
+    bool bExist = false;
+    std::string strSelectWordTrans = R"(INSERT INTO T_USER_LANGUAGE_LEVEL(F_TOKEN,F_LEVEL) VALUES(?,?);)";
+    if (nullptr != g_db) {
+        try {
+            SQLite::Statement query(*g_db, strSelectWordTrans);
+            query.bind(1, strToken);
+            query.bind(2, nLevel);
+            while (query.executeStep())
+            {
+                bExist = true;
+                break;
+            }
+        }
+        catch (std::exception& ec)
+        {
+            std::cout << "Exception:  " << ec.what() << std::endl;
+        }
+    }
+    return bExist;
 }
 
 bool CUserWordDatabaseSqlite::UpdateUserLanguageLevel(const std::string strToken, const int nLevel)
 {
-    return false;
+    bool bExist = false;
+    std::string strSelectWordTrans = R"(INSERT INTO T_USER_LANGUAGE_LEVEL(F_TOKEN,F_LEVEL) VALUES(?,?);)";
+    if (nullptr != g_db) {
+        try {
+            SQLite::Statement query(*g_db, strSelectWordTrans);
+            query.bind(1, strToken);
+            query.bind(2, nLevel);
+            while (query.executeStep())
+            {
+                bExist = true;
+                break;
+            }
+        }
+        catch (std::exception& ec)
+        {
+            std::cout << "Exception:  " << ec.what() << std::endl;
+        }
+    }
+    return bExist;
 }
 
 bool CUserWordDatabaseSqlite::GetUserLanguageLevel(const std::string strToken, int& nLevel)
 {
+    bool bExist = false;
+    std::string strSelectWordTrans = R"(SELECT F_LEVEL FROM T_USER_LANGUAGE_LEVEL WHERE F_TOKEN=?;)";
+    if (nullptr != g_db) {
+        try {
+            SQLite::Statement query(*g_db, strSelectWordTrans);
+            query.bind(1, strToken);
+            while (query.executeStep())
+            { 
+                nLevel = query.getColumn(0).getInt();
+                bExist = true;
+                break;
+            }
+        }
+        catch (std::exception& ec)
+        {
+            std::cout << "Exception:  " << ec.what() << std::endl;
+        }
+    }
+    return bExist;
     return false;
 }
 
