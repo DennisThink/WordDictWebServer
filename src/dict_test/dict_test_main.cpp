@@ -69,7 +69,7 @@ TEST_CASE("UserWordJson") {
 TEST_CASE("DictSqlite") {
     CHECK(1 == 1);
     DictDataBaseCfgSqlite cfg;
-    cfg.m_sqliteFileName = "ecdict_test.db";
+    cfg.m_sqliteFileName = "ecdict_dict.db";
 
     CDictDatabaseSqlite databaseUtil;
     databaseUtil.SetDictDatabaseConfig(&cfg);
@@ -255,6 +255,7 @@ TEST_CASE("UserWordSqlite") {
     CUserWordDatabaseSqlite dataUtil;
 
     UserWordDataBaseCfgSqlite cfg;
+    cfg.m_strUserWordFileName = "ecdict_userWord.db";
     CHECK(dataUtil.SetUserWordDatabaseConfig(&cfg));
 
     std::string strWord = "apple";
@@ -280,6 +281,29 @@ TEST_CASE("UserWordSqlite") {
     {
         CHECK(dataUtil.InsertUnKnownWord(strWord, strToken));
         CHECK(dataUtil.IsUnKnownWord(strWord, strToken));
+    }
+
+    if (dataUtil.IsWordFrequencyExist(strWord, strToken))
+    {
+        CHECK(dataUtil.UpdateWordFrequency(strWord, strToken));
+    }
+    else
+    {
+        CHECK(dataUtil.InsertWordFrequency(strWord, strToken));
+        CHECK(dataUtil.UpdateWordFrequency(strWord, strToken));
+    }
+
+
+    if (dataUtil.IsWordFrequencyExist(strWord, strToken))
+    {
+        CHECK(dataUtil.UpdateUserLanguageLevel(strToken, 10));
+        int nLevel = -1;
+        CHECK(dataUtil.GetUserLanguageLevel(strToken, nLevel));
+    }
+    else
+    {
+        int nLevel = -1;
+        CHECK(dataUtil.InsertUserLanguageLevel(strToken, nLevel));
     }
 }
 

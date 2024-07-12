@@ -1,6 +1,8 @@
 #ifndef _C_DICT_DATA_BASE_SQLITE_H_
 #define _C_DICT_DATA_BASE_SQLITE_H_
 #include "CDictDatabaseInterface.hpp"
+#include "SQLiteCpp/SQLiteCpp.h"
+
 class CDictDatabaseSqlite:public CDictDatabaseInterface
 {
 public:
@@ -15,12 +17,15 @@ public:
 private:
 	void DatabaseInit(const std::string strFileName);
 	DictDataBaseCfgSqlite m_config;
+	std::shared_ptr<SQLite::Database> m_dbSqlite;
 };
 
 class CUserWordDatabaseSqlite :public CUserWordDatabaseInterface
 {
 public:
-	virtual bool SetUserWordDatabaseConfig(const UserWordDataBaseCfg* cfg)  override { return true; };
+	CUserWordDatabaseSqlite();
+	virtual ~CUserWordDatabaseSqlite();
+	virtual bool SetUserWordDatabaseConfig(const UserWordDataBaseCfg* cfg)  override;
 	virtual bool InsertKnownWord(const std::string strWord, const std::string strToken) override;
 	virtual bool DeleteKnownWord(const std::string strWord, const std::string strToken) override;
 	virtual bool IsKnownWord(const std::string strWord, const std::string strToken) override;
@@ -37,5 +42,9 @@ public:
 	virtual bool InsertUserLanguageLevel(const std::string strToken, const int nLevel) override;
 	virtual bool UpdateUserLanguageLevel(const std::string strToken, const int nLevel) override;
 	virtual bool GetUserLanguageLevel(const std::string strToken, int& nLevel) override;
+private:
+	void DatabaseInit(const std::string strFileName);
+	std::shared_ptr<SQLite::Database> m_dbSqlite;
+	UserWordDataBaseCfgSqlite m_config;
 };
 #endif
