@@ -220,13 +220,13 @@ DictWebServerConfig FromJsonContent(const std::string& jsonContent)
         {
             if (result.m_eDataBaseType == DataBaseType::SQLITE)
             {
-                /*auto databaseJson = resultJson["UserWordDataBase"];
-                auto pDict = new UserWordDatabaseConfigJson();
+                auto databaseJson = resultJson["UserWordDataBase"];
+                auto pDict = std::make_shared <UserWordDataBaseCfgSqlite>();
                 if (databaseJson["FileName"].is_string())
                 {
-                    pDict-> = databaseJson["FileName"].string_value();
+                    pDict->m_strUserWordFileName= databaseJson["FileName"].string_value();
                 }
-                result.m_userWordCfg = pDict;*/
+                result.m_userWordCfg = pDict;
             }
 
             if (result.m_eDataBaseType == DataBaseType::MY_SQL)

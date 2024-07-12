@@ -111,8 +111,7 @@ struct UserWordDataBaseCfgJson :public UserWordDataBaseCfg {
 };
 
 struct UserWordDataBaseCfgSqlite :public UserWordDataBaseCfg {
-    std::string m_strKnownWordsFileName;
-    std::string m_strUnKnownWordsFileName;
+    std::string m_strUserWordFileName;
 };
 
 struct UserWordDataBaseCfgMysql :public UserWordDataBaseCfg {

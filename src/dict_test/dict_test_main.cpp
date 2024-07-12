@@ -203,6 +203,54 @@ TEST_CASE("ServerConfigJson") {
         CHECK_FALSE(true);
     }
 }
+
+TEST_CASE("ServerConfigSqlite") {
+    std::string strConfig = R"({
+    "ServerIp":"127.0.0.1",
+    "ServerPort":8080,
+    "DataBaseType":"SQLITE",
+    "DictDataBase":{
+        "FileName":"ecdict_test.db"
+    },
+    "UserWordDataBase":{
+        "FileName":"user_word.db"
+    }
+   })";
+    DictWebServerConfig cfg = FromJsonContent(strConfig);
+    CHECK_EQ(cfg.m_strServerIp, "127.0.0.1");
+    CHECK_EQ(cfg.m_nServerPort, 8080);
+    CHECK_EQ(cfg.m_eDataBaseType, DataBaseType::SQLITE);
+    CHECK_FALSE(cfg.m_dictCfg == nullptr);
+    if (nullptr != cfg.m_dictCfg)
+    {
+        DictDataBaseCfgSqlite* pCfg = dynamic_cast<DictDataBaseCfgSqlite*>(cfg.m_dictCfg.get());
+        CHECK_FALSE(pCfg == nullptr);
+        if (nullptr != pCfg)
+        {
+            CHECK_EQ(pCfg->m_sqliteFileName, "ecdict_test.db");
+        }
+    }
+    else
+    {
+        CHECK_FALSE(true);
+    }
+
+    if (NULL != cfg.m_userWordCfg)
+    {
+        UserWordDataBaseCfgSqlite* pCfg = dynamic_cast<UserWordDataBaseCfgSqlite*>(cfg.m_dictCfg.get());
+        CHECK_FALSE(pCfg == NULL);
+        if (NULL != pCfg)
+        {
+
+            CHECK_EQ(pCfg->m_strUserWordFileName, "user_word.db");
+        }
+    }
+    else
+    {
+        CHECK_FALSE(true);
+    }
+}
+
 TEST_CASE("UserWordSqlite") {
     CUserWordDatabaseSqlite dataUtil;
 
