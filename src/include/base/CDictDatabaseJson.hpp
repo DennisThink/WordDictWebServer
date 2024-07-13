@@ -8,6 +8,20 @@ struct WordTokenElem
 	std::string m_strWord;
 	std::string m_strToken;
 };
+
+struct WordFrequencyElem
+{
+	std::string m_strWord;
+	std::string m_strToken;
+	int m_nTimes;
+};
+
+struct UserLanguageLevelElem
+{
+	std::string strToken;
+	int m_nLevel;
+};
+
 class CDictDatabaseJson :public CDictDatabaseInterface
 {
 public:
@@ -53,6 +67,8 @@ private:
 	void SaveArrayToFile();
 	std::vector<WordTokenElem> m_knownWords;
 	std::vector<WordTokenElem> m_unKnownWords;
+	std::vector<WordFrequencyElem> m_userWordFrequency;
+	std::vector<UserLanguageLevelElem> m_userLanguageLevels;
 private:
 	UserWordDataBaseCfgJson m_config;
 };

@@ -307,6 +307,62 @@ TEST_CASE("UserWordSqlite") {
     }
 }
 
+TEST_CASE("UserWordJson") {
+    CUserWordDatabaseJson dataUtil;
+
+    UserWordDataBaseCfgJson cfg;
+    cfg.m_strKnownWordsFileName = "known_words.json";
+    cfg.m_strUnKnownWordsFileName = "unknown_words.json";
+    CHECK(dataUtil.SetUserWordDatabaseConfig(&cfg));
+
+    std::string strWord = "apple";
+    std::string strToken = "dennisthink";
+
+    if (dataUtil.IsKnownWord(strWord, strToken))
+    {
+        CHECK(dataUtil.DeleteKnownWord(strWord, strToken));
+        CHECK_FALSE(dataUtil.IsKnownWord(strWord, strToken));
+    }
+    else
+    {
+        CHECK(dataUtil.InsertKnownWord(strWord, strToken));
+        CHECK(dataUtil.IsKnownWord(strWord, strToken));
+    }
+
+    if (dataUtil.IsUnKnownWord(strWord, strToken))
+    {
+        CHECK(dataUtil.DeleteUnKnownWord(strWord, strToken));
+        CHECK_FALSE(dataUtil.IsUnKnownWord(strWord, strToken));
+    }
+    else
+    {
+        CHECK(dataUtil.InsertUnKnownWord(strWord, strToken));
+        CHECK(dataUtil.IsUnKnownWord(strWord, strToken));
+    }
+
+    if (dataUtil.IsWordFrequencyExist(strWord, strToken))
+    {
+        CHECK(dataUtil.UpdateWordFrequency(strWord, strToken));
+    }
+    else
+    {
+        CHECK(dataUtil.InsertWordFrequency(strWord, strToken));
+        CHECK(dataUtil.UpdateWordFrequency(strWord, strToken));
+    }
+
+
+    int nLevel = -1;
+    if (dataUtil.GetUserLanguageLevel(strToken, nLevel))
+    {
+        CHECK(dataUtil.UpdateUserLanguageLevel(strToken, 10));
+    }
+    else
+    {
+        int nLevel = -1;
+        CHECK(dataUtil.InsertUserLanguageLevel(strToken, nLevel));
+    }
+}
+
 TEST_CASE("DictMySql") {
     CHECK(1 == 1);
     DictDataBaseCfgMysql cfg;

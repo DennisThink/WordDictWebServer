@@ -213,30 +213,79 @@ bool CUserWordDatabaseJson::DeleteUnKnownWord(const std::string strWord, const s
 
 bool CUserWordDatabaseJson::UpdateWordFrequency(const std::string strWord, const std::string strToken)
 {
+	for (auto& item : m_userWordFrequency)
+	{
+		if ((item.m_strWord == strWord) &&
+			(item.m_strToken == strToken))
+		{
+			item.m_nTimes += 1;
+			return true;
+		}
+	}
 	return false;
 }
 
 bool CUserWordDatabaseJson::InsertWordFrequency(const std::string strWord, const std::string strToken)
 {
-	return false;
+	if (IsWordFrequencyExist(strWord, strToken))
+	{
+		return false;
+	}
+	else
+	{
+		WordFrequencyElem elem;
+		elem.m_strWord = strWord;
+		elem.m_nTimes = 1;
+		elem.m_strToken = strToken;
+		m_userWordFrequency.push_back(elem);
+		return true;
+	}
 }
 
 bool CUserWordDatabaseJson::IsWordFrequencyExist(const std::string strWord, const std::string strToken)
 {
+	for (auto& item : m_userWordFrequency)
+	{
+		if ( (item.m_strWord == strWord) && 
+			 (item.m_strToken == strToken) )
+		{
+			return true;
+		}
+	}
 	return false;
 }
 
 bool CUserWordDatabaseJson::InsertUserLanguageLevel(const std::string strToken, const int nLevel)
 {
-	return false;
+	UserLanguageLevelElem elem;
+	elem.strToken = strToken;
+	elem.m_nLevel = nLevel;
+	m_userLanguageLevels.push_back(elem);
+	return true;
 }
 
 bool CUserWordDatabaseJson::UpdateUserLanguageLevel(const std::string strToken, const int nLevel)
 {
+	for (auto& item : m_userLanguageLevels)
+	{
+		if (item.strToken == strToken)
+		{
+			item.m_nLevel=nLevel;
+			return true;
+		}
+	}
 	return false;
 }
 bool CUserWordDatabaseJson::GetUserLanguageLevel(const std::string strToken, int& nLevel)
 {
+	for (auto& item : m_userLanguageLevels)
+	{
+		if (item.strToken == strToken)
+		{
+			nLevel = item.m_nLevel;
+			return true;
+		}
+	}
 	return false;
 }
 
