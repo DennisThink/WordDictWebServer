@@ -15,8 +15,11 @@ public:
 	std::string HandleEnglishToWordTranslate(const std::string& strReq);
 	std::string HandleAddWordToKnow(const std::string& strReq);
 	std::string HandleAddWordToUnKnow(const std::string& strReq);
+	std::string HandleSetUserLanguageLevel(const std::string& strReq);
 
 
+	SetUserLanguageLevelReq_t GetUserLanguageLevelReq(const std::string& strReq);
+	SetUserLanguageLevelRsp_t SetUserLanguageLevel(const SetUserLanguageLevelReq_t& req);
 	EnglishToChineseReq_t GetReqFromRequest(const std::string& strReq);
 	EnglishToChineseRsp_t CreateRspFromReq(const EnglishToChineseReq_t& req);
 	SentenceToWordsRsp_t TranslateSentence(const EnglishToChineseReq_t& req);

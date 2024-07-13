@@ -50,6 +50,9 @@ protected:
 
     void OnAddWordToUnKnow(Response_SHARED_PTR response,
         Request_SHARED_PTR request);
+
+    void OnSetUserLanguageLevel(Response_SHARED_PTR response,
+        Request_SHARED_PTR request);
     //AddWordToKnownRsp_t HandleAddOrRemoveReq(const AddWordToKnowReq_t& req);
     //EnglishToChineseRsp_t HandleSentenceToWordReq(const EnglishToChineseReq_t& req);
 public:

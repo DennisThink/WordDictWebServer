@@ -59,7 +59,14 @@ std::string CHttpServerInterface::HandleAddWordToUnKnow(const std::string& strRe
     std::string strVersion = AddRemoveRspToString(result);
     return strVersion;
 }
-
+std::string CHttpServerInterface::HandleSetUserLanguageLevel(const std::string& strReq)
+{
+    std::string strResult;
+    auto req = GetUserLanguageLevelReq(strReq);
+    auto rsp = SetUserLanguageLevel(req);
+    strResult = AddRemoveRspToString(rsp);
+    return strResult;
+}
 
 AddWordToUnKnownRsp_t CHttpServerInterface::AddWordToUnKnown(const AddWordToUnKnownReq_t& req)
 {
@@ -201,6 +208,17 @@ std::string CHttpServerInterface::ToLower(const std::string strOrg)
     std::transform(strCopy.begin(), strCopy.end(), strCopy.begin(),
         [](unsigned char c) { return std::tolower(c); });
     return strCopy;
+}
+
+SetUserLanguageLevelReq_t CHttpServerInterface::GetUserLanguageLevelReq(const std::string& strReq)
+{
+    SetUserLanguageLevelReq_t result;
+    return result;
+}
+SetUserLanguageLevelRsp_t CHttpServerInterface::SetUserLanguageLevel(const SetUserLanguageLevelReq_t& req)
+{
+    SetUserLanguageLevelRsp_t result;
+    return result;
 }
 
 EnglishToChineseReq_t CHttpServerInterface::GetReqFromRequest(const std::string& strReq)

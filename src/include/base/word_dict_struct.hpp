@@ -43,6 +43,13 @@ struct AddWordToKnownRsp_t
 };
 
 
+struct SetUserLanguageLevelReq_t
+{
+    std::string m_strToken;
+    int m_nLevel;
+};
+typedef AddWordToKnownRsp_t SetUserLanguageLevelRsp_t;
+
 typedef AddWordToKnowReq_t  AddWordToUnKnownReq_t;
 typedef AddWordToKnownRsp_t AddWordToUnKnownRsp_t;
 /*
@@ -142,7 +149,7 @@ std::string WordRspToString(const EnglishToChineseRsp_t& rsp);
 std::string SentenceRspToString(const SentenceToWordsRsp_t& rsp);
 AddWordToKnowReq_t AddRemoveWordReq(const std::string& strReq);
 std::string AddRemoveRspToString(const AddWordToKnownRsp_t& rsp);
-
+//std::string SetUserLanguageLevelRspToString(const Set)
 enum class DataBaseType
 {
     NONE,

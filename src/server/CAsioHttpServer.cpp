@@ -292,6 +292,11 @@ bool CAsioHttpServer::MatchUrlMethodAndFunction()
             OnAddWordToUnKnow(response, request);
         };
 
+    m_server.resource["^/v1/set_user_language_level$"]["POST"] = [this](Response_SHARED_PTR response,
+        Request_SHARED_PTR request) {
+            OnAddWordToUnKnow(response, request);
+        };
+
     m_server.default_resource["GET"] = [this](Response_SHARED_PTR response,
         Request_SHARED_PTR request) {
             OnDefaultGet(response, request);
@@ -388,4 +393,13 @@ void CAsioHttpServer::OnAddWordToUnKnow(Response_SHARED_PTR response,
     WriteRspString(response, strRsp);
     
     return;
+}
+
+void CAsioHttpServer::OnSetUserLanguageLevel(Response_SHARED_PTR response,
+    Request_SHARED_PTR request)
+{
+    std::cout << "OnSetUserLanguageLevel" << std::endl;
+    ShowRemotePeer(request);
+    std::string strReq = GetReqString(request);
+
 }
