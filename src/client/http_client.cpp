@@ -22,6 +22,10 @@ class CWordTranslateClient
 public:
     std::string GetVersion();
     std::string EnglishToChinese(std::string strEnglish);
+    void SentenceToWords();
+    void AddWordToKnown();
+    void AddWordToUnKnown();
+    void SetUserLanguageLevel();
     std::string GetRequestDefault();
     std::string PostRequestDefault();
 };
@@ -54,16 +58,13 @@ std::string CWordTranslateClient::EnglishToChinese(std::string strEnglish)
             std::cout << rsp->content.rdbuf() << std::endl;
         }
     }
+    //client.io_service->run();
+    return "";
+}
 
-    {
-        std::string strReqContent = R"({"token":"dennisthink@hotmail.com","english":"orange"})";
-        auto rsp = client.request("POST", "/v1/english_to_chinese", strReqContent.c_str());
-        if (rsp)
-        {
-            std::cout << rsp->content.rdbuf() << std::endl;
-        }
-    }
-
+void CWordTranslateClient::SentenceToWords()
+{
+    HttpClient client("localhost:8080");
     {
         std::string strReqContent = R"({"token":"dennisthink@hotmail.com","english":"The color of flower is red"})";
         auto rsp = client.request("POST", "/v1/sentence_to_words", strReqContent.c_str());
@@ -72,16 +73,11 @@ std::string CWordTranslateClient::EnglishToChinese(std::string strEnglish)
             std::cout << rsp->content.rdbuf() << std::endl;
         }
     }
+}
 
-    {
-        std::string strReqContent = R"({"token":"dennisthink@hotmail.com","english":"I like eating apples"})";
-        auto rsp = client.request("POST", "/v1/sentence_to_words", strReqContent.c_str());
-        if (rsp)
-        {
-            std::cout << rsp->content.rdbuf() << std::endl;
-        }
-    }
-
+void CWordTranslateClient::AddWordToKnown()
+{
+    HttpClient client("localhost:8080");
     {
         std::string strReqContent = R"({"token":"dennisthink@hotmail.com","english":"apple"})";
         auto rsp = client.request("POST", "/v1/add_word_to_known", strReqContent.c_str());
@@ -90,7 +86,11 @@ std::string CWordTranslateClient::EnglishToChinese(std::string strEnglish)
             std::cout << rsp->content.rdbuf() << std::endl;
         }
     }
+}
 
+void CWordTranslateClient::AddWordToUnKnown()
+{
+    HttpClient client("localhost:8080");
     {
         std::string strReqContent = R"({"token":"dennisthink@hotmail.com","word":"orange"})";
         auto rsp = client.request("POST", "/v1/add_word_to_unknown", strReqContent.c_str());
@@ -99,8 +99,19 @@ std::string CWordTranslateClient::EnglishToChinese(std::string strEnglish)
             std::cout << rsp->content.rdbuf() << std::endl;
         }
     }
-    //client.io_service->run();
-    return "";
+}
+
+void CWordTranslateClient::SetUserLanguageLevel()
+{
+    HttpClient client("localhost:8080");
+    {
+        std::string strReqContent = R"({"token":"dennisthink@hotmail.com","level":10})";
+        auto rsp = client.request("POST", "/v1/set_user_language_level$", strReqContent.c_str());
+        if (rsp)
+        {
+            std::cout << rsp->content.rdbuf() << std::endl;
+        }
+    }
 }
 
 std::string CWordTranslateClient::GetRequestDefault()
@@ -120,6 +131,10 @@ int main(int argc, char* argv[])
         CWordTranslateClient client;
         client.GetVersion();
         client.EnglishToChinese("apple");
+        client.SentenceToWords();
+        client.AddWordToKnown();
+        client.AddWordToUnKnown();
+        client.SetUserLanguageLevel();
     }
     catch (std::exception& ex)
     {
