@@ -54,7 +54,12 @@ std::ostream& operator<<(std::ostream& os,const T_ENGLISH_CHINSE_TRANS& p)
 
 std::string EnglishToChineseReq_t::ToString()
 {
-    return "";
+    json11::Json dataJson = json11::Json::object{
+      {"english",this->m_strEnglish},
+      {"token",this->m_strToken}
+    };
+    std::string strReq = dataJson.dump();
+    return strReq;
 }
 
 bool EnglishToChineseReq_t::FromString(const std::string& strReq)
@@ -87,6 +92,20 @@ std::string EnglishToChineseRsp_t::ToString()
 
 bool EnglishToChineseRsp_t::FromString(const std::string& strReq)
 {
+    std::string strErr;
+    auto resultJson = json11::Json::parse(strReq.c_str(), strErr);
+    if (strErr.empty())
+    {
+        this->m_code = resultJson["code"].int_value();
+        this->m_strMsg = resultJson["message"].string_value();
+        auto dataJson = resultJson["data"];
+        if (dataJson.is_object())
+        {
+            this->m_data.m_strChinese = dataJson["chinese"].string_value();
+            this->m_data.m_strEnglish = dataJson["english"].string_value();
+            return true;
+        }
+    }
     return false;
 }
 

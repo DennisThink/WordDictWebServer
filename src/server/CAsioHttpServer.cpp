@@ -143,11 +143,13 @@ void CAsioHttpServer::OnAddWordToKnow(Response_SHARED_PTR response,
 std::string CAsioHttpServer::GetReqString(Request_SHARED_PTR request)
 {
     std::string strReq = request->content.string();
+    std::cout << "REQ: " << strReq << std::endl;
     return strReq;
 }
 
 void CAsioHttpServer::WriteRspString(Response_SHARED_PTR rsp, const std::string str)
 {
+    std::cout << "RSP: " << str << std::endl;
     *rsp << "HTTP/1.1 200 OK\r\n"
         << "Content-Length: " << str.length() << "\r\n\r\n"
         << str;

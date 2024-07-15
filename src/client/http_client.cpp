@@ -12,6 +12,7 @@
 #include "crypto.hpp"
 #endif
 
+#include "word_dict_struct.hpp"
 using HttpServer = SimpleWeb::Server<SimpleWeb::HTTP>;
 using Response_SHARED_PTR = std::shared_ptr<HttpServer::Response>;
 using Request_SHARED_PTR = std::shared_ptr<HttpServer::Request>;
@@ -51,11 +52,28 @@ std::string CWordTranslateClient::EnglishToChinese(std::string strEnglish)
     std::cout << "Example POST request to http://localhost:8080/json"
         << std::endl;
     {
-        std::string strReqContent = R"({"token":"dennisthink@hotmail.com","english":"apple"})";
-        auto rsp = client.request("POST", "/v1/english_to_chinese", strReqContent.c_str());
+        EnglishToChineseReq_t req;
+        req.m_strEnglish = "apple";
+        req.m_strToken = "test@test.com";
+        //std::string strReqContent = R"({"token":"dennisthink@hotmail.com","english":"apple"})";
+        auto rsp = client.request("POST", "/v1/english_to_chinese", req.ToString().c_str());
         if (rsp)
         {
-            std::cout << rsp->content.rdbuf() << std::endl;
+            std::cout <<"RSP: "<< rsp->content.rdbuf() << std::endl;
+            std::string strRsp;
+            std::istringstream ss;
+            ss >> rsp->content.rdbuf();
+            std::string s = ss.str();
+            
+            EnglishToChineseRsp_t rsp;
+            if (rsp.FromString(s))
+            {
+                std::cout << "english_to_chinese Success" << std::endl;
+            }
+            else
+            {
+                std::cerr << "english_to_chinese Failed" << std::endl;
+            }
         }
     }
     //client.io_service->run();

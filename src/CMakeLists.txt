@@ -13,7 +13,7 @@ include_directories(./include/thirdparty/doctest/)
 include_directories(./include/thirdparty/cpp_http_lib/)
 include_directories(./include/thirdparty/clipp/include/)
 link_directories(./libs/mysqllib/lib/)
-add_executable(DictWebClient ./client/http_client.cpp)
+add_executable(DictWebClient ./client/http_client.cpp ./include/base/word_dict_struct.cpp ./include/thirdparty/json11/json11.cpp)
 add_executable(DictWebServer ./server/http_server.cpp 
 							 ./server/CAsioHttpServer.cpp
                              ./server/EnglishChineseWordDict.cpp 
