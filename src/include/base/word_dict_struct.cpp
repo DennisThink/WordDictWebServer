@@ -52,6 +52,24 @@ std::ostream& operator<<(std::ostream& os,const T_ENGLISH_CHINSE_TRANS& p)
     return os;
 }
 
+std::string EnglishToChineseReq_t::ToString()
+{
+    return "";
+}
+
+bool EnglishToChineseReq_t::FromString(const std::string& strReq)
+{
+    std::string strErr;
+    auto resultJson = json11::Json::parse(strReq.c_str(), strErr);
+    if (strErr.empty())
+    {
+        this->m_strToken = resultJson["token"].string_value();
+        this->m_strEnglish = resultJson["english"].string_value();
+        return true;
+    }
+    return false;
+}
+
 std::string EnglishToChineseRsp_t::ToString()
 {
     json11::Json dataJson = json11::Json::object{
@@ -91,6 +109,23 @@ std::string SentenceToWordsRsp_t::ToString()
     return strRsp;
 }
 
+
+bool AddWordToKnownRsp_t::FromString(const std::string& strReq)
+{
+    return false;
+}
+
+
+std::string SetUserLanguageLevelReq_t::ToString()
+{
+    return "";
+}
+
+bool SetUserLanguageLevelReq_t::FromString(const std::string& strReq)
+{
+    return false;
+}
+
 bool SentenceToWordsRsp_t::FromString(const std::string& strReq)
 {
     return false;
@@ -128,12 +163,11 @@ AddWordToKnowReq_t AddRemoveWordReq(const std::string& strReq)
     return result;
 }
 
-std::string AddRemoveRspToString(const AddWordToKnownRsp_t& rsp)
+std::string AddWordToKnownRsp_t::ToString()
 {
-
     json11::Json rspJson = json11::Json::object{
-       {"code",rsp.m_code},
-       {"message",rsp.m_strMsg}
+      {"code",this->m_code},
+      {"message",this->m_strMsg}
     };
     std::string strRsp = rspJson.dump();
     return strRsp;
