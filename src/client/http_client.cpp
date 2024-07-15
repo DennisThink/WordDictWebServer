@@ -39,7 +39,7 @@ std::string CWordTranslateClient::GetVersion()
     auto rsp = client.request("GET", "/version");
     if (rsp)
     {
-        std::cout << rsp->content.rdbuf() << std::endl;
+        std::cout << rsp->content.string() << std::endl;
     }
     //client.io_service->run();
     return "";
@@ -59,12 +59,8 @@ std::string CWordTranslateClient::EnglishToChinese(std::string strEnglish)
         auto rsp = client.request("POST", "/v1/english_to_chinese", req.ToString().c_str());
         if (rsp)
         {
-            std::cout <<"RSP: "<< rsp->content.rdbuf() << std::endl;
-            std::string strRsp;
-            std::istringstream ss;
-            ss >> rsp->content.rdbuf();
-            std::string s = ss.str();
-            
+            std::cout <<"RSP: "<< rsp->content.string() << std::endl;
+            std::string s = rsp->content.string();
             EnglishToChineseRsp_t rsp;
             if (rsp.FromString(s))
             {
@@ -84,11 +80,24 @@ void CWordTranslateClient::SentenceToWords()
 {
     HttpClient client("localhost:8080");
     {
-        std::string strReqContent = R"({"token":"dennisthink@hotmail.com","english":"The color of flower is red"})";
-        auto rsp = client.request("POST", "/v1/sentence_to_words", strReqContent.c_str());
+        EnglishToChineseReq_t req;
+        req.m_strToken = "test@test.com";
+        req.m_strEnglish = "The color of flower is red";
+    
+        auto rsp = client.request("POST", "/v1/sentence_to_words", req.ToString().c_str());
         if (rsp)
         {
-            std::cout << rsp->content.rdbuf() << std::endl;
+            std::string strRsp = rsp->content.string();
+            std::cout << "RSP : " << strRsp << std::endl;
+            SentenceToWordsRsp_t rsp;
+            if (rsp.FromString(strRsp))
+            {
+                std::cout << "SentenceToWords Success" << std::endl;
+            }
+            else
+            {
+                std::cout << "SentenceToWords Failed" << std::endl;
+            }
         }
     }
 }

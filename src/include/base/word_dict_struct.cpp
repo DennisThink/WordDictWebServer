@@ -99,7 +99,7 @@ bool EnglishToChineseRsp_t::FromString(const std::string& strReq)
         this->m_code = resultJson["code"].int_value();
         this->m_strMsg = resultJson["message"].string_value();
         auto dataJson = resultJson["data"];
-        if (dataJson.is_object())
+        if (!dataJson.is_null())
         {
             this->m_data.m_strChinese = dataJson["chinese"].string_value();
             this->m_data.m_strEnglish = dataJson["english"].string_value();
@@ -147,6 +147,24 @@ bool SetUserLanguageLevelReq_t::FromString(const std::string& strReq)
 
 bool SentenceToWordsRsp_t::FromString(const std::string& strReq)
 {
+    {
+        std::string strErr;
+        auto resultJson = json11::Json::parse(strReq.c_str(), strErr);
+        if (strErr.empty())
+        {
+            this->m_code = resultJson["code"].int_value();
+            this->m_strMsg = resultJson["word"].string_value();
+            auto dataArray = resultJson["data"];
+            for (auto& item : dataArray.array_items())
+            {
+                EnglishToChineseData_t elem;
+                elem.m_strChinese = item["chinese"].string_value();
+                elem.m_strEnglish = item["english"].string_value();
+                this->m_data.push_back(elem);
+            }
+            return true;
+        }
+    }
     return false;
 }
 
