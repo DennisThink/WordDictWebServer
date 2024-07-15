@@ -401,5 +401,7 @@ void CAsioHttpServer::OnSetUserLanguageLevel(Response_SHARED_PTR response,
     std::cout << "OnSetUserLanguageLevel" << std::endl;
     ShowRemotePeer(request);
     std::string strReq = GetReqString(request);
-
+    std::string strRsp = HandleSetUserLanguageLevel(strReq);
+    WriteRspString(response, strRsp);
+    return;
 }

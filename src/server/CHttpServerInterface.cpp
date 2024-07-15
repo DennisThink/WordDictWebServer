@@ -32,7 +32,7 @@ std::string CHttpServerInterface::HandleEnglishToChinese(const std::string& strR
 {
     EnglishToChineseReq_t reqData = GetReqFromRequest(strReq);
     EnglishToChineseRsp_t rspData = CreateRspFromReq(reqData);
-    std::string strRsp = WordRspToString(rspData);
+    std::string strRsp = rspData.ToString();
     return strRsp;
 }
 
@@ -40,24 +40,39 @@ std::string CHttpServerInterface::HandleEnglishToWordTranslate(const std::string
 {
     EnglishToChineseReq_t reqData = GetReqFromRequest(strReq);
     auto result = TranslateSentence(reqData);
-    std::string strVersion = SentenceRspToString(result);
+    std::string strVersion = result.ToString();
     return strVersion;
 }
 
 std::string CHttpServerInterface::HandleAddWordToKnow(const std::string& strReq)
 {
-    AddWordToKnowReq_t reqData = AddRemoveWordReq(strReq);
-    auto result = AddWordToKnow(reqData);
-    std::string strVersion = AddRemoveRspToString(result);
-    return strVersion;
+    AddWordToKnowReq_t reqData;
+    if(reqData.FromString(strReq))
+    {
+        auto result = AddWordToKnow(reqData);
+        std::string strVersion = AddRemoveRspToString(result);
+        return strVersion;
+    }
+    else
+    {
+        return "";
+    }
 }
 
 std::string CHttpServerInterface::HandleAddWordToUnKnow(const std::string& strReq)
 {
-    AddWordToKnowReq_t reqData = AddRemoveWordReq(strReq);
-    auto result = AddWordToUnKnown(reqData);
-    std::string strVersion = AddRemoveRspToString(result);
-    return strVersion;
+    AddWordToKnowReq_t reqData;
+    // = AddRemoveWordReq(strReq);
+    if (reqData.FromString(strReq))
+    {
+        auto result = AddWordToUnKnown(reqData);
+        std::string strVersion = AddRemoveRspToString(result);
+        return strVersion;
+    }
+    else
+    {
+        return "";
+    }
 }
 std::string CHttpServerInterface::HandleSetUserLanguageLevel(const std::string& strReq)
 {

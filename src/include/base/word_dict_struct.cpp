@@ -52,25 +52,30 @@ std::ostream& operator<<(std::ostream& os,const T_ENGLISH_CHINSE_TRANS& p)
     return os;
 }
 
-std::string WordRspToString(const EnglishToChineseRsp_t& rsp)
+std::string EnglishToChineseRsp_t::ToString()
 {
     json11::Json dataJson = json11::Json::object{
-        {"english",rsp.m_data.m_strEnglish},
-        {"chinese",rsp.m_data.m_strChinese}
+       {"english",this->m_data.m_strEnglish},
+       {"chinese",this->m_data.m_strChinese}
     };
     json11::Json rspJson = json11::Json::object{
-        {"code",rsp.m_code},
-        {"message",rsp.m_strMsg},
+        {"code",this->m_code},
+        {"message",this->m_strMsg},
         {"data",dataJson}
     };
     std::string strRsp = rspJson.dump();
     return strRsp;
 }
 
-std::string SentenceRspToString(const SentenceToWordsRsp_t& rsp)
+bool EnglishToChineseRsp_t::FromString(const std::string& strReq)
+{
+    return false;
+}
+
+std::string SentenceToWordsRsp_t::ToString()
 {
     json11::Json::array dataArray;
-    for (auto item : rsp.m_data) {
+    for (auto item : this->m_data) {
         json11::Json dataJson = json11::Json::object{
             {"english",item.m_strEnglish},
             {"chinese",item.m_strChinese}
@@ -78,15 +83,33 @@ std::string SentenceRspToString(const SentenceToWordsRsp_t& rsp)
         dataArray.push_back(dataJson);
     }
     json11::Json rspJson = json11::Json::object{
-       {"code",rsp.m_code},
-       {"message",rsp.m_strMsg},
+       {"code",this->m_code},
+       {"message",this->m_strMsg},
        {"data",dataArray}
     };
     std::string strRsp = rspJson.dump();
     return strRsp;
 }
 
+bool SentenceToWordsRsp_t::FromString(const std::string& strReq)
+{
+    return false;
+}
 
+bool AddWordToKnowReq_t::FromString(const std::string& strReq)
+{
+    {
+        std::string strErr;
+        auto resultJson = json11::Json::parse(strReq.c_str(), strErr);
+        if (strErr.empty())
+        {
+            this->m_strToken = resultJson["token"].string_value();
+            this->m_strWord = resultJson["word"].string_value();
+            return true;
+        }
+    }
+    return false;
+}
 AddWordToKnowReq_t AddRemoveWordReq(const std::string& strReq)
 {
     AddWordToKnowReq_t result;

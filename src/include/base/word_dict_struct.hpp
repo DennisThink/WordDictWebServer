@@ -5,18 +5,28 @@
 #include <memory>
 struct EnglishToChineseReq_t
 {
+public:
+    std::string ToString();
+    bool FromString(const std::string& strReq);
     std::string m_strToken;
     std::string m_strEnglish;
 };
 
 struct EnglishToChineseData_t
 {
+public:
+    std::string ToString();
+    bool FromString(const std::string& strReq);
     std::string m_strEnglish;
     std::string m_strChinese;
 };
 
 struct EnglishToChineseRsp_t
 {
+public:
+    std::string ToString();
+    bool FromString(const std::string& strReq);
+
     int m_code;
     std::string m_strMsg;
     EnglishToChineseData_t m_data;
@@ -25,6 +35,9 @@ struct EnglishToChineseRsp_t
 
 struct SentenceToWordsRsp_t 
 {
+public:
+    std::string ToString();
+    bool FromString(const std::string& strReq);
     int m_code;
     std::string m_strMsg;
     std::vector<EnglishToChineseData_t> m_data;
@@ -32,12 +45,20 @@ struct SentenceToWordsRsp_t
 
 struct AddWordToKnowReq_t
 {
+public:
+    std::string ToString();
+    bool FromString(const std::string& strReq);
+
     std::string m_strWord;
     std::string m_strToken;
 };
 
 struct AddWordToKnownRsp_t
 {
+public:
+    std::string ToString();
+    bool FromString(const std::string& strReq);
+
     int m_code;
     std::string m_strMsg;
 };
@@ -45,6 +66,9 @@ struct AddWordToKnownRsp_t
 
 struct SetUserLanguageLevelReq_t
 {
+public:
+    std::string ToString();
+    bool FromString(const std::string& strReq);
     std::string m_strToken;
     int m_nLevel;
 };
@@ -145,9 +169,9 @@ struct T_WORD_REQUENCY {
     int         F_TIMES;
 };
 
-std::string WordRspToString(const EnglishToChineseRsp_t& rsp);
-std::string SentenceRspToString(const SentenceToWordsRsp_t& rsp);
-AddWordToKnowReq_t AddRemoveWordReq(const std::string& strReq);
+//std::string WordRspToString(const EnglishToChineseRsp_t& rsp);
+//std::string SentenceRspToString(const SentenceToWordsRsp_t& rsp);
+//AddWordToKnowReq_t AddRemoveWordReq(const std::string& strReq);
 std::string AddRemoveRspToString(const AddWordToKnownRsp_t& rsp);
 //std::string SetUserLanguageLevelRspToString(const Set)
 enum class DataBaseType
