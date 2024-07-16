@@ -14,15 +14,7 @@ include_directories(./include/thirdparty/cpp_http_lib/)
 include_directories(./include/thirdparty/clipp/include/)
 link_directories(./libs/mysqllib/lib/)
 add_executable(DictWebClient ./client/http_client.cpp ./include/base/word_dict_struct.cpp ./include/thirdparty/json11/json11.cpp)
-add_executable(DictWebServer ./server/http_server.cpp 
-							 ./server/CAsioHttpServer.cpp
-                             ./server/EnglishChineseWordDict.cpp 
-							 ./include/thirdparty/json11/json11.cpp
-							 ./include/base/dict_tool.cpp 
-						     ./include/base/word_dict_struct.cpp
-							./include/base/CDictDatabaseJson.cpp
-							./include/base/CDictDatabaseMySql.cpp
-							./server/CHttpServerInterface.cpp)
+
 
 add_executable(HttpServer ./server/cpp_http_main.cpp 
                           ./server/CCppHttpLibServer.cpp 
@@ -59,6 +51,19 @@ add_executable(DictTool ./dict_tool/dict_tool_main.cpp
 						./include/thirdparty/json11/json11.cpp
 						${SQLITE_CPP_FILE}
 						${SQLITE_FILE})
+
+add_executable(DictWebServer ./server/http_server.cpp 
+							 ./server/CAsioHttpServer.cpp
+                             ./server/EnglishChineseWordDict.cpp 
+							 ./include/thirdparty/json11/json11.cpp
+							 ./include/base/dict_tool.cpp 
+						     ./include/base/word_dict_struct.cpp
+							./include/base/CDictDatabaseJson.cpp
+							./include/base/CDictDatabaseSqlite.cpp
+							./include/base/CDictDatabaseMySql.cpp
+							./server/CHttpServerInterface.cpp
+							${SQLITE_CPP_FILE}
+							${SQLITE_FILE})
 if(CMAKE_HOST_WIN32)
 target_link_libraries(DictTool mysqlclient.lib)
 else()

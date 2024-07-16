@@ -52,6 +52,8 @@ std::ostream& operator<<(std::ostream& os,const T_ENGLISH_CHINSE_TRANS& p)
     return os;
 }
 
+
+// EnglishToChineseReq_t begin
 std::string EnglishToChineseReq_t::ToString()
 {
     json11::Json dataJson = json11::Json::object{
@@ -75,6 +77,9 @@ bool EnglishToChineseReq_t::FromString(const std::string& strReq)
     return false;
 }
 
+//EnglishToChineseReq_t end
+
+//EnglishToChineseRsp_t begin
 std::string EnglishToChineseRsp_t::ToString()
 {
     json11::Json dataJson = json11::Json::object{
@@ -109,6 +114,9 @@ bool EnglishToChineseRsp_t::FromString(const std::string& strReq)
     return false;
 }
 
+//EnglishToChineseRsp_t end
+
+//SentenceToWordsRsp_t begin
 std::string SentenceToWordsRsp_t::ToString()
 {
     json11::Json::array dataArray;
@@ -126,45 +134,6 @@ std::string SentenceToWordsRsp_t::ToString()
     };
     std::string strRsp = rspJson.dump();
     return strRsp;
-}
-
-
-bool AddWordToKnownRsp_t::FromString(const std::string& strReq)
-{
-    std::string strErr;
-    auto resultJson = json11::Json::parse(strReq.c_str(), strErr);
-    if (strErr.empty())
-    {
-        this->m_code = resultJson["code"].int_value();
-        this->m_strMsg = resultJson["message"].string_value();
-        return true;
-    }
-
-    return false;
-}
-
-
-std::string SetUserLanguageLevelReq_t::ToString()
-{
-    json11::Json rspJson = json11::Json::object{
-      {"token",this->m_strToken},
-      {"level",this->m_nLevel}
-    };
-    std::string strRsp = rspJson.dump();
-    return strRsp;
-}
-
-bool SetUserLanguageLevelReq_t::FromString(const std::string& strReq)
-{
-    std::string strErr;
-    auto resultJson = json11::Json::parse(strReq.c_str(), strErr);
-    if (strErr.empty())
-    {
-        this->m_strToken = resultJson["token"].string_value();
-        this->m_nLevel = resultJson["level"].int_value();
-        return true;
-    }
-    return false;
 }
 
 bool SentenceToWordsRsp_t::FromString(const std::string& strReq)
@@ -189,7 +158,9 @@ bool SentenceToWordsRsp_t::FromString(const std::string& strReq)
     }
     return false;
 }
+//SentenceToWordsRsp_t end
 
+//AddWordToKnowReq_t begin
 bool AddWordToKnowReq_t::FromString(const std::string& strReq)
 {
     {
@@ -214,7 +185,22 @@ std::string AddWordToKnowReq_t::ToString()
     std::string strRsp = rspJson.dump();
     return strRsp;
 }
+//AddWordToKnowReq_t end
 
+//AddWordToKnownRsp_t begin
+bool AddWordToKnownRsp_t::FromString(const std::string& strReq)
+{
+    std::string strErr;
+    auto resultJson = json11::Json::parse(strReq.c_str(), strErr);
+    if (strErr.empty())
+    {
+        this->m_code = resultJson["code"].int_value();
+        this->m_strMsg = resultJson["message"].string_value();
+        return true;
+    }
+
+    return false;
+}
 
 std::string AddWordToKnownRsp_t::ToString()
 {
@@ -225,6 +211,37 @@ std::string AddWordToKnownRsp_t::ToString()
     std::string strRsp = rspJson.dump();
     return strRsp;
 }
+//AddWordToKnownRsp_t end
+
+
+//SetUserLanguageLevelReq_t begin
+std::string SetUserLanguageLevelReq_t::ToString()
+{
+    json11::Json rspJson = json11::Json::object{
+      {"token",this->m_strToken},
+      {"level",this->m_nLevel}
+    };
+    std::string strRsp = rspJson.dump();
+    return strRsp;
+}
+
+bool SetUserLanguageLevelReq_t::FromString(const std::string& strReq)
+{
+    std::string strErr;
+    auto resultJson = json11::Json::parse(strReq.c_str(), strErr);
+    if (strErr.empty())
+    {
+        this->m_strToken = resultJson["token"].string_value();
+        this->m_nLevel = resultJson["level"].int_value();
+        return true;
+    }
+    return false;
+}
+//SetUserLanguageLevelReq_t end
+
+
+
+
 
 DictWebServerConfig::DictWebServerConfig()
 {

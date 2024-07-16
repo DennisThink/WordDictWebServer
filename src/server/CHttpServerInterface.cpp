@@ -1,5 +1,7 @@
 #include "CHttpServerInterface.hpp"
 #include "CDictDatabaseMySql.hpp"
+#include "CDictDatabaseSqlite.hpp"
+#include "CDictDatabaseJson.hpp"
 #include "json11.hpp"
 #include <iostream>
 #include <algorithm>
@@ -20,6 +22,20 @@ void CHttpServerInterface::InitDataBaseFromCfg()
         m_dict = std::make_shared<CDictDatabaseMysql>();
         m_dict->SetDictDatabaseConfig(m_cfg.m_dictCfg.get());
         m_userWord = std::make_shared<CUserWordDatabaseMysql>();
+        m_userWord->SetUserWordDatabaseConfig(m_cfg.m_userWordCfg.get());
+    }
+    else if (m_cfg.m_eDataBaseType == DataBaseType::SQLITE)
+    {
+        m_dict = std::make_shared<CDictDatabaseSqlite>();
+        m_dict->SetDictDatabaseConfig(m_cfg.m_dictCfg.get());
+        m_userWord = std::make_shared<CUserWordDatabaseSqlite>();
+        m_userWord->SetUserWordDatabaseConfig(m_cfg.m_userWordCfg.get());
+    }
+    else if (m_cfg.m_eDataBaseType == DataBaseType::JSON)
+    {
+        m_dict = std::make_shared<CDictDatabaseJson>();
+        m_dict->SetDictDatabaseConfig(m_cfg.m_dictCfg.get());
+        m_userWord = std::make_shared<CUserWordDatabaseJson>();
         m_userWord->SetUserWordDatabaseConfig(m_cfg.m_userWordCfg.get());
     }
 }
