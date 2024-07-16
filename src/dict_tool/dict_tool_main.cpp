@@ -11,7 +11,7 @@
 int JsonDemo(int argc, char* argv[])
 {
     DictDataBaseCfgJson cfg;
-    cfg.m_jsonFileName = "middle_school.json";
+    //cfg.m_jsonFileName = "middle_school.json";
 
     CDictDatabaseJson databaseUtil;
     databaseUtil.SetDictDatabaseConfig(&cfg);
@@ -152,8 +152,8 @@ int SaveWordsFromJsonToMysql(int argc, char* argv[])
     CDictDatabaseJson JsonDatabaseUtil;
     {
         DictDataBaseCfgJson cfg;
-        cfg.m_jsonFileName = "middle_school.json";
-        cfg.m_nLevel = 10;
+        //cfg.m_jsonFileName = "middle_school.json";
+        //cfg.m_nLevel = 10;
         JsonDatabaseUtil.SetDictDatabaseConfig(&cfg);
     }
     CDictDatabaseMysql mysqlDatabaseUtil;
@@ -180,8 +180,8 @@ int SaveWordsFromJsonToSqlite(int argc, char* argv[])
     CDictDatabaseJson JsonDatabaseUtil;
     {
         DictDataBaseCfgJson cfg;
-        cfg.m_jsonFileName = "middle_school.json";
-        cfg.m_nLevel = 10;
+        //cfg.m_jsonFileName = "middle_school.json";
+        //cfg.m_nLevel = 10;
         JsonDatabaseUtil.SetDictDatabaseConfig(&cfg);
     }
     CDictDatabaseSqlite sqliteDatabaseUtil;
@@ -244,8 +244,8 @@ void SaveJsonToMysql(const std::string strName, const int level)
     CDictDatabaseJson JsonDatabaseUtil;
     {
         DictDataBaseCfgJson cfg;
-        cfg.m_jsonFileName = strName;
-        cfg.m_nLevel = level;
+        //cfg.m_jsonFileName = strName;
+        //cfg.m_nLevel = level;
         JsonDatabaseUtil.SetDictDatabaseConfig(&cfg);
     }
     DictDataBaseCfgMysql cfg;

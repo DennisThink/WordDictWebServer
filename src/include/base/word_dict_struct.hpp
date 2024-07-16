@@ -113,12 +113,19 @@ public:
     std::string m_sqliteFileName;
 };
 
+struct DictJsonFileElem
+{
+public:
+    DictJsonFileElem() {};
+    virtual ~DictJsonFileElem() {};
+    std::string m_jsonFileName;
+    int m_nLevel;
+};
 struct DictDataBaseCfgJson : public DictDataBaseCfg {
 public:
     DictDataBaseCfgJson(){};
     virtual ~DictDataBaseCfgJson() {};
-    std::string m_jsonFileName;
-    int m_nLevel;
+    std::vector<DictJsonFileElem> m_jsonFiles;
 };
 
 struct DictDataBaseCfgMysql : public DictDataBaseCfg {

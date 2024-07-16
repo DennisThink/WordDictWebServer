@@ -295,11 +295,11 @@ DictWebServerConfig FromJsonContent(const std::string& jsonContent)
                 auto pDict = std::make_shared<DictDataBaseCfgJson>();
                 if (databaseJson["FileName"].is_string())
                 {
-                    pDict->m_jsonFileName = databaseJson["FileName"].string_value();
+                    //pDict->m_jsonFileName = databaseJson["FileName"].string_value();
                 }
                 if (databaseJson["Level"].is_number())
                 {
-                    pDict->m_nLevel = databaseJson["Level"].int_value();
+                    //pDict->m_nLevel = databaseJson["Level"].int_value();
                 }
                 result.m_dictCfg = pDict;
             }

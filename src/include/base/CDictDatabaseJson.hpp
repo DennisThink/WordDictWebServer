@@ -22,6 +22,12 @@ struct UserLanguageLevelElem
 	int m_nLevel;
 };
 
+struct WordTransAndLevelElem
+{
+	std::string m_strChinese;
+	int m_nLevel;
+};
+
 class CDictDatabaseJson :public CDictDatabaseInterface
 {
 public:
@@ -34,9 +40,9 @@ public:
 	virtual bool SetDictDatabaseConfig(const DictDataBaseCfg* cfg) override;
 	std::vector<T_ENGLISH_CHINSE_TRANS> GetAllWords();
 protected:
-	void InitDatabase(const std::string jsonFile);
+	void InitDatabase(const std::string jsonFile,const int nLevel);
 	std::string ToLower(const std::string& strOld);
-	std::map<std::string, std::string> m_mapWords[26];
+	std::map<std::string,WordTransAndLevelElem> m_mapWords[26];
 
 	DictDataBaseCfgJson m_cfg;
 };

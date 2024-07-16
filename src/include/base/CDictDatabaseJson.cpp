@@ -19,7 +19,7 @@ T_ENGLISH_CHINSE_TRANS CDictDatabaseJson::GetTranslation(const std::string strWo
 		auto iter = m_mapWords[index].find(strWord);
 		if (iter != m_mapWords[index].end()) {
 			result.F_CHINESE = strWord;
-			result.F_CHINESE = iter->second;
+			result.F_CHINESE = iter->second.m_strChinese;
 			result.F_LEVEL = 0;
 		}
 	}
@@ -32,7 +32,10 @@ bool CDictDatabaseJson::InsertWordElem(const T_ENGLISH_CHINSE_TRANS& elem)
 		std::size_t index = strLow[0] - 'a';
 		if ((0 <= index) &&
 			(index < 26)) {
-			m_mapWords[index].insert({ elem.F_ENGLISH,elem.F_CHINESE });
+			WordTransAndLevelElem item;
+			item.m_strChinese = elem.F_CHINESE;
+			item.m_nLevel = elem.F_LEVEL;
+			m_mapWords[index].insert({ elem.F_ENGLISH,item});
 			return true;
 		}
 	}
@@ -82,8 +85,14 @@ bool CDictDatabaseJson::SetDictDatabaseConfig(const DictDataBaseCfg* cfg)
 		(NULL != cfg))
 	{
 		m_cfg = *(DictDataBaseCfgJson*)(cfg);
-		InitDatabase(m_cfg.m_jsonFileName);
-		return true;
+		if (!m_cfg.m_jsonFiles.empty())
+		{
+			for (auto& item : m_cfg.m_jsonFiles)
+			{
+				InitDatabase(item.m_jsonFileName,item.m_nLevel);
+			}
+			return true;
+		}
 	}
 	return false;
 }
@@ -96,8 +105,8 @@ std::vector<T_ENGLISH_CHINSE_TRANS> CDictDatabaseJson::GetAllWords()
 		for (auto wordItem : mapItem) {
 			T_ENGLISH_CHINSE_TRANS elem;
 			elem.F_ENGLISH = wordItem.first;
-			elem.F_CHINESE = wordItem.second;
-			elem.F_LEVEL = m_cfg.m_nLevel;
+			elem.F_CHINESE = wordItem.second.m_strChinese;
+			elem.F_LEVEL = 0;//m_cfg.m_nLevel;
 			retResult.push_back(elem);
 		}
 	}
@@ -372,7 +381,6 @@ void CUserWordDatabaseJson::InitArrayFromFile()
 void CUserWordDatabaseJson::SaveArrayToFile()
 {
 	{
-
 		json11::Json::array knownArray;
 		for (auto& item : m_knownWords) {
 			auto elemJson = json11::Json::object{
@@ -403,7 +411,7 @@ void CUserWordDatabaseJson::SaveArrayToFile()
 }
 
 
-void CDictDatabaseJson::InitDatabase(const std::string strJsonFile)
+void CDictDatabaseJson::InitDatabase(const std::string strJsonFile,const int nLevel)
 {
 	std::ifstream file(strJsonFile);
 	if (file.is_open()) {
@@ -444,7 +452,10 @@ void CDictDatabaseJson::InitDatabase(const std::string strJsonFile)
 						std::size_t index = strLow[0] - 'a';
 						if ( (0 <= index) && 
 							 (index < 26)  ) {
-							m_mapWords[index].insert({ strEnglish,strChinese });
+							WordTransAndLevelElem elem;
+							elem.m_strChinese = strChinese;
+							elem.m_nLevel = nLevel;
+							m_mapWords[index].insert({ strEnglish,elem});
 						}
 					}
 				}
