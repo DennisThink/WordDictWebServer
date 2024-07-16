@@ -64,7 +64,7 @@ bool CAsioHttpServer::MatchUrlMethodAndFunction()
 
     m_server.resource["^/v1/set_user_language_level$"]["POST"] = [this](Response_SHARED_PTR response,
         Request_SHARED_PTR request) {
-            OnAddWordToUnKnow(response, request);
+            OnSetUserLanguageLevel(response, request);
         };
 
     m_server.default_resource["GET"] = [this](Response_SHARED_PTR response,

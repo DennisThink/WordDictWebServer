@@ -252,6 +252,36 @@ std::string CHttpServerInterface::ToLower(const std::string strOrg)
 SetUserLanguageLevelRsp_t CHttpServerInterface::SetUserLanguageLevel(const SetUserLanguageLevelReq_t& req)
 {
     SetUserLanguageLevelRsp_t result;
+    if (m_userWord)
+    {
+        int nLevel = -1;
+        if (m_userWord->GetUserLanguageLevel(req.m_strToken, nLevel))
+        {
+            if (m_userWord->UpdateUserLanguageLevel(req.m_strToken, req.m_nLevel))
+            {
+                result.m_code = 0;
+                result.m_strMsg = "Success";
+            }
+            else
+            {
+                result.m_code = -1;
+                result.m_strMsg = "failed";
+            }
+        }
+        else
+        {
+            if (m_userWord->InsertUserLanguageLevel(req.m_strToken, req.m_nLevel))
+            {
+                result.m_code = 0;
+                result.m_strMsg = "Success";
+            }
+            else
+            {
+                result.m_code = -1;
+                result.m_strMsg = "failed";
+            }
+        }
+    }
     return result;
 }
 

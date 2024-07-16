@@ -106,11 +106,23 @@ void CWordTranslateClient::AddWordToKnown()
 {
     HttpClient client("localhost:8080");
     {
-        std::string strReqContent = R"({"token":"dennisthink@hotmail.com","english":"apple"})";
-        auto rsp = client.request("POST", "/v1/add_word_to_known", strReqContent.c_str());
+        AddWordToKnowReq_t req;
+        req.m_strToken = "test@test.com";
+        req.m_strWord = "apple";
+        auto rsp = client.request("POST", "/v1/add_word_to_known",req.ToString());
         if (rsp)
         {
-            std::cout << rsp->content.rdbuf() << std::endl;
+            std::string strRsp = rsp->content.string();
+            std::cout << "RSP : " << strRsp << std::endl;
+            AddWordToKnownRsp_t rsp;
+            if (rsp.FromString(strRsp))
+            {
+                std::cout << "AddWordToKnown success" << std::endl;
+            }
+            else
+            {
+                std::cout << "AddWordToKnown Failed" << std::endl;
+            }
         }
     }
 }
@@ -119,11 +131,23 @@ void CWordTranslateClient::AddWordToUnKnown()
 {
     HttpClient client("localhost:8080");
     {
-        std::string strReqContent = R"({"token":"dennisthink@hotmail.com","word":"orange"})";
-        auto rsp = client.request("POST", "/v1/add_word_to_unknown", strReqContent.c_str());
+        AddWordToUnKnownReq_t req;
+        req.m_strToken = "test@test.com";
+        req.m_strWord = "orange";
+        auto rsp = client.request("POST", "/v1/add_word_to_unknown",req.ToString());
         if (rsp)
         {
-            std::cout << rsp->content.rdbuf() << std::endl;
+            std::string strRsp = rsp->content.string();
+            std::cout << "RSP : " << strRsp << std::endl;
+            AddWordToUnKnownRsp_t rsp;
+            if (rsp.FromString(strRsp))
+            {
+                std::cout << "AddWordToUnKnown success" << std::endl;
+            }
+            else
+            {
+                std::cerr << "AddWordToUnKnown Failed" << std::endl;
+            }
         }
     }
 }
@@ -132,11 +156,23 @@ void CWordTranslateClient::SetUserLanguageLevel()
 {
     HttpClient client("localhost:8080");
     {
-        std::string strReqContent = R"({"token":"dennisthink@hotmail.com","level":10})";
-        auto rsp = client.request("POST", "/v1/set_user_language_level$", strReqContent.c_str());
+        SetUserLanguageLevelReq_t req;
+        req.m_strToken = "test@test.com";
+        req.m_nLevel = 10;
+        auto rsp = client.request("POST", "/v1/set_user_language_level", req.ToString());
         if (rsp)
         {
-            std::cout << rsp->content.rdbuf() << std::endl;
+            std::string strRsp = rsp->content.string();
+            std::cout << "RSP : " << strRsp << std::endl;
+            SetUserLanguageLevelRsp_t rsp;
+            if (rsp.FromString(strRsp))
+            {
+                std::cout << "SetUserLanguageLevel success" << std::endl;
+            }
+            else
+            {
+                std::cerr << "SetUserLanguageLevel fail" << std::endl;
+            }
         }
     }
 }

@@ -131,17 +131,39 @@ std::string SentenceToWordsRsp_t::ToString()
 
 bool AddWordToKnownRsp_t::FromString(const std::string& strReq)
 {
+    std::string strErr;
+    auto resultJson = json11::Json::parse(strReq.c_str(), strErr);
+    if (strErr.empty())
+    {
+        this->m_code = resultJson["code"].int_value();
+        this->m_strMsg = resultJson["message"].string_value();
+        return true;
+    }
+
     return false;
 }
 
 
 std::string SetUserLanguageLevelReq_t::ToString()
 {
-    return "";
+    json11::Json rspJson = json11::Json::object{
+      {"token",this->m_strToken},
+      {"level",this->m_nLevel}
+    };
+    std::string strRsp = rspJson.dump();
+    return strRsp;
 }
 
 bool SetUserLanguageLevelReq_t::FromString(const std::string& strReq)
 {
+    std::string strErr;
+    auto resultJson = json11::Json::parse(strReq.c_str(), strErr);
+    if (strErr.empty())
+    {
+        this->m_strToken = resultJson["token"].string_value();
+        this->m_nLevel = resultJson["level"].int_value();
+        return true;
+    }
     return false;
 }
 
@@ -182,23 +204,17 @@ bool AddWordToKnowReq_t::FromString(const std::string& strReq)
     }
     return false;
 }
-AddWordToKnowReq_t AddRemoveWordReq(const std::string& strReq)
+
+std::string AddWordToKnowReq_t::ToString()
 {
-    AddWordToKnowReq_t result;
-    {
-        {
-            std::string strErr;
-            auto resultJson = json11::Json::parse(strReq.c_str(), strErr);
-            if (strErr.empty())
-            {
-                result.m_strToken = resultJson["token"].string_value();
-                result.m_strWord = resultJson["word"].string_value();
-                return result;
-            }
-        }
-    }
-    return result;
+    json11::Json rspJson = json11::Json::object{
+     {"token",this->m_strToken},
+     {"english",this->m_strWord}
+    };
+    std::string strRsp = rspJson.dump();
+    return strRsp;
 }
+
 
 std::string AddWordToKnownRsp_t::ToString()
 {
