@@ -293,13 +293,22 @@ DictWebServerConfig FromJsonContent(const std::string& jsonContent)
             {
                 auto databaseJson = resultJson["DictDataBase"];
                 auto pDict = std::make_shared<DictDataBaseCfgJson>();
-                if (databaseJson["FileName"].is_string())
+                if (databaseJson.is_array())
                 {
-                    //pDict->m_jsonFileName = databaseJson["FileName"].string_value();
-                }
-                if (databaseJson["Level"].is_number())
-                {
-                    //pDict->m_nLevel = databaseJson["Level"].int_value();
+                    auto jsonItemArray = databaseJson.array_items();
+                    for (auto& jsonItem : jsonItemArray)
+                    {
+                        DictJsonFileElem elem;
+                        if (jsonItem["FileName"].is_string())
+                        {
+                            elem.m_jsonFileName = jsonItem["FileName"].string_value();
+                        }
+                        if (jsonItem["Level"].is_number())
+                        {
+                            elem.m_nLevel = jsonItem["Level"].int_value();
+                        }
+                        pDict->m_jsonFiles.push_back(elem);
+                    }
                 }
                 result.m_dictCfg = pDict;
             }
