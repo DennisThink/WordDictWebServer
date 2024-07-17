@@ -11,6 +11,10 @@
 TEST_CASE("DictJson") {
     CHECK(1 == 1);
     DictDataBaseCfgJson cfg;
+    DictJsonFileElem elem;
+    elem.m_jsonFileName = "middle_school.json";
+    elem.m_nLevel = 10;
+    cfg.m_jsonFiles.push_back(elem);
     //cfg.m_jsonFileName = "middle_school.json";
 
     CDictDatabaseJson databaseUtil;
@@ -90,8 +94,10 @@ TEST_CASE("ServerConfigJson") {
         CHECK_FALSE(pCfg == nullptr);
         if (nullptr != pCfg)
         {
-            //CHECK_EQ(pCfg->m_jsonFileName, "middle_school.json");
-            //CHECK_EQ(pCfg->m_nLevel, 10);
+            DictJsonFileElem elem;
+            elem.m_jsonFileName = "middle_school.json";
+            elem.m_nLevel = 10;
+            pCfg->m_jsonFiles.push_back(elem);
         }
     }
     else
