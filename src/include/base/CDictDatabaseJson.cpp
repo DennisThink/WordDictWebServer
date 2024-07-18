@@ -20,7 +20,7 @@ T_ENGLISH_CHINSE_TRANS CDictDatabaseJson::GetTranslation(const std::string strWo
 		if (iter != m_mapWords[index].end()) {
 			result.F_CHINESE = strWord;
 			result.F_CHINESE = iter->second.m_strChinese;
-			result.F_LEVEL = 0;
+			result.F_LEVEL = iter->second.m_nLevel;
 		}
 	}
 	return result;

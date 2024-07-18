@@ -216,22 +216,56 @@ SentenceToWordsRsp_t CHttpServerInterface::TranslateSentence(const EnglishToChin
         }
     }
 
-    bool bNeedTranslat = false;
+    bool bUnKnown = false;
+    bool bKnown = false;
+    int nLevel = -1;
+    if (nullptr != m_userWord)
+    {
+        if (m_userWord->GetUserLanguageLevel(req.m_strToken, nLevel))
+        {
+            std::cout << "Get User Level: " << req.m_strToken << " " << nLevel << std::endl;
+        }
+        else
+        {
+            nLevel = 10;
+        }
+    }
     for (auto item : words) {
-        bNeedTranslat = true;
-        //Need Translate
+
+        bUnKnown = false;
+        bKnown = false;
         {
             if (nullptr != m_userWord)
             {
                 if (m_userWord->IsKnownWord(item.first, req.m_strToken))
                 {
-                    bNeedTranslat = false;
+                    std::cout << "TOKEN: " << req.m_strToken << "  KnownWord: " << item.first << std::endl;
+                    bKnown = true;
+                }
+                else
+                {
+                    bKnown = false;
                 }
             }
         }
+        {
+            if (nullptr != m_userWord)
+            {
+                if (m_userWord->IsUnKnownWord(item.first, req.m_strToken))
+                {
+                    bUnKnown = true;
+                }
+                else
+                {
+                    bUnKnown = false;
+                }
+            }
+        }
+        {
+
+        }
         //Translate
         {
-            if (bNeedTranslat)
             {
                 EnglishToChineseData_t elem;
                 elem.m_strEnglish = item.first;
@@ -239,14 +273,59 @@ SentenceToWordsRsp_t CHttpServerInterface::TranslateSentence(const EnglishToChin
                 strLow = WordTrim(strLow);
                 if (nullptr != m_dict)
                 {
-                    elem.m_strChinese = m_dict->GetTranslation(strLow).F_CHINESE;
+                    T_ENGLISH_CHINSE_TRANS result = m_dict->GetTranslation(strLow);
+                    elem.m_strChinese = result.F_CHINESE;
+                    std::cout << "Engish: " << result.F_ENGLISH << "   Chinese: " << result.F_CHINESE << std::endl;
+                    if (bUnKnown)
+                    {
+                        if (nullptr != m_userWord)
+                        {
+                            if (m_userWord->IsWordFrequencyExist(elem.m_strEnglish, req.m_strToken))
+                            {
+                                m_userWord->UpdateWordFrequency(elem.m_strEnglish, req.m_strToken);
+                            }
+                            else
+                            {
+                                m_userWord->InsertWordFrequency(elem.m_strEnglish, req.m_strToken);
+                            }
+                        }
+                        transResultArray.push_back(elem);
+                    }
+                    else if (nLevel !=-1)
+                    {
+                        if (result.F_LEVEL > nLevel)//学习新词汇
+                        {
+                            if (bKnown)//新词汇已知
+                            {
+                                //
+                            }
+                            else//新词汇未知
+                            {
+                                if (nullptr != m_userWord)
+                                {
+                                    if (m_userWord->IsWordFrequencyExist(elem.m_strEnglish, req.m_strToken))
+                                    {
+                                        m_userWord->UpdateWordFrequency(elem.m_strEnglish, req.m_strToken);
+                                    }
+                                    else
+                                    {
+                                        m_userWord->InsertWordFrequency(elem.m_strEnglish, req.m_strToken);
+                                    }
+                                }
+                                transResultArray.push_back(elem);
+                            }
+                        }
+                        else
+                        {
+                            std::cout << "TOKEN: " << req.m_strToken << " WordLowLevel: " << item.first << std::endl;
+                        }
+                    }
+                    else
+                    {
+                        std::cout << "TOKEN: " << req.m_strToken << " WordLevelError: " << nLevel << std::endl;
+                    }
                 }
-                std::cout << "Engish: " << item.first << "   Chinese: " << elem.m_strChinese << std::endl;
-                transResultArray.push_back(elem);
-            }
-            else
-            {
-                std::cout << "CAN NOT TRANS EN: " << item.first << std::endl;
+
             }
         }
     }

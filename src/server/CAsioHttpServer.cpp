@@ -15,7 +15,7 @@ void CAsioHttpServer::ShowRemotePeer(Request_SHARED_PTR request)
 {
     if (request)
     {
-        std::cout << "Remote: " << std::endl;
+        std::cout << "Remote: "<<request->remote_endpoint_address()<<":"<<request->remote_endpoint_port() << std::endl;
     }
 
 }
