@@ -2,7 +2,7 @@
 #include <client_http.hpp>
 #include <future>
 #include <server_http.hpp>
-
+#include "version_base.hpp"
 // Added for the default_resource example
 #include <algorithm>
 #include <filesystem>
@@ -190,6 +190,7 @@ std::string CWordTranslateClient::PostRequestDefault()
 
 int main(int argc, char* argv[])
 {
+    std::cout << GetSoftVersion() << std::endl;
     try {
         CWordTranslateClient client;
         client.GetVersion();

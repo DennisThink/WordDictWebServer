@@ -7,7 +7,7 @@
 #include "CDictDatabaseSqlite.hpp"
 #include "CDictDatabaseMySql.hpp"
 #include "dict_tool.hpp"
-
+#include "version_base.hpp"
 int JsonDemo(int argc, char* argv[])
 {
     DictDataBaseCfgJson cfg;

@@ -2,6 +2,7 @@
 #include "clipp.h"
 #include "version_base.hpp"
 int main(int argc,char * argv[]) {
+    std::cout << GetSoftVersion() <<"   "<<GetCompileInfo() << std::endl;
     using namespace clipp;
     std::string strCfgFileName;
     auto cli = (

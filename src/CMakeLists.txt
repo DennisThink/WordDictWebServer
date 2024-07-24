@@ -35,6 +35,7 @@ add_executable(Dict_Test ./dict_test/dict_test_main.cpp
 						./include/base/CDictDatabaseJson.cpp
 						./include/base/version_base.cpp
 						./include/thirdparty/json11/json11.cpp
+						./include/base/version_base.cpp
 						${SQLITE_CPP_FILE}
 						${SQLITE_FILE})
 
@@ -45,6 +46,7 @@ add_executable(DictTool ./dict_tool/dict_tool_main.cpp
 						./include/base/CDictDatabaseMySql.cpp
 						./include/base/CDictDatabaseJson.cpp
 						./include/thirdparty/json11/json11.cpp
+						./include/base/version_base.cpp
 						${SQLITE_CPP_FILE}
 						${SQLITE_FILE})
 
@@ -57,6 +59,7 @@ add_executable(DictWebServer ./server/http_server.cpp
 							./include/base/CDictDatabaseJson.cpp
 							./include/base/CDictDatabaseSqlite.cpp
 							./include/base/CDictDatabaseMySql.cpp
+							./include/base/version_base.cpp
 							./server/CHttpServerInterface.cpp
 							${SQLITE_CPP_FILE}
 							${SQLITE_FILE})
@@ -69,6 +72,7 @@ add_executable(HttpServer ./server/cpp_http_main.cpp
 						  ./include/base/CDictDatabaseJson.cpp
 						  ./include/base/CDictDatabaseMySql.cpp
 						  ./include/base/CDictDatabaseSqlite.cpp
+						  ./include/base/version_base.cpp
 						  ${SQLITE_CPP_FILE}
 						  ${SQLITE_FILE})
 
