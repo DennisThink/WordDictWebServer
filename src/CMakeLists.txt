@@ -33,6 +33,7 @@ add_executable(Dict_Test ./dict_test/dict_test_main.cpp
 						./include/base/CDictDatabaseSqlite.cpp
 						./include/base/CDictDatabaseMySql.cpp
 						./include/base/CDictDatabaseJson.cpp
+						./include/base/version_base.cpp
 						./include/thirdparty/json11/json11.cpp
 						${SQLITE_CPP_FILE}
 						${SQLITE_FILE})
@@ -70,6 +71,8 @@ add_executable(HttpServer ./server/cpp_http_main.cpp
 						  ./include/base/CDictDatabaseSqlite.cpp
 						  ${SQLITE_CPP_FILE}
 						  ${SQLITE_FILE})
+
+add_executable(VersionTest ./include/base/version_base.cpp ./server/version_test.cpp ./include/base/error_code.cpp)
 if(CMAKE_HOST_WIN32)
 target_link_libraries(DictTool mysqlclient.lib)
 else()

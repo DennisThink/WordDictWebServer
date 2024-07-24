@@ -44,15 +44,6 @@ void CCppHttpLibServer::OnEnglishToWordTranslate(const httplib::Request& req, ht
 	WriteRspString(res, strRsp);
 }
 
-void CCppHttpLibServer::OnDefaultGet(const httplib::Request&, httplib::Response& res)
-{
-
-}
-
-void CCppHttpLibServer::OnDefaultPost(const httplib::Request&, httplib::Response& res)
-{
-
-}
 
 void CCppHttpLibServer::OnAddWordToKnow(const httplib::Request& req, httplib::Response& res)
 {
@@ -67,7 +58,12 @@ void CCppHttpLibServer::OnAddWordToUnKnow(const httplib::Request& req, httplib::
 	std::string strRsp = HandleAddWordToUnKnow(strReq);
 	WriteRspString(res, strRsp);
 }
-
+void CCppHttpLibServer::OnSetUserLanguageLevel(const httplib::Request& req, httplib::Response& res)
+{
+	std::string strReq = GetReqString(req);
+	std::string strRsp = HandleSetUserLanguageLevel(strReq);
+	WriteRspString(res, strRsp);
+}
 std::string CCppHttpLibServer::GetReqString(const httplib::Request& req)
 {
 	std::string strRsp = req.body;
@@ -107,4 +103,7 @@ void CCppHttpLibServer::InitUrlRoute()
     m_server.Post("^/v1/add_word_to_unknown$",[this](const httplib::Request& req, httplib::Response& rsp) {
             OnAddWordToUnKnow(req, rsp);
     });
+	m_server.Post("^/v1/set_user_language_level$", [this](const httplib::Request& req, httplib::Response& rsp) {
+			OnSetUserLanguageLevel(req, rsp);
+	});
 }

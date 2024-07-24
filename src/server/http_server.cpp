@@ -1,5 +1,6 @@
 #include "CAsioHttpServer.hpp"
 #include "clipp.h"
+#include "version_base.hpp"
 int main(int argc,char * argv[]) {
     using namespace clipp;
     std::string strCfgFileName;
